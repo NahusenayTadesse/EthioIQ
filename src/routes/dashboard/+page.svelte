@@ -11,7 +11,7 @@
 <svelte:head>
    <title> Dashboard </title>
  </svelte:head>
- <h1>Welcome {data.role.name}</h1>
+ <h3>Welcome {data.role.name} </h3>
 
 <div class="p-4 w-[550px] rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
   {#if data.birthdayPerson.length}

@@ -46,6 +46,39 @@
 				<button type="submit" class="{submitButton} w-full">Create User</button>
 			</form>
 
+
+			<form method="POST" action="/your-backend-endpoint">
+  {#each data.allPermissions as perm}
+    <label>
+      <input 
+        type="checkbox" 
+        name="permissions[]"   
+        value={perm.id}
+      />
+      <strong>{perm.name}</strong> — {perm.description}
+    </label>
+    <br>
+  {/each}
+
+  <button type="submit">Submit</button>
+</form>
+
+<form method="POST" action="/your-backend-endpoint">
+  {#each data.allPermissions as perm}
+    <label>
+      <input 
+        type="checkbox" 
+        name="permissions[]"  
+        value={perm.id}
+      />
+      <strong>{perm.name}</strong> — {perm.description}
+    </label>
+    <br>
+  {/each}
+
+  <button type="submit">Submit</button>
+</form>
+
 			<!-- Additional Info -->
 			
 		</div>

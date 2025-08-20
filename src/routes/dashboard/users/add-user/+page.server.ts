@@ -3,7 +3,7 @@ import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import {roles, user} from '$lib/server/db/schema';
+import {permissions, roles, user} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 
@@ -19,8 +19,17 @@ export const load: PageServerLoad = async ({locals}) => {
      name: roles.name
   }).from(roles).orderBy(roles.id);
 
+  const allPermissions = await db.select(
+      {
+          id: permissions.id,
+          name: permissions.name, 
+          description: permissions.description  
+      }
+    ).from(permissions).orderBy(permissions.id);
+
   return {
-     allroles
+     allroles,
+     allPermissions
   }
 };
 

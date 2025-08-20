@@ -12,5 +12,5 @@ export const searchableFields = ['id', 'firstName', 'lastName',
   'location', 'fee','naturalOrSocial', 'notes',
   'age', 'bankAccount', 'hourlyRates', 'payment', 
   'parentPhone', 'studentPhone', 'studentFirstName', 'studentLastName',
-   'parentFirstName', 'parentLastName'];
+   'parentFirstName', 'parentLastName', 'description', 'name'];
 

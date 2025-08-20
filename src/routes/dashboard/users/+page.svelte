@@ -42,11 +42,33 @@ let fileName = 'Ethio Iq System Users'
 
 
 
-
+   let tableHeaders2 = $state([
+    
+   
+   {name:'Id', key: 'id'},
+   {name:'Name', key: 'name'},
+   {name:'Description', key: 'description'},
 
 
   
+  ]);
 
+  
+
+
+
+
+  let selected = $state([]);
+
+
+  
+function toggleSelection(id) {
+    if (selected.includes(id)) {
+      selected = selected.filter(item => item !== id);
+    } else {
+      selected = [...selected, id];
+    }
+  }
 
 
 

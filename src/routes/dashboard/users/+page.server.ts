@@ -25,6 +25,8 @@ export const load: PageServerLoad = async ({locals}) => {
 .orderBy(desc(user.createdAt));
 
 
+  
+
 
 
         return {
@@ -38,6 +40,7 @@ export const load: PageServerLoad = async ({locals}) => {
 
         return {
             users: [],
+            allPermissions: [],
             error: 'Failed to load users'
         };
     }
