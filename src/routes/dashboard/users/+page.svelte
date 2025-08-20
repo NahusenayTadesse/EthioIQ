@@ -1,0 +1,76 @@
+<script lang='ts'>
+	import { submitButton } from '$lib/global.svelte';
+  import Table from '$lib/Table.svelte';
+	import { RotateCcw } from '@lucide/svelte';
+
+
+
+   let { data } = $props();
+
+   let users = $state(data.users);
+
+
+  
+
+   let tableHeaders = $state([
+    
+   
+   {name:'Id', key: 'id'},
+   {name:'Name', key: 'name'},
+   {name:'Email', key: 'email'},
+   {name:'Role', key: 'role'},
+   {name: 'Active', key: 'isActive'}
+
+  
+  ]);
+
+
+
+  
+
+  let componentKey = $state(0);
+
+  function reloadComponent() {
+        componentKey++;
+        users = data.users;
+ } 
+
+
+let fileName = 'Ethio Iq System Users'
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</script>
+
+ <svelte:head>
+   <title> Users </title>
+ </svelte:head>
+
+
+
+
+
+<a href="/dashboard/users/add-user" class="{submitButton} w-[150px]">Add New User</a>
+
+<br />
+{#key componentKey}
+
+<button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
+ <div class= "">
+ <Table mainlist = {users} {tableHeaders} {fileName}  />
+</div>
+{/key}
+
+
+
