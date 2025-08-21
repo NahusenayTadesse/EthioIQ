@@ -32,12 +32,11 @@ export const load: PageServerLoad = async ({locals}) => {
    const allRolePermissions = await db
   .select({
     id: rolePermissions.id,
-    roleName: roles.name,
-    permissionName: permissions.name,
+    roleName: rolePermissions.roleId,
+    permissionName: rolePermissions.permissionId,
   })
   .from(rolePermissions)
-  .innerJoin(roles, eq(rolePermissions.roleId, roles.id))
-  .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id));
+  
 
   return {
      allroles,
