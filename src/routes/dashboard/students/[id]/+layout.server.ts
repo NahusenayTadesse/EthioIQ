@@ -1,6 +1,5 @@
 
 
-import { auth } from "$lib/auth";
 import { eq, sql } from 'drizzle-orm';
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";

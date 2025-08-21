@@ -2,8 +2,10 @@ import { hash } from '@node-rs/argon2';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
+import { eq } from 'drizzle-orm';
+
 import { db } from '$lib/server/db';
-import {permissions, roles, user} from '$lib/server/db/schema';
+import {permissions, rolePermissions, roles, user} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 
@@ -27,9 +29,20 @@ export const load: PageServerLoad = async ({locals}) => {
       }
     ).from(permissions).orderBy(permissions.id);
 
+   const allRolePermissions = await db
+  .select({
+    id: rolePermissions.id,
+    roleName: roles.name,
+    permissionName: permissions.name,
+  })
+  .from(rolePermissions)
+  .innerJoin(roles, eq(rolePermissions.roleId, roles.id))
+  .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id));
+
   return {
      allroles,
-     allPermissions
+     allPermissions,
+     allRolePermissions
   }
 };
 
@@ -42,7 +55,7 @@ export const actions: Actions = {
 
 		const name = formData.get('name') as string;
 		const email = formData.get('email') as string;
-		const role = formData.get('role') as string;
+		const roleId = formData.get('role') as string;
     const username = extractUsername(email);
 
 		const password = generatePassword();
@@ -61,11 +74,15 @@ export const actions: Actions = {
 		});
 
 		try {
-			await db.insert(user).values({ id: userId, email, name,  username, passwordHash, roleId: role });
+			await db.insert(user).values({ id: userId, email, name,  username, passwordHash, roleId });
 
 			const sessionToken = auth.generateSessionToken();
 			const session = await auth.createSession(sessionToken, userId);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+   
+
+
+
 		} catch(err) {
 			console.error('Action failed:', err);
 
@@ -78,7 +95,8 @@ export const actions: Actions = {
        message: "Successfully Added User"
     };
 	}
-};
+}; 
+
 
 function generateUserId() {
 	// ID with 120 bits of entropy, or about the same as UUID v4.

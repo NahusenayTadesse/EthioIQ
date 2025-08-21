@@ -1,9 +1,24 @@
 <script>
 	import { enhance } from "$app/forms";
 	import { input, label, select, submitButton } from "$lib/global.svelte.js";
-    let {data, form} = $props()
+	import ChildrenTable from "$lib/ChildrenTable.svelte";
+
+	let tableHeaders= $state(
+		 [
+			{name: 'Id', key: 'id'},
+			{name: 'Role Name', key: 'roleName'},
+			{name: 'Permission Name', key: 'permissionName'}
+			
+		 ])
+    let {data, form} = $props();
+
+	let showPermission = $state(false)
 
 </script>
+<svelt:head>
+	<title>Add User</title>
+</svelt:head>
+
 <h1>{form?.message}</h1>
 <div class="bg-background text-foreground min-h-screen flex items-center justify-start p-4">
 	<div class="w-full max-w-md">
@@ -43,27 +58,23 @@
 				</div>
 
 				<!-- Submit Button -->
+
+						<button onclick={()=> showPermission = !showPermission  } class="{submitButton} w-full"> Customize User Permission</button>
+
 				<button type="submit" class="{submitButton} w-full">Create User</button>
 			</form>
 
 
+
 			<form method="POST" action="/your-backend-endpoint">
-  {#each data.allPermissions as perm}
-    <label>
-      <input 
-        type="checkbox" 
-        name="permissions[]"   
-        value={perm.id}
-      />
-      <strong>{perm.name}</strong> — {perm.description}
-    </label>
-    <br>
-  {/each}
 
-  <button type="submit">Submit</button>
+
+
+
+
 </form>
-
-<form method="POST" action="/your-backend-endpoint">
+{#if showPermission}
+<form method="POST" >
   {#each data.allPermissions as perm}
     <label>
       <input 
@@ -76,11 +87,16 @@
     <br>
   {/each}
 
-  <button type="submit">Submit</button>
+
+  <button type="submit" class="{submitButton} w-full">Save</button>
 </form>
+  {/if}
 
 			<!-- Additional Info -->
 			
 		</div>
 	</div>
 </div>
+
+
+<ChildrenTable mainlist={data.allRolePermissions} {tableHeaders} search=true />

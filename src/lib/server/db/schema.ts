@@ -81,6 +81,7 @@ export const permissions = pgTable('permissions', {
 });
 
 export const rolePermissions = pgTable('role_permissions', {
+    id: serial('id').primaryKey(),
   roleId: integer('role_id').notNull().references(() => roles.id),
   permissionId: integer('permission_id').notNull().references(() => permissions.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -93,6 +94,14 @@ export const specialPermissions = pgTable('special_permissions', {
   permissionId: integer('permission_id').notNull().references(() => permissions.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
+export const userPermissions = pgTable("user_permissions", {
+  id: serial('id').primaryKey(),
+  userId: varchar("user_id").notNull().references(() => user.id),
+  permissionId: integer("permission_id").notNull().references(() => permissions.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const persons = pgTable('persons', {

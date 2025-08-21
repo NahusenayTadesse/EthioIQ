@@ -5,6 +5,8 @@
     import { toggleMode } from "mode-watcher";
     import { LayoutDashboard, IdCardLanyard, GraduationCap, Users, CircleDollarSign, BookOpenText, HeartHandshake, SunIcon, MoonIcon, LogOut } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
+	import { X } from '@lucide/svelte';
+	import { onMount } from 'svelte';
 
 let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pathname.slice(2));
 
@@ -44,7 +46,16 @@ let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pa
     function onsubmit() {
         submitting = true;
     }
+  let showbanner =  $state(true)
+onMount(() => {
+    const timer = setTimeout(() => {
+      showbanner = false;
+    }, 10000); // 10 seconds
 
+    // Optional: cleanup if the component unmounts before 30s
+    return () => clearTimeout(timer);
+  });
+   
 </script>
 
 <div class="flex h-screen">
@@ -101,7 +112,11 @@ let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pa
 
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
-    {#if data.birthdayPerson}
+    {#if data.birthdayPerson && showbanner}
+
+    
+  
+    
      
    {#each data.birthdayPerson as birthdayPerson}
      {#if birthdayPerson.type === 'employee'} 
@@ -116,6 +131,8 @@ let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pa
 {/if}
 {/each}
 {/if}
+
+
 
   </div>
    
