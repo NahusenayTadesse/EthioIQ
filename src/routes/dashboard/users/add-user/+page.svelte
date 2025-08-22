@@ -1,7 +1,6 @@
 <script lang='ts'>
 	import { enhance } from "$app/forms";
 	import { input, label, select, submitButton } from "$lib/global.svelte.js";
-	import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import * as Dialog from "$lib/components/ui/dialog/index.js";
 	import * as Popover from "$lib/components/ui/popover/index.js";
 	import { SquarePen, Save, BadgeCheck } from "@lucide/svelte";
@@ -46,7 +45,7 @@ function hasPermission(
 
 <h1>{form?.message}</h1>
 <div class="bg-background text-foreground min-h-screen flex items-center justify-center p-4">
-	<div class="w-full max-w-full flex lg:flex-row flex-col gap-4 flex-wrap justify-center">
+	<div class="w-full max-w-full flex lg:flex-row flex-col gap-4 flex-wrap justify-start">
 		<div class="w-xl bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-gray-800">
 			
 
@@ -77,7 +76,7 @@ function hasPermission(
 					<label for="role" class={label}>Role</label>
 					<select id="role" name="role" required bind:value={selected} 
                      onchange={() => showPermission = selected !== ""}					class={select}>
-						<option value="" class="text-gray-500">Select your role</option>
+						<option value="" class="text-gray-500" disabled>Select your role</option>
 						{#each data.allroles as role}
 						<option value={role.id} class="text-gray-900 dark:text-white">{role.name}</option>
 						{/each}
@@ -156,6 +155,3 @@ function hasPermission(
 		</div>
 	</div>
 </div>
-
-
-<ChildrenTable mainlist={data.allRolePermissions} {tableHeaders} search=true />

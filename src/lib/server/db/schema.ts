@@ -82,7 +82,7 @@ export const permissions = pgTable('permissions', {
 
 export const rolePermissions = pgTable('role_permissions', {
     id: serial('id').primaryKey(),
-  roleId: integer('role_id').notNull().references(() => roles.id),
+  roleId: integer('role_id').notNull().references(() => roles.id, { onDelete: 'cascade' }),
   permissionId: integer('permission_id').notNull().references(() => permissions.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
@@ -90,7 +90,7 @@ export const rolePermissions = pgTable('role_permissions', {
 
 export const specialPermissions = pgTable('special_permissions', {
   id: serial('id').primaryKey(),
-  userId: varchar('user_id').notNull().references(() => user.id),
+  userId: varchar('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   permissionId: integer('permission_id').notNull().references(() => permissions.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),

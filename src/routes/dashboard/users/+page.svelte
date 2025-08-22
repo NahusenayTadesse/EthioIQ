@@ -82,9 +82,6 @@ function toggleSelection(id) {
 
 
 
-
-<a href="/dashboard/users/add-user" class="{submitButton} w-[150px]">Add New User</a>
-
 <br />
 {#key componentKey}
 
