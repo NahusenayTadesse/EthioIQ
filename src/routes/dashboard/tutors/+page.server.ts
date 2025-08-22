@@ -2,7 +2,7 @@ import { sql, eq, count } from 'drizzle-orm';
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import {  locations, persons, tutors, tutorStudentMatches, subjects} from '$lib/server/db/schema'
+import {  locations, persons, tutors, tutorStudentMatches} from '$lib/server/db/schema'
 
 
 export const load: PageServerLoad = async ({locals}) => {

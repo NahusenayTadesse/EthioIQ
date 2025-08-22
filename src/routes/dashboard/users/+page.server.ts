@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({locals}) => {
     try {
   const users = db.select({
   id: user.id,
-  name: user.name,
+  userName: user.name,
   email: user.email,
   role: roles.name,
   isActive: user.isActive,

@@ -1,11 +1,11 @@
 import { hash } from '@node-rs/argon2';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
-import * as auth from '$lib/server/auth';
-import { eq } from 'drizzle-orm';
+// import * as auth from '$lib/server/auth';
+// import { eq } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
-import {permissions, rolePermissions, roles, user} from '$lib/server/db/schema';
+import {permissions, rolePermissions, roles, specialPermissions, user} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 
@@ -55,6 +55,8 @@ export const actions: Actions = {
 		const name = formData.get('name') as string;
 		const email = formData.get('email') as string;
 		const roleId = formData.get('role') as string;
+    const customPrem = formData.get('customPrem') as string;
+    const permissionIds = formData.getAll("permissions[]").map(v => Number(v)); 
     const username = extractUsername(email);
 
 		const password = generatePassword();
@@ -73,11 +75,24 @@ export const actions: Actions = {
 		});
 
 		try {
-			await db.insert(user).values({ id: userId, email, name,  username, passwordHash, roleId });
+			await db.insert(user).values({ id: userId, email, name,  username, passwordHash, roleId }).returning;
 
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+      if(customPrem === 'true'){
+await db.insert(specialPermissions).values(
+  permissionIds.map((permId) => ({
+    userId,
+    permissionId: permId,
+  }))
+);
+  permissionIds.map((permId) => ({
+    userId,
+    permissionId: permId,
+  }));
+    }
+
+			// const sessionToken = auth.generateSessionToken();
+			// const session = await auth.createSession(sessionToken, userId);
+			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
    
 
 
@@ -104,24 +119,24 @@ function generateUserId() {
 	return id;
 }
 
-function validateUsername(username: unknown): username is string {
-	return (
-		typeof username === 'string' &&
-		username.length >= 3 &&
-		username.length <= 31 &&
-		/^[a-z0-9_-]+$/.test(username)
-	);
-}
+// function validateUsername(username: unknown): username is string {
+// 	return (
+// 		typeof username === 'string' &&
+// 		username.length >= 3 &&
+// 		username.length <= 31 &&
+// 		/^[a-z0-9_-]+$/.test(username)
+// 	);
+// }
 
-function validatePassword(password: unknown): password is string {
-	return typeof password === 'string' && password.length >= 6 && password.length <= 255;
-}
+// function validatePassword(password: unknown): password is string {
+// 	return typeof password === 'string' && password.length >= 6 && password.length <= 255;
+// }
 function isValidEmail(email: string): boolean {
   // Basic email regex pattern
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-function extractUsername(email) {
+function extractUsername(email: string) {
   if (typeof email !== "string") {
     throw new Error("Input must be a string");
   }
@@ -167,6 +182,7 @@ function generatePassword() {
 // Example usage
 import nodemailer from 'nodemailer';
 import { HOST, USER, PASSWORD } from '$env/static/private';
+import { spec } from 'node:test/reporters';
 
 const transporter = nodemailer.createTransport({
     host: HOST,

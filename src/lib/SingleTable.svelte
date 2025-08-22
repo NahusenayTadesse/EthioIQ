@@ -2,6 +2,7 @@
 <script>
 
     import Copy from "$lib/Copy.svelte";
+    import {LoaderCircle} from "@lucide/svelte"
     // import JSPDF from "$lib/JSPDF.svelte"
 
     let { singleTable  } = $props();

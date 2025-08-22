@@ -5,7 +5,6 @@
   import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
 	import { submitButton } from "$lib/global.svelte.js";
-	import Table from "$lib/Table.svelte";
 
     let { data } = $props();
     let matches = $state(data.matches);

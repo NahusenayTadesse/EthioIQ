@@ -240,7 +240,7 @@ Number of Filtered Data: {mainlist.length} <br>
           <td class="px-6 py-4 whitespace-nowrap text-sm  {value ? 'bg-green-400' : 'bg-red-400'} text-white">{value ? 'Active' : 'InActive'}</td>
           {:else if key === 'id'}
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize">{index + 1}</td>
-          {:else if key === 'firstName' || key === 'lastName'}
+          {:else if key === 'firstName' || key === 'lastName' || key==='userName'}
 
           
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='{page.url.pathname}/{person.id}'>{value}</a></td>

@@ -2,6 +2,14 @@
 	import { enhance } from "$app/forms";
 	import { input, label, select, submitButton } from "$lib/global.svelte.js";
 	import ChildrenTable from "$lib/ChildrenTable.svelte";
+	import * as Dialog from "$lib/components/ui/dialog/index.js";
+	import * as Popover from "$lib/components/ui/popover/index.js";
+	import { SquarePen, Save, BadgeCheck } from "@lucide/svelte";
+	import DialogClose from "$lib/components/ui/dialog/dialog-close.svelte";
+
+	
+
+
 
 
 	let tableHeaders= $state(
@@ -15,7 +23,7 @@
 
 	let showPermission = $state(false)
 
-	let selected = $state(0);
+	let selected = $state();
 
 	let allRolePermissions = $state(data.allRolePermissions);
 
@@ -26,7 +34,10 @@ function hasPermission(
   return allRolePermissions.some(
     (rp) => rp.roleName === roleId && rp.permissionName === permissionId
   );
-}
+} 
+
+
+ let customPerm = $state(false)
 
 </script>
 <svelt:head>
@@ -34,9 +45,9 @@ function hasPermission(
 </svelt:head>
 
 <h1>{form?.message}</h1>
-<div class="bg-background text-foreground min-h-screen flex items-center justify-start p-4">
-	<div class="w-full max-w-full flex lg:flex-row flex-col gap-4 flex-wrap">
-		<div class="w-md bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-gray-800">
+<div class="bg-background text-foreground min-h-screen flex items-center justify-center p-4">
+	<div class="w-full max-w-full flex lg:flex-row flex-col gap-4 flex-wrap justify-center">
+		<div class="w-xl bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-gray-800">
 			
 
 			<form method="POST" action="?/register" class="space-y-4" use:enhance>
@@ -64,38 +75,29 @@ function hasPermission(
 				<!-- Role Select -->
 				<div>
 					<label for="role" class={label}>Role</label>
-					<select id="role" name="role" required bind:value={selected} class={select}>
+					<select id="role" name="role" required bind:value={selected} 
+                     onchange={() => showPermission = selected !== ""}					class={select}>
 						<option value="" class="text-gray-500">Select your role</option>
 						{#each data.allroles as role}
 						<option value={role.id} class="text-gray-900 dark:text-white">{role.name}</option>
 						{/each}
 					</select>
+					<input type="hidden" value={customPerm} name="customPerm">
 				</div>
+				{#if customPerm}
+				<p class="bg-green-400 p-2 w-auto rounded-lg animate-pulse justify-self-center text-white text-center">Using Custom Permissions</p>
+				{/if}
+				
 
-				<!-- Submit Button -->
-
-						<button onclick={()=> showPermission = !showPermission  } class="{submitButton} w-full"> Customize User Permission</button>
-
-				<button type="submit" class="{submitButton} w-full">Create User</button>
-			</form>
-
-
-
-			<form method="POST" action="/your-backend-endpoint">
-
-
-
-
-</form>
-
-
-			<!-- Additional Info -->
-			
-		</div>
-
-		{#if showPermission}
-<form method="POST" >
-  {#each data.allPermissions as perm}
+{#if showPermission}
+<Dialog.Root>
+  <Dialog.Trigger  class="{submitButton} w-full flex flex-row gap-2"><SquarePen class="w-4 h-4" /> Customize User Permission</Dialog.Trigger>
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title class="text-center text-2xl">Give New User custom permissions</Dialog.Title>
+      <Dialog.Description>
+<div class="h-[95%] overflow-y-auto">
+        {#each data.allPermissions as perm}
     <label>
       <input 
         type="checkbox" 
@@ -104,15 +106,54 @@ function hasPermission(
 
     checked={hasPermission(+selected, perm.id)}
       />
-      <strong>{perm.name}</strong> — {perm.description}
+       {perm.description}
     </label>
     <br>
   {/each}
+  
+  </div>      </Dialog.Description>
+    </Dialog.Header>
+	 <Dialog.DialogFooter>
+	 <div class="w-full flex flex-row justify-between items-between">
+		<DialogClose class="{submitButton} px-4" onclick={()=> customPerm = false}>Use Default Permissions</DialogClose>
+		<DialogClose >
+		 <button 
+		 class="{submitButton} px-4 flex flex-row gap-2 {customPerm ? '!bg-green-400 !text-white': ''}"
+		  onclick={()=> customPerm = true} >
+			{#if customPerm}
+			<BadgeCheck class="w-6 h-6" />
+			 Permissions Saved
+			{:else}
+			<Save class="w-4 h-4" />
+			 Save Custom Permissions
+			 {/if}
+		 </button>
+		 </DialogClose>
+		 
+	 </div>
+   </Dialog.DialogFooter>
+  </Dialog.Content>
+  
+</Dialog.Root>
+{:else}
+<Popover.Root >
+  <Popover.Trigger class="{submitButton} !bg-gray-400 !text-white cursor-not-allowed opacity-50 w-full flex flex-row gap-2"><SquarePen class="w-4 h-4" />Customize user permission</Popover.Trigger>
+  <Popover.Content class="bg-dark dark:bg-white dark:text-black text-white text-xl">Please Choose a role first to customize permissions.</Popover.Content>
+</Popover.Root>
+{/if}
+				<button type="submit" class="{submitButton} w-full">Create User</button>
+          
+
+			</form>
 
 
-  <button type="submit" class="{submitButton} w-full">Save</button>
-</form>
-  {/if}
+
+			
+
+
+			<!-- Additional Info -->
+			
+		</div>
 	</div>
 </div>
 
