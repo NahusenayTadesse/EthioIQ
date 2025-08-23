@@ -1,13 +1,20 @@
 import { asc, eq } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
+import {  error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import { employees, persons } from '$lib/server/db/schema'
 
-export const load: PageServerLoad = async ({locals}) => {
-       if (!locals.user) {
-        return redirect(302, '/login');
-    }
+export const load: PageServerLoad = async ({ parent }) => {
+  const layoutData = await parent();
+  const permList = layoutData.permList;
+  const perm = 'can_view_employees';
+
+  const hasPerm = permList.some(p => p.name === perm);
+
+     if (!hasPerm) {
+     error(403, 'Not Allowed! You do not have permission to see employees. Talk to an admin to change it.');
+  }
+
 
    
     try {

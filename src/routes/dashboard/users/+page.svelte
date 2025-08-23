@@ -16,7 +16,7 @@
     
    
    {name:'Id', key: 'id'},
-   {name:'Name', key: 'name'},
+   {name:'Name', key: 'userName'},
    {name:'Email', key: 'email'},
    {name:'Role', key: 'role'},
    {name: 'Active', key: 'isActive'}

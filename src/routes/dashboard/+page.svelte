@@ -40,6 +40,11 @@
         </h2>
    {/if}
 </div>
+{data?.permList.length}
+
+{#each data?.permList as perm, index}
+<h6>{index+1}. {perm.name}</h6> 
+{/each}
 
 
 

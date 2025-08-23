@@ -70,6 +70,7 @@ function filter(key: string, value: any): void {
 
 
 
+
 <button onclick={()=> openFilter = !openFilter} aria-label="Advanced Filter" title="Filter Table"><SlidersHorizontal  /> </button><br/>
 
   {#if openFilter}
