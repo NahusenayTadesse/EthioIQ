@@ -3,7 +3,6 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  user, permissions, specialPermissions, rolePermissions, roles, session} from '$lib/server/db/schema'
-import { spec } from 'node:test/reporters';
 
 
 export const load: PageServerLoad = async ({params, locals}) => {

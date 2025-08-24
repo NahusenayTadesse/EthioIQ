@@ -101,15 +101,15 @@ function filterEmployees(persons, query) {
           
       
         {#each Object.entries(person) as [key, value]}
-          {#if key === 'isActive'}
+          {#if key === 'isActive' }
           <td class="px-6 py-4 whitespace-nowrap text-sm  {value ? 'bg-green-400' : 'bg-red-400'} text-white">{value ? 'Active' : 'InActive'}</td>
           {:else if key === 'id'}
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize">{index + 1}</td>
-          {:else if key === 'firstName' || key === 'lastName'}
+          {:else if key === 'firstName' || key === 'lastName' || key === 'userName'}
 
           
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='/dashboard/{link}/{person.id}'>{value}</a></td>
-           {:else if key === 'studentFirstName' || key === 'studentLastName'}
+           {:else if key === 'studentFirstName' || key === 'studentLastName' || key==='userName'}
 
           
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='/dashboard/students/{person.id}'>{value}</a></td>

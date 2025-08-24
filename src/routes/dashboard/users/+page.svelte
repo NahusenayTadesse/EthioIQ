@@ -1,6 +1,5 @@
 <script lang='ts'>
-	import { submitButton } from '$lib/global.svelte';
-  import Table from '$lib/Table.svelte';
+	import ChildrenTable from '$lib/ChildrenTable.svelte';
 	import { RotateCcw } from '@lucide/svelte';
 
 
@@ -86,8 +85,8 @@ function toggleSelection(id) {
 {#key componentKey}
 
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
- <div class= "">
- <Table mainlist = {users} {tableHeaders} {fileName}  />
+ <div class= "flex flex-start flex-col">
+ <ChildrenTable mainlist = {users} {tableHeaders} search=true link="users" />
 </div>
 {/key}
 

@@ -1,15 +1,12 @@
 
 
 import { eq } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { employees, persons } from '$lib/server/db/schema'
+import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/server/db/schema'
 
-export const load: PageServerLoad = async ({locals, params}) => {
-       if (!locals.user) {
-        return redirect(302, '/login');
-    }
+export const load: PageServerLoad = async ({ params}) => {
+  
 
     const {id} =  params;
 
@@ -36,8 +33,22 @@ export const load: PageServerLoad = async ({locals, params}) => {
   .innerJoin(persons, eq(employees.personId, persons.id))
   .where(eq(employees.id, id)).then(rows => rows[0]);
 
+  const bankAccounts = db.select({
+      id: employees.id,
+      name: paymentMethods.name,
+      bankAccount: personPaymentMethods.accountNumber,
+      isDefault: personPaymentMethods.isDefault
+  })
+  .from(personPaymentMethods)
+  .innerJoin(paymentMethods, eq(personPaymentMethods.paymentMethodId, paymentMethods.id))
+  .innerJoin(persons, eq(personPaymentMethods.personId, persons.id))
+  .innerJoin(employees, eq(persons.id, employees.personId))
+  .where(eq(employees.id, id));
+  
+
         return {
-            employee
+            employee,
+            bankAccounts
         };
     } catch (error) {
         console.error('Failed to load employees:', error);

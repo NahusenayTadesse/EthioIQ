@@ -1,5 +1,6 @@
 
 <script lang='ts'>
+	import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
   let { data } = $props();
   let employee = $state(data.employee);
@@ -35,7 +36,14 @@ let singleTable = [
 
     }
   }
-  
+      let bankAccounts =  $state(data.bankAccounts);
+  let bankHeader = $state([
+     { name: 'Id', key: 'id'},
+     { name: 'Payment Method', key: 'name'},
+     { name: 'Account Number', key: 'bankAccount'},
+     { name: 'Default Account', key: 'idDefault'},
+     
+  ])
 
 </script>
 <svelte:head>
@@ -47,13 +55,19 @@ let singleTable = [
 </div> -->
 
 
-<div class="min-h-screen py-10 flex flex-start">
-  <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md min-w-3xl">
+<div class="min-h-screen py-10 flex flex-start flex-col gap-4">
+  <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md min-w-3xl w-md">
     <div class="bg-gradient-to-r from-dark to-black text-white py-6 px-8 rounded-lg">
       <h1 class="text-center">Employee Details</h1>
     </div>
       <SingleTable {singleTable}/>
     </div>
+     <div class="flex flex-col flex-start gap-4">
+      <h1>Bank Accounts</h1>
+
+<ChildrenTable mainlist = {bankAccounts} tableHeaders = {bankHeader} />
+</div>
+
 </div>
     <!-- <div class="py-8 px-6">
       {#await data}

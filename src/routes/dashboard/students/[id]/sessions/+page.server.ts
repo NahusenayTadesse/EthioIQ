@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 
@@ -7,10 +6,8 @@ import {  persons, tutors, students, subjects, tutoringSessions } from '$lib/ser
 
 
 
-export const load: PageServerLoad = async ({params, locals}) => {
-       if (!locals.user) {
-        return redirect(302, '/login');
-    }
+export const load: PageServerLoad = async ({params}) => {
+      
     const {id} =  params; 
 
     try { 

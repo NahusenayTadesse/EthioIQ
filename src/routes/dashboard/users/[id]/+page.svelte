@@ -48,7 +48,10 @@
  <br /> <br />
   
  <div class="flex flex-col flex-start">
-    <ChildrenTable mainlist={permissions} {tableHeaders} />
-    <ChildrenTable mainlist={specialpermissions} {tableHeaders} />
+    {#if specialpermissions.length}
+    <ChildrenTable mainlist={specialpermissions} {tableHeaders} search = true />
+    {:else}
+    <ChildrenTable mainlist={permissions} {tableHeaders} search = true />
+    {/if}
 </div>
 

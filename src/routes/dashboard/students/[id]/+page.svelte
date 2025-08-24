@@ -90,7 +90,7 @@ let tutorHeaders = $state([
    <title> {data.student.firstName} {data.student.lastName}</title>
 </svelte:head>
 
-   <a href="/dashboard/tutors/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
+   <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
 
   
 
