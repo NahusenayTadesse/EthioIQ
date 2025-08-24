@@ -1,13 +1,18 @@
 import { eq, count } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  parents, persons, studentParentRelations } from '$lib/server/db/schema'
 
-export const load: PageServerLoad = async ({locals}) => {
-       if (!locals.user) {
-        return redirect(302, '/login');
-    }
+export const load: PageServerLoad = async ({ parent }) => {
+  const layoutData = await parent();
+  const permList = layoutData.permList;
+  const perm = 'can_view_parents';
+
+  const hasPerm = permList?.some(p => p.name === perm);
+
+     if (!hasPerm) {
+     error(403, 'Not Allowed! You do not have permission to see parents. <br /> Talk to an admin to change it.');
+  }
 
    
     try {

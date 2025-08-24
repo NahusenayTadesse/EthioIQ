@@ -1,17 +1,21 @@
 import { count, eq, sql, and } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 
 import {  persons, tutors,  tutoringSessions, paymentMethods, personPaymentMethods } from '$lib/server/db/schema'
 
 
-export const load: PageServerLoad = async ({ locals }) => {
-   
-    if (!locals.user) {
-        redirect(302, "/login");
-    }
+export const load: PageServerLoad = async ({ parent }) => {
+  const layoutData = await parent();
+  const permList = layoutData.permList;
+  const perm = 'can_view_payments';
 
+  const hasPerm = permList.some(p => p.name === perm);
+
+     if (!hasPerm) {
+     error(403, 'Not Allowed! You do not have permission to see tutor payments. <br /> Talk to an admin to change it.');
+  }
 
     try { 
 

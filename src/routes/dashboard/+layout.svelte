@@ -5,10 +5,17 @@
     import { toggleMode } from "mode-watcher";
     import { LayoutDashboard, IdCardLanyard, GraduationCap, Users, CircleDollarSign, BookOpenText, HeartHandshake, SunIcon, MoonIcon, LogOut } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
-	import { X } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pathname.slice(2));
+let permList: Array<{ name: string }> = $state(data.permList);
+let forEmp = ["can_view_employees"];
+let forPar = ["can_view_parents"];
+let forStu = ["can_view_students"];
+let forPay = ["can_view_payment"];
+let forUser = ["can_view_user"];
+
+
 
 
   const navItems = [
@@ -23,22 +30,44 @@ let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pa
 
 
   let fileteredItems: typeof navItems = $state([]);
+  fileteredItems = navItems;
+  const foundEmp = $state(forEmp.some(item =>
+  permList.some(obj => obj.name === item)));
+  const foundPar = $state(forPar.some(item =>
+  permList.some(obj => obj.name === item)));
+  const foundStu = $state(forStu.some(item =>
+  permList.some(obj => obj.name === item)));
+  const foundPay = $state(forPay.some(item =>
+  permList.some(obj => obj.name === item)));
+  const foundUser = $state(forUser.some(item =>
+  permList.some(obj => obj.name === item)));
+
+fileteredItems = navItems.filter(item => {
+  if (item.name === 'Employees'  && !foundEmp)  return false;
+  if (item.name === 'Parents'    && !foundPar)  return false;
+  if (item.name === 'Students'   && !foundStu)  return false;
+  if (item.name === 'Payments'   && !foundPay)  return false;
+  if (item.name === 'Users'      && !foundUser) return false;
+  return true;
+});
+
+
 
   if(data.roleDetails.roleId === 1) {
      fileteredItems = navItems;   
   }
-  else if(data.roleDetails.roleId === 2){
-    fileteredItems = navItems.filter(item => !['Payments', 'Employees', 'Users'].includes(item.name));
-  }
-  else if(data.roleDetails.roleId === 3){
-        fileteredItems = navItems.filter(item => !['Users', 'Students'].includes(item.name));
-  }
-  else if(data.roleDetails.roleId === 4){
-        fileteredItems = navItems.filter(item => !['Payments'].includes(item.name));
-  }
-  else if(data.roleDetails.roleId === 5){
-        fileteredItems = navItems.filter(item => !['Users'].includes(item.name));
-  }
+  // else if(data.roleDetails.roleId === 2){
+  //   fileteredItems = navItems.filter(item => !['Payments', 'Employees', 'Users'].includes(item.name));
+  // }
+  // else if(data.roleDetails.roleId === 3){
+  //       fileteredItems = navItems.filter(item => !['Users', 'Students'].includes(item.name));
+  // }
+  // else if(data.roleDetails.roleId === 4){
+  //       fileteredItems = navItems.filter(item => !['Payments'].includes(item.name));
+  // }
+  // else if(data.roleDetails.roleId === 5){
+  //       fileteredItems = navItems.filter(item => !['Users'].includes(item.name));
+  // }
   
   let sidebar = $state(true);
   let submitting = $state(false);

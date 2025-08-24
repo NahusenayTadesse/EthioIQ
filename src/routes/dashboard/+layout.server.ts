@@ -2,7 +2,7 @@ import { eq, and, sql } from 'drizzle-orm'
 import { fail, redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import {  user, persons,  rolePermissions, roles, permissions } from '$lib/server/db/schema'
+import {  user, persons,  rolePermissions, specialPermissions, roles, permissions } from '$lib/server/db/schema'
 
 export const load: LayoutServerLoad = async ({ locals }) => {
 	try {
@@ -11,16 +11,29 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 			throw redirect(302, '/login');
 		}
 
-		// permissions
-		const permList = await db
-			.select({
-				name: permissions.name
-			})
-			.from(user)
-			.innerJoin(roles, eq(user.roleId, roles.id))
-			.innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-			.innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-			.where(eq(user.id, locals.user.id));
+
+		const roleList = await db
+  .select({ name: permissions.name })
+  .from(user)
+  .innerJoin(roles, eq(user.roleId, roles.id))
+  .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
+  .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
+  .where(eq(user.id, locals.user.id));
+
+    const specialList = await db
+  .select({ name: permissions.name })
+  .from(specialPermissions)
+  .innerJoin(permissions, eq(specialPermissions.permissionId, permissions.id))
+  .where(eq(specialPermissions.userId, locals.user.id));
+
+// decide which list to use
+let permList: Array<{ name: string }>;
+if (specialList.length) {
+  permList = specialList;
+} else {
+  permList = roleList;
+}
+			  
 
 		// user details
 		const dbUser = await db

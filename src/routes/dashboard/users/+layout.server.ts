@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ parent }) => {
   const hasPerm = permList.some(p => p.name === perm);
 
      if (!hasPerm) {
-     error(403, 'Not Allowed! You do not have permission to see users');
+     error(403, 'Not Allowed! You do not have permission to see users.<br /> Talk to an admin to change it.');
   }
 
    
