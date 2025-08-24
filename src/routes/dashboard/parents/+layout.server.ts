@@ -2,6 +2,7 @@ import { eq, count } from 'drizzle-orm';
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  parents, persons, studentParentRelations } from '$lib/server/db/schema'
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ parent }) => {
   const layoutData = await parent();

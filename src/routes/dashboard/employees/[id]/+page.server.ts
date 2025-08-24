@@ -23,7 +23,8 @@ export const load: PageServerLoad = async ({ params}) => {
      birthday: persons.dateOfBirth,
      address: persons.address,
      position: employees.position,
-     isActive: employees.isActive
+     isActive: employees.isActive,
+     image: persons.image
 
 
     }

@@ -107,6 +107,7 @@ export const userPermissions = pgTable("user_permissions", {
 export const persons = pgTable('persons', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: varchar('user_id').references(() => user.id),
+  image: varchar('image').default('https://avatar.iran.liara.run/public/12'),
   type: varchar('type', { length: 20 }).notNull(), // 'student', 'tutor', 'parent', 'employee'
   firstName: varchar('first_name', { length: 50 }).notNull(),
   lastName: varchar('last_name', { length: 50 }).notNull(),

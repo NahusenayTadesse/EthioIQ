@@ -57,7 +57,8 @@ let singleTable = [
 
 <div class="min-h-screen py-10 flex flex-start flex-col gap-4">
   <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md min-w-3xl w-md">
-    <div class="bg-gradient-to-r from-dark to-black text-white py-6 px-8 rounded-lg">
+    <div class="bg-gradient-to-r from-dark to-black text-white py-6 px-8 rounded-lg flex flex-col justify-center items-center">
+      <img src={data.employee.image} alt="" class="w-[150px]" loading="lazy">
       <h1 class="text-center">Employee Details</h1>
     </div>
       <SingleTable {singleTable}/>

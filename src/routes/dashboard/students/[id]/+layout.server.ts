@@ -27,7 +27,8 @@ export const load: LayoutDataServerLoad = async ({params}) => {
    fee: students.fee,
    specificLocation: students.specificLocation,
    notes: students.notes,
-   isActive: students.isActive
+   isActive: students.isActive,
+   image: persons.image
  })
  .from(students)
  .innerJoin(persons, eq(students.personId, persons.id))

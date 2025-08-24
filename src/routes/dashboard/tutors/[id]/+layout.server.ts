@@ -33,7 +33,8 @@ export const load: PageServerLoad = async ({params, locals}) => {
     gradePreference: tutors.gradePreference,
     hireDate: tutors.hireDate,
     notes: tutors.notes,
-    isActive: tutors.isActive
+    isActive: tutors.isActive,
+    image: persons.image
  })
  .from(tutors)
  .innerJoin(persons, eq(tutors.personId, persons.id))
