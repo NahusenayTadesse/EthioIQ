@@ -7,6 +7,7 @@
     import JSPDF from '$lib/JSPDF.svelte';
     import Papa from 'papaparse';
     import Copy from "$lib/Copy.svelte";
+	import { ScrollArea } from "./components/ui/scroll-area";
 
     let table = $state();
    
@@ -175,6 +176,9 @@ Number of Filtered Data: {mainlist.length} <br>
         
       {:then list} 
 
+      <ScrollArea class="h-full w-[90%] rounded-md border p-4" orientation='both'>
+
+
 <table id='table' class="divide-y divide-gray-200 dark:divide-gray-200" bind:this={table}>
     <thead class="bg-gray-100 dark:bg-black">
       <tr>
@@ -243,9 +247,11 @@ Number of Filtered Data: {mainlist.length} <br>
           {:else if key === 'firstName' || key === 'lastName' || key==='userName'}
 
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='{page.url.pathname}/{person.id}'>{value}</a></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize hover:scale-110 transition-discrete duration-300 ease-in-out"><a href='{page.url.pathname}/{person.id}'>{value}</a></td>
 
-          {:else if key === 'phone' || key === 'bankAccount' || key === 'parentPhone' || key === 'studentPhone'} 
+          
+
+          {:else if key === 'phone' || key === 'bankAccount' || key === 'parentPhone' || key === 'studentPhone' || key==='email'} 
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"> <Copy  data = {value} /></td>
 
            
@@ -264,6 +270,7 @@ Number of Filtered Data: {mainlist.length} <br>
   
     </tbody>
   </table>
+  </ScrollArea>
 
    {:catch error}
   <div>

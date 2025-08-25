@@ -1,4 +1,6 @@
 <script>
+    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+
 	import { enhance } from "$app/forms";
     import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import { input, label, submitButton } from "$lib/global.svelte.js";
@@ -33,7 +35,10 @@
                 <div class="">
 
         <label for="permission" class={label}>Add Permisssions</label>
-        <div class="grid grid-cols-2 gap-2">
+        <!-- <div class="grid grid-cols-2 gap-2"> -->
+     <ScrollArea class="h-[300px] w-full rounded-md border p-4"> 
+      <div class="flex flex-col">
+
         {#each data?.allPermissions as perm}
     <label>
       <input 
@@ -47,6 +52,8 @@
     
   {/each}
   </div>
+     </ScrollArea>
+  <!-- </div> -->
   </div>
 
                 <button type="submit" class="{submitButton} w-full">Create Role</button>

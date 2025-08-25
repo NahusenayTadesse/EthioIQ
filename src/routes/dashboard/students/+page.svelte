@@ -5,6 +5,7 @@
 	import { fly } from 'svelte/transition';
 
 
+
    let { data } = $props();
 
    let students = $state(data.allStudents);
@@ -36,7 +37,7 @@
 
   let openFilter = $state(false)
 
-  let fileName = 'Ethio IQ Parents List';
+  let fileName = 'Ethio IQ Students List';
 
 
    
@@ -126,8 +127,9 @@ function filter(key: string, value: any): void {
 {#key componentKey}
 
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
- <div class= "w-3/4 overflow-auto p-2">
- <Table mainlist = {students} {tableHeaders}  />
+ <div class= "w-[90%] pr-4">
+
+ <Table mainlist = {students} {tableHeaders} {fileName} />
 </div>
 {/key}
 

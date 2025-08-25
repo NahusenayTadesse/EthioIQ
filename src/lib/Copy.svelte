@@ -1,23 +1,38 @@
 <script lang='ts'>
-
+  import { Copy, CopyCheck } from '@lucide/svelte'
 
     let message = $state('');
-    async function copyPhoneNumber(copied: string) {
-    try {
-      await navigator.clipboard.writeText(copied);
-      message = 'Copied!';
-      setTimeout(() => (message = ''), 2000);
+    let copied = $state(false)
+    
+        let  Menuicon = $derived (copied ? CopyCheck : Copy);
 
-    } catch (err) {
-      message = 'Failed to copy!';
-      console.error(err);
-      setTimeout(() => (message = ''), 2000);
+    async function copyPhoneNumber(copiedText: string) {
+  try {
+    await navigator.clipboard.writeText(copiedText);
+    message = 'Copied!';
+    copied = true;
 
-    }
+    setTimeout(() => {
+      message = '';
+      copied = false;
+    }, 2000);
+
+  } catch (err) {
+    message = 'Failed to copy!';
+    copied = false;
+    console.error(err);
+
+    setTimeout(() => {
+      message = '';
+      copied = false;
+    }, 2000);
   }
+}
+
 
     let { data } = $props();
 </script> 
 
-  <button onclick = {()=> copyPhoneNumber(data)} title= 'Copy {data}'> {data} <span class="text-blue-500 dark:text-blue-400">{message}</span> </button> 
+  <button onclick = {()=> copyPhoneNumber(data)} title= 'Copy {data}'> {data} <span class="relative p-4">
+    <Menuicon class ="w-4 h-4  absolute right-0 top-2  text-black dark:text-white" /> </span> </button> 
  

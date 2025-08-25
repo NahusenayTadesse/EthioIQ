@@ -78,9 +78,6 @@ function toggleSelection(id) {
    <title> Users </title>
  </svelte:head>
 
-
-
-
 <br />
 {#key componentKey}
 

@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ parent }) => {
    try {
  const pendingPayments = await db
   .select({
-    employeeId: employees.id,
+    id: employees.id,
     firstName: persons.firstName,
     lastName: persons.lastName,
     phone: persons.phone,
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     personPaymentMethods,
     and(
       eq(personPaymentMethods.personId, persons.id),
-      eq(personPaymentMethods.paymentMethodId, employeePayments.paymentMethodId)
+    eq(personPaymentMethods.isDefault, true)
     )
   )
   .leftJoin(paymentMethods, eq(personPaymentMethods.paymentMethodId, paymentMethods.id))

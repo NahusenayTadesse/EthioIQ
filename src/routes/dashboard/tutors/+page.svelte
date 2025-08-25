@@ -136,7 +136,7 @@ function filter(key: string, value: any): void {
 {#key componentKey}
 
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
- <div class= "w-[1150px]  overflow-auto  p-2">
+ <div class= "w-[85%] pr-4">
  <Table mainlist = {tutors} {tableHeaders} {fileName}  />
 </div>
 {/key}

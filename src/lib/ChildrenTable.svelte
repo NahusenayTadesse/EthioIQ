@@ -108,24 +108,24 @@ function filterEmployees(persons, query) {
           {:else if key === 'firstName' || key === 'lastName' || key === 'userName'}
 
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='/dashboard/{link}/{person.id}'>{value}</a></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize hover:scale-110 transition-discrete duration-300 ease-in-out" ><a href='/dashboard/{link}/{person.id}'>{value}</a></td>
            {:else if key === 'studentFirstName' || key === 'studentLastName' || key==='userName'}
 
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize"><a href='/dashboard/students/{person.id}'>{value}</a></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize" ><a href='/dashboard/students/{person.id}'>{value}</a></td>
            
 
-          {:else if key === 'phone' || key === 'parentPhone' || key === 'studentPhone'}
+          {:else if key === 'phone' || key === 'parentPhone' || key === 'studentPhone' || key === 'bankAccount' || key ==='email'}
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize">
                <Copy data={value} />
             </td>
-          {:else if key === 'bankAccount'}
+          <!-- {:else if key === 'bankAccount'}
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize">
                <Copy data={value} />
-            </td>
+            </td> -->
           {:else }
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize">{value}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize" >{value}</td>
                 
          {/if}
           
