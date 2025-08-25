@@ -176,7 +176,7 @@ Number of Filtered Data: {mainlist.length} <br>
         
       {:then list} 
 
-      <ScrollArea class="h-full w-[90%] rounded-md border p-4" orientation='both'>
+      <ScrollArea class="h-full lg:w-[90%] w-[100%] rounded-md border p-4" orientation='both'>
 
 
 <table id='table' class="divide-y divide-gray-200 dark:divide-gray-200" bind:this={table}>

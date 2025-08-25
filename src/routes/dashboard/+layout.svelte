@@ -98,7 +98,7 @@ onMount(() => {
   <!-- Sidebar -->
   <aside class="{sidebar ? 'w-[250px]': 'w-[70px]'} 
   {sidebar ? 'min-w-[250px]': 'min-w-[70px]'} 
-  h-[100vh] inset-y-0 fixed 
+  h-[100vh] inset-y-0 fixed hidden lg:block
   top-0 bottom-0 shadow-md p-2 
   dark:shadow-gray-300/70 bg-gradient-to-bl
    from-white to-mentalBlue/80 dark:bg-gradient-to-r dark:from-dark dark:to-dark
@@ -141,20 +141,14 @@ onMount(() => {
   <div class="flex-1 flex flex-col p-4">
     <!-- Header -->
     <header class="{sidebar ? 'ml-[250px] w-[1250px]' : 'ml-[80px] w-[1425px]'} 
-    shadow-md p-4 flex flex-row items-center justify-between dark:shadow-gray-300/70 rounded-lg 
-    transition-all duration-300 ease-in-out">
+    shadow-md p-4 flex-row items-center justify-between dark:shadow-gray-300/70 rounded-lg 
+    transition-all duration-300 ease-in-out hidden lg:flex">
       <h1 class="text-xl font-semibold">
         {(navItems.find(item => item.href === page.url.pathname)?.name) || ''}
       </h1> 
-
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
     {#if data.birthdayPerson && showbanner}
-
-    
-  
-    
-     
    {#each data.birthdayPerson as birthdayPerson}
      {#if birthdayPerson.type === 'employee'} 
     
@@ -168,9 +162,6 @@ onMount(() => {
 {/if}
 {/each}
 {/if}
-
- 
-
   </div>
   
    <Settings />
@@ -180,7 +171,7 @@ onMount(() => {
 
     </header>
 
-<main class="flex flex-col p-2 flex-1 w-full {sidebar ? 'ml-[250px]' : 'ml-[80px]'} pb-16 transition-all duration-300 ease-in-out">
+<main class="flex flex-col p-2 flex-1 w-screen {sidebar ? 'lg:ml-[250px]' : 'lg:ml-[80px]'} pb-16 transition-all duration-300 ease-in-out">
             {@render children()}
     </main>
   </div>
