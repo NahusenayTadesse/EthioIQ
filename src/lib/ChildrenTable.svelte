@@ -2,6 +2,7 @@
   import { LoaderCircle, OctagonMinus } from "@lucide/svelte";
 	import Copy from "./Copy.svelte";
 	import { select, searchableFields } from "./global.svelte";
+	import { ScrollArea } from "./components/ui/scroll-area";
   
 
      let { mainlist,  tableHeaders = [{name:'Id', key: 'id'}, 
@@ -54,6 +55,8 @@ function filterEmployees(persons, query) {
   {@const mainlist = Array.isArray(rawList)
         ? rawList.filter(Boolean)      // drop null / undefined rows
         : []}
+        <ScrollArea class="h-full w-full rounded-md border p-4" orientation='both'>
+
  <table id='table' class="w-1/2 divide-y divide-gray-200 dark:divide-gray-200 justify-self-center"  bind:this = {table}>
     <thead class="bg-gray-100 dark:bg-black">
       <tr>
@@ -136,6 +139,7 @@ function filterEmployees(persons, query) {
       {/if}
     </tbody>
   </table>
+        </ScrollArea>
 
    {:catch error}
   <div>

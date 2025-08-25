@@ -27,7 +27,7 @@
     {#if tutorSessions.length ===  0}
         <p class="text-gray-500 dark:text-gray-100">No sessions found for this tutor.</p>
     {:else}
-       <div class="overflow-x-auto flex flex-start flex-col">
+       <div class="w-[90%] flex flex-start flex-col">
            <ChildrenTable mainlist={tutorSessions} {tableHeaders} link='students' search=true />
        </div>
     {/if}
