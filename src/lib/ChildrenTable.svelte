@@ -56,7 +56,7 @@ function filterEmployees(persons, query) {
   {@const mainlist = Array.isArray(rawList)
         ? rawList.filter(Boolean)      // drop null / undefined rows
         : []}
-        <ScrollArea class="h-full w-full rounded-md border" orientation='both'>
+        <ScrollArea class="w-full rounded-md border" orientation='horizontal'>
 
  <table id='table' class="w-1/2 divide-y divide-gray-200 dark:divide-gray-200"  bind:this = {table}>
     <thead class="bg-gray-100 dark:bg-black">

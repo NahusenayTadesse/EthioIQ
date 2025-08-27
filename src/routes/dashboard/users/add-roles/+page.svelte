@@ -14,8 +14,11 @@
          {name: 'Description', key: 'description'}
     ]
 
+    let grid = "grid lg:grid-cols-2 grid-cols-1 gap";
+
+
 </script>
- <div class="grid lg:grid-cols-2 grid-cols-1 gap">
+ <div class={grid}>
   <div class="w-[90%]">
 
   
@@ -24,7 +27,7 @@
    <ChildrenTable mainlist={data.allRoles} {tableHeaders} />
    </div>
 
-   <form method="POST"  class="space-y-4 w-lg p-2 shadow-lgm-4 rounded-lg" use:enhance>
+   <form method="POST" action = "?/addRole" class="space-y-4 w-xl p-4 shadow-lgm-4 rounded-lg bg-white dark:bg-black" use:enhance>
 				<div class="mb-6">
 				<h1 class="text-center">Create a Role</h1>
 				<h1 class="text-center">{form?.message}</h1>
@@ -63,4 +66,80 @@
 
                 <button type="submit" class="{submitButton} w-full">Create Role</button>
         </form>
+</div>
+
+<br /><br />
+
+<div class={grid}>
+
+  <div class="w-[90%] flex flex-col gap-4">
+
+  
+  <h1>Existing Subjects</h1>
+   <ScrollArea class="w-full h-[350px] rounded-md border" orientation='vertical'>
+
+   <ChildrenTable mainlist={data.allSubjects} {tableHeaders} />
+
+    </ScrollArea>
+   </div>
+
+ <div class="w-xl flex flex-col justify-center items-center gap-4">
+
+   <form method="POST" action = "?/addSubject" 
+   class="space-y-4 w-full p-4 py-8 shadow-lgm-4 rounded-lg bg-white dark:bg-black flex flex-col justify-center items-center" use:enhance>
+            <h1 class="">Create a Subject</h1>
+    
+    <div class="mb-6">
+        <h1 class="text-center">{form?.message}</h1>
+      </div>
+        <div class="w-full">
+          <label for="name" class={label}>Subject Name</label>
+          <input  name="name" type="text"  placeholder="Enter Subject name" required class={input} />
+        </div>
+                <div class="w-full">
+          <label for="description" class={label}>Subject Description</label>
+          <textarea  name="description"  placeholder="Enter Subject description" required class="{input} w-full" > </textarea>
+        </div>
+                
+
+                <button type="submit" class="{submitButton} w-full">Create Subject</button>
+        </form>
+        </div>
+
+</div>
+
+<br /><br />
+
+<div class={grid}>
+   
+   <div class="w-[90%] flex flex-col gap-4">
+  <h1>Existing Locations</h1> 
+    <ScrollArea class="w-full h-[350px] rounded-md border" orientation='vertical'>
+  
+    <ChildrenTable mainlist={data.allLocations} {tableHeaders} />
+  
+      </ScrollArea>
+    </div>
+
+  <div class="w-xl flex flex-col justify-center items-center gap-4 mt-4">
+    <form method="POST" action = "?/addLocation" 
+    class="space-y-4 w-full p-4 py-8 shadow-lgm-4 rounded-lg bg-white dark:bg-black flex flex-col justify-center items-center" use:enhance>
+             <h1 class="">Create a Location</h1>
+     
+     <div class="mb-6">
+         <h1 class="text-center">{form?.message}</h1>
+       </div>
+         <div class="w-full">
+           <label for="name" class={label}>Location Name</label>
+           <input  name="name" type="text"  placeholder="Enter Location name" required class={input} />
+         </div>
+                 <div class="w-full">
+           <label for="description" class={label}>Location Description</label>
+           <textarea  name="description"  placeholder="Enter Location description" required class="{input} w-full" > </textarea>
+         </div>
+                 
+ 
+                 <button type="submit" class="{submitButton} w-full">Create Location</button>
+         </form>
+         </div>
 </div>

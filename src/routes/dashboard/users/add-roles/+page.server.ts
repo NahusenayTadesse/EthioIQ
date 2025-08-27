@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 // import { eq } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
-import { roles, rolePermissions, permissions} from '$lib/server/db/schema';
+import { roles, rolePermissions, permissions, locations, subjects} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 
@@ -21,6 +21,19 @@ export const load: PageServerLoad = async ({locals}) => {
     }).from(roles).orderBy(roles.id);
 
 
+      const allSubjects = await db.select( {
+         id: subjects.id,
+         name: subjects.name,
+         description: subjects.description 
+    }).from(subjects).orderBy(subjects.id);
+
+   const allLocations = await db.select( {
+         id:locations.id,
+         name: locations.name,
+         description: locations.branches 
+    }).from(locations).orderBy(locations.id);
+
+
     const allPermissions = await db
       .select({
         id: permissions.id,
@@ -30,18 +43,22 @@ export const load: PageServerLoad = async ({locals}) => {
       .from(permissions)
       .orderBy(permissions.id);
 
+
+
     return {
       allPermissions,
-      allRoles
+      allRoles,
+      allSubjects,
+      allLocations
     };
   } catch (error) {
     console.error('Database error:', error);
-    return fail(500, { message: 'Failed to fetch permissions' });
+    return fail(500, { message: 'Failed to fetch data from the database.' });
   }
 }
 
 export const actions: Actions = {
-  default: async ({ request }) => {
+  addRole: async ({ request }) => {
     try {
       const formData = await request.formData();
 
@@ -97,4 +114,44 @@ export const actions: Actions = {
       };
     }
   },
+
+  addSubject: async ({ request }) => {
+    try {
+      const formData = await request.formData();
+
+      const name = formData.get("name") as string;
+      const description = formData.get("description") as string;
+
+          if (!name || !description) {
+        return fail(400, {
+          success: false,
+          message: "Name and description are required.",
+          values: { name, description}
+        });
+      }
+
+
+   await db
+        .insert(subjects)
+        .values({ name, description });
+
+
+      // ✅ Return success message
+      return {
+        success: true,
+        message: "Subject created successfully!",
+      };
+    } catch (error) {
+      console.error("Error creating role:", error);
+
+      // ❌ Return error message
+      return {
+        success: false,
+        message: "Failed to create subject. Please try again.",
+        error: String(error),
+      };
+    }
+  
+  
+  }
 };
