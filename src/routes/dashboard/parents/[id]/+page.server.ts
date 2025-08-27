@@ -1,7 +1,7 @@
 
 
 import { eq } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  persons, parents, studentParentRelations, students } from '$lib/server/db/schema'
@@ -26,10 +26,15 @@ export const load: PageServerLoad = async ({ locals, params}) => {
      birthday: persons.dateOfBirth,
      address: persons.address,
      isActive: parents.isActive
+     
     })
   .from(parents)
   .innerJoin(persons, eq(parents.personId, persons.id))
   .where(eq(parents.id, id)).then(rows => rows[0]); 
+
+  if (!parent) {
+			throw error(404, 'Parent not found');
+		}
 
   const children = await db.select({
       id: students.id,

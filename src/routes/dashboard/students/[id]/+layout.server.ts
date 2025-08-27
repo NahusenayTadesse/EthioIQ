@@ -4,6 +4,7 @@ import { eq, sql } from 'drizzle-orm';
 import type { LayoutDataServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  persons, parents, studentParentRelations, tutors, students, subjects, locations, schools, tutorStudentMatches, subjectStudents, assessmentResults } from '$lib/server/db/schema'
+import { error } from '@sveltejs/kit';
 
 
 export const load: LayoutDataServerLoad = async ({params}) => {
@@ -36,6 +37,10 @@ export const load: LayoutDataServerLoad = async ({params}) => {
  .innerJoin(locations, eq(students.location, locations.id))
  .orderBy(students.id)
 .where(eq(students.id, id)).then(rows => rows[0]); 
+
+if (!student) {
+			error(404, 'Student not found');
+		}
 
   const parent = await db.select({
       id: parents.id,

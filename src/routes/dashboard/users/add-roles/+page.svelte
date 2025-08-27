@@ -5,7 +5,7 @@
     import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import { input, label, submitButton } from "$lib/global.svelte.js";
     let {data, form} = $props();
-    let roles = $state(data.allRoles);
+
 
 
     let tableHeaders = [
@@ -15,13 +15,18 @@
     ]
 
 </script>
+ <div class="grid lg:grid-cols-2 grid-cols-1 gap">
+  <div class="w-[90%]">
 
+  
   <h1>Existing Roles</h1>
-   <ChildrenTable mainlist={data.allRoles} {tableHeaders} />
 
-   <form method="POST"  class="space-y-4 w-2xl p-4 shadow-lg bg-white m-4 rounded-lg" use:enhance>
+   <ChildrenTable mainlist={data.allRoles} {tableHeaders} />
+   </div>
+
+   <form method="POST"  class="space-y-4 w-lg p-2 shadow-lgm-4 rounded-lg" use:enhance>
 				<div class="mb-6">
-				<h1 class="text-center">Create Role</h1>
+				<h1 class="text-center">Create a Role</h1>
 				<h1 class="text-center">{form?.message}</h1>
 			</div>
 				<div>
@@ -58,4 +63,4 @@
 
                 <button type="submit" class="{submitButton} w-full">Create Role</button>
         </form>
-
+</div>

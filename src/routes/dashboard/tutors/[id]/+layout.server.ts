@@ -42,6 +42,10 @@ export const load: PageServerLoad = async ({params, locals}) => {
  .orderBy(tutors.id)
  .where(eq(tutors.id, id)).then(rows => rows[0]); 
 
+ if (!tutor) {
+            throw error(404, 'Tutor not found');
+        }
+
  const subjectforTutor = await db.select(
     {
         id: subjectTutors.id,

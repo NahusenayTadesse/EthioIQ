@@ -3,6 +3,7 @@
 	import Copy from "./Copy.svelte";
 	import { select, searchableFields } from "./global.svelte";
 	import { ScrollArea } from "./components/ui/scroll-area";
+	import Skeleton from "./Skeleton.svelte";
   
 
      let { mainlist,  tableHeaders = [{name:'Id', key: 'id'}, 
@@ -49,15 +50,15 @@ function filterEmployees(persons, query) {
 {/if}
 
   {#await mainlist}
-           <h1 class="flex flex-row m-2">     Loading Data <LoaderCircle class="animate-spin" /></h1>
+    <Skeleton {tableHeaders} />
 {:then rawList}
   <!-- normalise to a clean array -->
   {@const mainlist = Array.isArray(rawList)
         ? rawList.filter(Boolean)      // drop null / undefined rows
         : []}
-        <ScrollArea class="h-full w-full rounded-md border p-4" orientation='both'>
+        <ScrollArea class="h-full w-full rounded-md border" orientation='both'>
 
- <table id='table' class="w-1/2 divide-y divide-gray-200 dark:divide-gray-200 justify-self-center"  bind:this = {table}>
+ <table id='table' class="w-1/2 divide-y divide-gray-200 dark:divide-gray-200"  bind:this = {table}>
     <thead class="bg-gray-100 dark:bg-black">
       <tr>
         {#each tableHeaders as head, index }
@@ -111,11 +112,14 @@ function filterEmployees(persons, query) {
           {:else if key === 'firstName' || key === 'lastName' || key === 'userName'}
 
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize hover:scale-110 transition-discrete duration-300 ease-in-out" ><a href='/dashboard/{link}/{person.id}'>{value}</a></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize 
+          hover:scale-110 transition-discrete duration-300 ease-in-out" >
+          <a href='/dashboard/{link}/{person.id}'>{value}</a></td>
            {:else if key === 'studentFirstName' || key === 'studentLastName' || key==='userName'}
 
           
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize" ><a href='/dashboard/students/{person.id}'>{value}</a></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 capitalize
+          hover:scale-110 transition-discrete duration-300 ease-in-out" ><a href='/dashboard/students/{person.id}'>{value}</a></td>
            
 
           {:else if key === 'phone' || key === 'parentPhone' || key === 'studentPhone' || key === 'bankAccount' || key ==='email'}

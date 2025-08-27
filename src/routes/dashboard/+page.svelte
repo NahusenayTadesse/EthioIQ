@@ -5,12 +5,12 @@
 
   <script >
 	import Copy from '$lib/Copy.svelte';
-
   let { data } = $props();
 </script>
 <svelte:head>
    <title> Dashboard </title>
  </svelte:head>
+
  <h3>Welcome {data.role.name} </h3>
 
 <div class="p-4 w-[550px] rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">

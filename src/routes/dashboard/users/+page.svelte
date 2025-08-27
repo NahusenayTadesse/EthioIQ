@@ -82,7 +82,7 @@ function toggleSelection(id) {
 {#key componentKey}
 
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
- <div class= "flex flex-start flex-col">
+ <div class= "flex flex-start flex-col justify-start items-start">
  <ChildrenTable mainlist = {users} {tableHeaders} search=true link="users" />
 </div>
 {/key}

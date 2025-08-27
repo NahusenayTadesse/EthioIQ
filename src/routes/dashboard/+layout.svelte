@@ -138,14 +138,15 @@ onMount(() => {
   </aside>
 
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col p-4">
+  <div class="flex-1 flex flex-col p-2">md
     <!-- Header -->
-    <header class="{sidebar ? 'ml-[250px] w-[1250px]' : 'ml-[80px] w-[1425px]'} 
-    shadow-md p-4 flex-row items-center justify-between dark:shadow-gray-300/70 rounded-lg 
+    <header class="{sidebar ? 'ml-[250px] w-[1200px]' : 'ml-[80px] w-[1420px]'} mr-8
+    shadow-md py-2 p-4 flex-row items-center justify-end dark:shadow-gray-300/70 rounded-lg 
     transition-all duration-300 ease-in-out hidden lg:flex">
-      <h1 class="text-xl font-semibold">
+      <!-- <h1 class="text-md font-semibold">
         {(navItems.find(item => item.href === page.url.pathname)?.name) || ''}
-      </h1> 
+        {page.url.pathname}
+      </h1>  -->
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
   <div class="text-center mt-4 text-lg font-semibold text-gray-800">
     {#if data.birthdayPerson && showbanner}

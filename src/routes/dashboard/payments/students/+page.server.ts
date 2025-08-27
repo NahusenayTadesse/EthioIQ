@@ -2,7 +2,7 @@ import { count, eq, sql, and } from 'drizzle-orm';
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { alias } from 'drizzle-orm/pg-core'; // 👈 alias helper
+import { alias } from 'drizzle-orm/pg-core'; 
 
 
 import {  persons,  students,  tutoringSessions,  studentParentRelations, parents } from '$lib/server/db/schema'
@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 // import your tables from schema:
 
-const parentPersons = alias(persons, 'parentPersons'); // 👈 make an alias of persons
+const parentPersons = alias(persons, 'parentPersons'); // make an alias of persons
 
 const studentsFees = await db.select({
   id: students.id,

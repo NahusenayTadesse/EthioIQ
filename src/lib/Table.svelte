@@ -8,6 +8,7 @@
     import Papa from 'papaparse';
     import Copy from "$lib/Copy.svelte";
 	import { ScrollArea } from "./components/ui/scroll-area";
+	import Skeleton from "./Skeleton.svelte";
 
     let table = $state();
    
@@ -171,13 +172,10 @@ Number of Filtered Data: {mainlist.length} <br>
  <div 
  class="rounded-lg shadow-lg border border-gray-200 dark:border-gray-200/20">      
        {#await mainlist}
-           <h1 class="flex flex-row m-2">     Loading Data <LoaderCircle class="animate-spin" /></h1>
-
-        
+        <Skeleton {tableHeaders} />
       {:then list} 
 
       <ScrollArea class="h-full lg:w-[90%] w-[100%] rounded-md border p-4" orientation='both'>
-
 
 <table id='table' class="divide-y divide-gray-200 dark:divide-gray-200" bind:this={table}>
     <thead class="bg-gray-100 dark:bg-black">

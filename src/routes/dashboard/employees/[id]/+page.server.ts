@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/server/db/schema'
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params}) => {
   
@@ -34,6 +35,10 @@ export const load: PageServerLoad = async ({ params}) => {
   .innerJoin(persons, eq(employees.personId, persons.id))
   .where(eq(employees.id, id)).then(rows => rows[0]);
 
+
+  if (!employee) {
+			throw error(404, 'User not found');
+		}
   const bankAccounts = db.select({
       id: employees.id,
       name: paymentMethods.name,

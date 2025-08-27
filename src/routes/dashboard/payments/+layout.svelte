@@ -12,7 +12,7 @@
         <a href="/dashboard/payments/students" class="{page.url.pathname === '/dashboard/payments/students' ? submitButton: menubtn} px-4">Students</a>
         {#if forEmp.some(item =>
   data.permList.some(obj => obj.name === item))}
-                   <a href="/dashboard/payments/employees" class="{page.url.pathname === '/dashboard/payments/employees' ? submitButton: menubtn}{submitButton} px-4">Employees</a>
+                   <a href="/dashboard/payments/employees" class="{page.url.pathname === '/dashboard/payments/employees' ? submitButton: menubtn} px-4">Employees</a>
 
             
         {/if}
