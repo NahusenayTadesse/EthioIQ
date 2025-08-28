@@ -1,11 +1,13 @@
-<script>
+<script lang="ts">
 	import { enhance } from "$app/forms";
     import { input, label, submitButton} from '$lib/global.svelte.js';
     import * as Select from "$lib/components/ui/select/index.js";
+
+ 
+  let value = $state<string | undefined>();
  
 
     let {form} = $props();
-    let value = $state("");
  
 </script>
 {#snippet fe(labeler, name, type)}
@@ -26,7 +28,7 @@
 
     <label for="gender" class={label}>Gender:</label>
     <Select.Root type="single" name="gender" required bind:value>
-        <Select.Trigger class="w-full">
+        <Select.Trigger class="w-full {input}">
             {value ? (value === 'male' ? 'Male' : 'Female') : 'Select Gender'}
         </Select.Trigger>
         <Select.Content>
@@ -39,6 +41,7 @@
     {@render fe("Address", "address", "text")}
     {@render fe("Phone", "phone", "tel")}
     {@render fe("Date of Birth", "dateOfBirth", "date")}
+
     {@render fe("Position", "position", "text")}
     {@render fe("Salary", "salary", "number")}
     {@render fe("Hire Date", "hireDate", "date")}
