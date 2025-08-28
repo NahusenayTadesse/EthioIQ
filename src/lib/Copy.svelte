@@ -35,4 +35,4 @@
 
   <button onclick = {()=> copyPhoneNumber(data)} title= 'Copy {data}' onmouseenter={() => visible=true} onmouseleave={() => visible = false}> {data} <span class="relative p-4">
     {#if visible}
-    <Copyicon class ="w-4 h-4  absolute right-0 top-2  text-black dark:text-white" /> {/if} </span> </button>
+    <Copyicon class ="w-4 h-4 absolute right-0 top-2  text-black dark:text-white" /> {/if} </span> </button>
