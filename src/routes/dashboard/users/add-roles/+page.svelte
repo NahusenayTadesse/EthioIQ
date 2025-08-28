@@ -109,7 +109,7 @@
 </div>
 
 <br /><br />
-
+<!-- 
 <div class={grid}>
    
    <div class="w-[90%] flex flex-col gap-4">
@@ -142,4 +142,4 @@
                  <button type="submit" class="{submitButton} w-full">Create Location</button>
          </form>
          </div>
-</div>
+</div> -->
