@@ -1,19 +1,28 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
     import { input, label, submitButton} from '$lib/global.svelte.js';
     import * as Select from "$lib/components/ui/select/index.js";
 
  
   let value = $state<string | undefined>();
  
+	import { superForm } from 'sveltekit-superforms';
 
-    let {form} = $props();
- 
+	let { data } = $props();
+
+	const { form, errors, enhance, constraints, message } = superForm(data.form);
+
 </script>
+{#if $message}<h3>{$message}</h3>{/if}
+
 {#snippet fe(labeler, name, type)}
  <div class="flex justify-start flex-col w-full">
  <label for={name} class={label}>{labeler}</label>
- <input type={type} name={name} class={input} required />
+ <input type={type} name={name} class={input} required bind:value={$form[name]}     aria-invalid={$errors[name] ? 'true' : undefined}
+  
+ {...$constraints[name]}
+ />
+    {#if $errors[name]}<span class="invalid">{$errors[name]}</span>{/if}
+
  </div>
 {/snippet}
 

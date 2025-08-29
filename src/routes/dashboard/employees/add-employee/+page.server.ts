@@ -1,9 +1,12 @@
-import { asc, eq } from 'drizzle-orm';
-import {  error } from "@sveltejs/kit";
+import {  fail, error } from "@sveltejs/kit";
+import { message } from 'sveltekit-superforms';
+
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import { employees, persons } from '$lib/server/db/schema'
-import { form } from '$app/server';
+import { superValidate } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { schema } from "$lib/server/zodschema";
 
 export const load: PageServerLoad = async ({ parent }) => {
   const layoutData = await parent();
@@ -15,10 +18,19 @@ export const load: PageServerLoad = async ({ parent }) => {
      if (!hasPerm) {
      error(403, 'Not Allowed! You do not have permission to create new employees. <br /> Talk to an admin to change it.');
   }
+  const form = await superValidate(zod4(schema));
+
+  // Always return { form } in load functions
+  return { form };
 }
 export const actions = {
   createEmployee: async ({request}) => {
     const formData = await request.formData();
+    const form = await superValidate(formData, zod4(schema));
+
+    if (!form.valid) return fail(400, { form });
+
+
 
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
@@ -36,19 +48,9 @@ export const actions = {
     
 
 
-    if (
-        !firstName ||
-        !lastName ||
-        !grandFatherName ||
-        !email ||
-        !gender ||
-        !address ||
-        !phone ||
-        !dateOfBirth ||
-        !position ||
-        !hireDate
-    ) {
-        return { status: 400, body: { error: 'All fields are required.' } };
+     if (!form.valid) {
+      // Return { form } and things will just work.
+      return fail(400, { form });
     }
 
     
@@ -67,10 +69,8 @@ export const actions = {
 
      await db.insert(employees).values({ personId: employee.id, position, salary: Number(salary), hireDate, notes });
 
-    if (error) {
-      return { status: 500, body: { error: 'Failed to create employee' } };
-    }
-
-    return { status: 201, body: { success: true } };
+    return message(form, 'Form posted successfully!');
   }
+
+  
 };
