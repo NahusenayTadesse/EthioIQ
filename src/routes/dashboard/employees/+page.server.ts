@@ -1,5 +1,6 @@
 import {  fail, error } from "@sveltejs/kit";
 import { message } from 'sveltekit-superforms';
+import {  desc, eq } from 'drizzle-orm';
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
@@ -7,24 +8,64 @@ import { employees, persons } from '$lib/server/db/schema'
 import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { schema } from "$lib/server/zodschema";
+import type {  Actions } from "../$types";
+
+let sharedList: Array<{ name: string }>; 
 
 export const load: PageServerLoad = async ({ parent }) => {
-  const layoutData = await parent();
-  const permList = layoutData.permList;
-  const perm = 'can_create_employees';
+   const layoutData = await parent();
+  const permList: Array<{ name: string }> = layoutData.permList;
+  sharedList = permList;
+  const perm = 'can_view_employees';
 
   const hasPerm = permList.some(p => p.name === perm);
 
      if (!hasPerm) {
-     error(403, 'Not Allowed! You do not have permission to create new employees. <br /> Talk to an admin to change it.');
+     error(403, 'Not Allowed! You do not have permission to see employees. <br /> Talk to an admin to change it.');
   }
   const form = await superValidate(zod4(schema));
 
-  // Always return { form } in load functions
-  return { form };
-}
-export const actions = {
+ try {
+        const employeeList = await db
+  .select({
+     id: employees.id,
+     firstName: persons.firstName,
+     lastName: persons.lastName,
+     gender: persons.gender,
+     phone: persons.phone,
+     position: employees.position,
+     isActive: employees.isActive
+   })
+   .from(employees)
+   .innerJoin(persons, eq(employees.personId, persons.id))
+   .where(eq(persons.type, 'employee')).orderBy(desc(employees.id));
+ 
+   const positionList = await db.select({position: employees.position}).from(employees);
+ 
+    
+         return {
+             employeeList,
+             positionList,
+             form
+         };
+     } catch (err) {
+         error(500, 'Failed to load employees: ' + err);
+ 
+     
+ 
+         return {
+             employeeList: [],
+             error: 'Failed to load employees'
+         };
+     }
+ };
+
+
+export const actions: Actions = {
   createEmployee: async ({request}) => {
+    const canCreate = sharedList.some(p => p.name === 'can_create_employees');
+    if (!canCreate) error(403, 'Not allowed');
+
     const formData = await request.formData();
     const form = await superValidate(formData, zod4(schema));
 

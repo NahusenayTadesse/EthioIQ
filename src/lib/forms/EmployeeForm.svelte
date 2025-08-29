@@ -1,15 +1,20 @@
 <script lang="ts">
     import { input, label, submitButton} from '$lib/global.svelte.js';
     import * as Select from "$lib/components/ui/select/index.js";
+  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
 
  
   let value = $state<string | undefined>();
  
 	import { superForm } from 'sveltekit-superforms';
+	import { LoaderCircle } from '@lucide/svelte';
 
 	let { data } = $props();
 
-	const { form, errors, enhance, constraints, message } = superForm(data.form);
+	const { form, errors, enhance,  constraints, message, delayed } = superForm(data.form, {
+        taintedMessage: 'You have unsaved changes – are you sure you want to leave?'
+
+    });
 
 </script>
 {#if $message}<h3>{$message}</h3>{/if}
@@ -25,9 +30,8 @@
 
  </div>
 {/snippet}
-
-<form use:enhance action="?/createEmployee" class="rounded-lg w-xl bg-white dark:bg-black flex flex-col gap-4 p-6" method="POST">
-    <h2>Add New Employee</h2>
+<ScrollArea class="h-screen pb-12" orientation = "vertical" >
+<form use:enhance action="?/createEmployee" class="rounded-lg w-full bg-white dark:bg-black flex flex-col gap-4 p-6" method="POST">
     {@render fe("First Name", "firstName", "text")}
     {@render fe("Last Name", "lastName", "text")}
     {@render fe("Grandfather's Name", "grandFatherName", "text")}
@@ -45,6 +49,8 @@
             <Select.Item value="female">Female</Select.Item>
         </Select.Content>
     </Select.Root>
+        {#if $errors.gender}<span class="invalid">{$errors.gender}</span>{/if}
+
     </div>
 
     {@render fe("Address", "address", "text")}
@@ -56,7 +62,9 @@
     {@render fe("Hire Date", "hireDate", "date")}
 
 
-    <button type="submit" class="{submitButton} w-full">Submit</button>
+    <button type="submit" class="{submitButton} w-full">
+          {#if $delayed}<LoaderCircle class="h-4 w-4 animate-spin" /> {/if}
+Submit</button>
 </form>
-
+</ScrollArea>
 

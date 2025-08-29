@@ -33,9 +33,9 @@
 	 
 </script>
 
-<svelt:head>
+<svelte:head>
 	<title>Add User</title>
-</svelt:head>
+</svelte:head>
 
 <h1>{form?.message}</h1>
 <div class="flex min-h-screen items-center justify-center p-4 text-foreground">

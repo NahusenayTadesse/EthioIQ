@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { submitButton } from '$lib/global.svelte.js';
+	import EmployeeForm from '$lib/forms/EmployeeForm.svelte';
 	import Table from '$lib/Table.svelte';
-	import { BrushCleaning, Mars, RotateCcw, SlidersHorizontal, Venus } from '@lucide/svelte';
+	import * as Sheet from "$lib/components/ui/sheet/index.js";	
+	import { BrushCleaning, Mars, Plus, RotateCcw, SlidersHorizontal, Venus } from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
 
 	let { data } = $props();
 
 	let employeeList = $state(data.employeeList);
+	$effect(() => {
+    employeeList = data.employeeList;
+});
 
 	let tableHeaders = $state([
 		{ name: 'Id', key: 'id' },
@@ -49,13 +54,28 @@
 		{ key: lastNames, name: 'Last Name', query: 'lastName' },
 		{ key: position, name: 'Position', query: 'position' }
 	]);
+	      let forEmp = ["can_create_employees"];
+
 </script>
 
 <svelte:head>
 	<title>Employees</title>
 </svelte:head>
-
-<button onclick={() => (openFilter = !openFilter)} aria-label="Advanced Filter" title="Filter Table"
+{#if forEmp.some(item =>
+  data.permList.some(obj => obj.name === item))}
+<Sheet.Root>
+  <Sheet.Trigger class="{submitButton} w-[120px] flex flex-row gap-2 !text-sm" title="Add a new employee"><Plus class="h-4 w-4" /> Add New</Sheet.Trigger>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title class="text-xl text-center font-semibold">Create a new employee</Sheet.Title>
+      <Sheet.Description>
+        <EmployeeForm {data} />
+      </Sheet.Description>
+    </Sheet.Header>
+  </Sheet.Content>
+</Sheet.Root>
+{/if}
+<button onclick={() => (openFilter = !openFilter)} aria-label="Advanced Filter" class="m-4" title="Filter Table"
 	><SlidersHorizontal />
 </button><br />
 

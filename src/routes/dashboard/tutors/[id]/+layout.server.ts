@@ -1,7 +1,7 @@
 
 
 import { eq, sql } from 'drizzle-orm';
-import { redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  persons, tutors, students, locations, tutorStudentMatches, subjectTutors, subjects, fieldOfStudy, personPaymentMethods, paymentMethods } from '$lib/server/db/schema'
