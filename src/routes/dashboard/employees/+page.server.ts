@@ -7,7 +7,7 @@ import { db } from '$lib/server/db';
 import { employees, persons } from '$lib/server/db/schema'
 import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { schema } from "$lib/server/zodschema";
+import { employeeSchema } from "$lib/server/zodschema";
 import type {  Actions } from "../$types";
 
 let sharedList: Array<{ name: string }>; 
@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ parent }) => {
      if (!hasPerm) {
      error(403, 'Not Allowed! You do not have permission to see employees. <br /> Talk to an admin to change it.');
   }
-  const form = await superValidate(zod4(schema));
+  const form = await superValidate(zod4(employeeSchema));
 
  try {
         const employeeList = await db
@@ -67,7 +67,7 @@ export const actions: Actions = {
     if (!canCreate) error(403, 'Not allowed');
 
     const formData = await request.formData();
-    const form = await superValidate(formData, zod4(schema));
+    const form = await superValidate(formData, zod4(employeeSchema));
 
     if (!form.valid) return fail(400, { form });
 

@@ -1,6 +1,6 @@
 import { z } from 'zod/v4';
 
-export const schema = z.object({
+export const employeeSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required.' }),
   lastName: z.string().min(1, { message: 'Last name is required.' }),
   grandFatherName: z.string().min(5, { message: "Grandfather's name is required." }),
@@ -11,7 +11,9 @@ export const schema = z.object({
   dateOfBirth: z.string().min(1, { message: 'Date of birth is required.' }),
   position: z.string().min(1, { message: 'Position is required.' }),
   salary: z.string().optional(),
-  hireDate: z.string().min(1, { message: 'Hire date is required.' }),
+  hireDate: z.string().min  (1, { message: 'Hire date is required.' }),
   notes: z.string().optional(),
 
 });
+
+export type EmployeeSchema = typeof employeeSchema;

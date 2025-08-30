@@ -5,8 +5,12 @@
 	import * as Sheet from "$lib/components/ui/sheet/index.js";	
 	import { BrushCleaning, Mars, Plus, RotateCcw, SlidersHorizontal, Venus } from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
+	import { superForm } from 'sveltekit-superforms';
+	import type { Snapshot } from './$types.js';
+
 
 	let { data } = $props();
+
 
 	let employeeList = $state(data.employeeList);
 	$effect(() => {
@@ -56,6 +60,14 @@
 	]);
 	      let forEmp = ["can_create_employees"];
 
+
+
+	const { form, errors, enhance, constraints, message, delayed, capture, restore } =
+    superForm(data.form);
+
+  // snapshot export **must** be in the page
+  export const snapshot: Snapshot = { capture, restore };
+
 </script>
 
 <svelte:head>
@@ -63,13 +75,13 @@
 </svelte:head>
 {#if forEmp.some(item =>
   data.permList.some(obj => obj.name === item))}
-<Sheet.Root>
+<Sheet.Root >
   <Sheet.Trigger class="{submitButton} w-[120px] flex flex-row gap-2 !text-sm" title="Add a new employee"><Plus class="h-4 w-4" /> Add New</Sheet.Trigger>
-  <Sheet.Content>
+  <Sheet.Content class="w-[80%]">
     <Sheet.Header>
       <Sheet.Title class="text-xl text-center font-semibold">Create a new employee</Sheet.Title>
       <Sheet.Description>
-        <EmployeeForm {data} />
+        <EmployeeForm {form} {errors} {enhance} {constraints} {message} {delayed} />
       </Sheet.Description>
     </Sheet.Header>
   </Sheet.Content>

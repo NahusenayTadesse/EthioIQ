@@ -6,7 +6,17 @@ import { db } from '$lib/server/db';
 import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/server/db/schema'
 import { error } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ params}) => {
+export const load: PageServerLoad = async ({ params, parent }) => {
+
+    const layoutData = await parent();
+      const permList: Array<{ name: string }> = layoutData.permList;
+      const perm = 'can_view_employees';
+    
+      const hasPerm = permList.some(p => p.name === perm);
+    
+         if (!hasPerm) {
+         error(403, 'Not Allowed! You do not have permission to see employees. <br /> Talk to an admin to change it.');
+      }
   
 
     const {id} =  params;
