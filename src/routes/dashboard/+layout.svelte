@@ -86,7 +86,7 @@ onMount(() => {
    
    <div class="h-screeen w-screen flex flex-col justify-center items-center">
       <img src="/ethioiq.png" alt="Ethio Iq Logo" class="w-lg animate-spin">
-       <h4 class="animate-pulse">Loading Ethio IQ Office Management System</h4>
+       <h4 class="animate-pulse">Loading Ethio IQ Office Management System...</h4>
    </div>
   
 {:then permList} 
@@ -138,10 +138,10 @@ onMount(() => {
   </aside>
 
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col p-2">md
+  <div class="flex-1 flex flex-col p-2 pt-0">md
     <!-- Header -->
     <header class="{sidebar ? 'ml-[250px] w-[1200px]' : 'ml-[80px] w-[1420px]'} mr-8
-    shadow-md py-2 p-4 flex-row items-center justify-end dark:shadow-gray-300/70 rounded-lg 
+    shadow-md px-4 flex-row items-center justify-end dark:shadow-gray-300/70 rounded-lg 
     transition-all duration-300 ease-in-out hidden lg:flex">
       <!-- <h1 class="text-md font-semibold">
         {(navItems.find(item => item.href === page.url.pathname)?.name) || ''}

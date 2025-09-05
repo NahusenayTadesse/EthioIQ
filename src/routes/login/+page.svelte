@@ -2,14 +2,24 @@
 	import { enhance } from '$app/forms';
 	import { formContainer, formContainerInner, input, submitButton } from '$lib/global.svelte';
 	import type { ActionData } from './$types';
-		import { LoaderCircle, MoonIcon, SunIcon } from "@lucide/svelte";
+		import { Eye,  EyeOff, LoaderCircle, MoonIcon, SunIcon } from "@lucide/svelte";
 	import { toggleMode } from "mode-watcher";
 	let submitted = $state(false)
-	function onsubmit(){
-		 submitted = true;
-	}
+	// function onsubmit(){
+	// 	 submitted = true;
+	// }
 
 	let { form }: { form: ActionData } = $props();
+    let types = $state("password");
+	function toggle(){
+    if(types === 'password'){
+      types = 'text';
+    } else {
+      types = 'password';
+    }
+  }
+	 let EyeIcon = $derived(types === 'password' ? Eye : EyeOff);
+
 </script>
 
 <div class={formContainer}> 
@@ -35,7 +45,14 @@
                 Enter your email below to login to your account
             </p>
         </div>
-<form method="post" action="?/login" use:enhance class="flex flex-col justify-center space-y-6" {onsubmit}>
+<form method="post" action="?/login" use:enhance={() => {
+	   submitted=true
+      return async ({ update }) => {
+		
+		submitted=false
+		update()
+      };
+    }} class="flex flex-col justify-center space-y-6" >
     
 <h4 class="text-red-500 text-center">{form?.message ?? ''}</h4>
 	
@@ -46,17 +63,23 @@
 		<input
 		   type="email"
 			name="email"
-			class="{input}"
+			class={input}
+			autocomplete="email"
 		/>
 	</label>
-	<label>
+	<label class="relative">
 		Password
-		<input
-			type="password"
-			name="password"
-			class="{input}"
-		/>
-	</label>
+				<input
+					type={types}
+					name="password"
+					autocomplete="current-password"
+					class={input}
+				/>
+				<button type="button" onclick={toggle} 
+				title={types === 'password' ? 'Show password' : 'Hide password'} class="absolute right-3 top-[70%] transform -translate-y-1/2">
+     <EyeIcon class="text-gray-600 dark:text-gray-200 z-10"  />
+   </button>
+   </label>
 	<button type="submit" class="{submitButton} w-full flex flex-row gap-4"
 		>{#if submitted}<LoaderCircle class="animate-spin" />{/if} Login</button
 	>

@@ -20,5 +20,12 @@ export const searchableFields = ['id', 'firstName', 'lastName',
   'location', 'fee','naturalOrSocial', 'notes',
   'age', 'bankAccount', 'hourlyRates', 'payment', 
   'parentPhone', 'studentPhone', 'studentFirstName', 'studentLastName',
-   'parentFirstName', 'parentLastName', 'description', 'name', 'roleName', 'permissionName', 'userName', 'role', 'email','name', 'description'];
+   'parentFirstName', 'parentLastName', 'description', 'subject', 'name', 'roleName', 
+   'permissionName', 'userName', 'role', 'email','name', 'description'];
+
+  export const toastmsg = `bg-green-500 rounded-lg  font-bold p-3 text-white fixed right-4 lg:bottom-0 bottom-20 z-10`
+  export const errormsg = `${toastmsg} !bg-red-500`;
+  export const createForm = `rounded-lg lg:w-4/5 w-full bg-white dark:bg-black grid lg:grid-cols-2 grid-cols-1 gap-4 p-6`;
+
+  export const createbtn= `${submitButton} w-[180px]  fixed top-30 right-4 flex flex-row gap-2`
 

@@ -43,7 +43,9 @@ let singleTable = [
      { name: 'Account Number', key: 'bankAccount'},
      { name: 'Default Account', key: 'idDefault'},
      
-  ])
+  ]);
+
+
 
 </script>
 <svelte:head>

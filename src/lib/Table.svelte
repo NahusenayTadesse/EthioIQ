@@ -57,7 +57,7 @@
 
 
 
-//Sorter
+// Sorter
 function sorter(head: string) {
   if (head === '') return list;
 
@@ -92,6 +92,23 @@ function sorterReverse(head: string){
 
 return list.sort((a,b)=> b[head].localeCompare(a[head]) )
 }
+
+
+// function sorter(head: string, reverse = false) {
+//   if (!head) return [...list];
+
+//   const sample = list.find(item => item[head] !== undefined && item[head] !== null)?.[head];
+//   if (sample === undefined) return [...list];
+
+//   const dir = reverse ? -1 : 1;
+
+//   if (typeof sample === 'number' || typeof sample === 'boolean') {
+//     return [...list].sort((a, b) => (Number(a[head]) - Number(b[head])) * dir);
+//   }
+
+//   return [...list].sort((a, b) => String(a[head]).localeCompare(String(b[head])) * dir);
+// }
+
 
 
 

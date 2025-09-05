@@ -7,6 +7,7 @@ import * as table from '$lib/server/db/schema';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
+
 export const sessionCookieName = 'auth-session';
 
 export function generateSessionToken() {
@@ -20,7 +21,7 @@ export async function createSession(token: string, userId: string) {
 	const session: table.Session = {
 		id: sessionId,
 		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
+		expiresAt: new Date(Date.now() + DAY_IN_MS * 7)
 	};
 	await db.insert(table.session).values(session);
 	return session;

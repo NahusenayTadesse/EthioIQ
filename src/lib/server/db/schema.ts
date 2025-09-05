@@ -122,7 +122,7 @@ export const persons = pgTable('persons', {
 
 export const students = pgTable('students', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id),
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   grade: varchar('grade', { length: 20 }),
   school: integer('school').notNull().references(() => schools.id),
   naturalOrSocial: varchar('natural_or_social', {length: 20}),
@@ -139,7 +139,7 @@ export const students = pgTable('students', {
 
 export const tutors = pgTable('tutors', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id),
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   qualifications: text('qualifications'),
   gradePreference: varchar('grade_preference', { length: 20 }),
   location: integer('location').notNull().references(() => locations.id),
@@ -157,7 +157,7 @@ export const tutors = pgTable('tutors', {
 
 export const parents = pgTable('parents', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id),
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   isActive: boolean('is_active').notNull().default(true),
   notes: text('notes'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -166,7 +166,7 @@ export const parents = pgTable('parents', {
 
 export const employees = pgTable('employees', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id),
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}  ),
   position: varchar('position', { length: 100 }).notNull(),
   salary: decimal('salary', { precision: 10, scale: 2 }),
   hireDate: date('hire_date').notNull(),
@@ -355,7 +355,7 @@ export const paymentMethods = pgTable('payment_methods', {
 
 export const personPaymentMethods = pgTable('person_payment_methods', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id),
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   paymentMethodId: integer('payment_method_id').notNull().references(() => paymentMethods.id),
   accountNumber: varchar('account_number', {length: 50}),
   isDefault: boolean('is_default').notNull().default(false),
@@ -462,7 +462,7 @@ export const schedules = pgTable('schedules', {
 
 export const cancellations = pgTable('cancellations', {
   id: serial('id').primaryKey(),
-  cancelledBy: uuid('cancelled_by').notNull().references(() => persons.id),
+  cancelledBy: uuid('cancelled_by').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   reason: text('reason').notNull(),
   cancellationDate: timestamp('cancellation_date').notNull().defaultNow(),
   refundAmount: decimal('refund_amount', { precision: 10, scale: 2 }),
@@ -473,7 +473,7 @@ export const cancellations = pgTable('cancellations', {
 
 export const contacts = pgTable('contacts', {
   id: serial('id').primaryKey(),
-  personId: uuid('person_id').notNull().references(() => persons.id), // FK -> person.id
+  personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}), // FK -> person.id
   type: varchar('type', { length: 50 }).notNull(), // 'phone', 'email', 'telegram', etc.
   value: varchar('value', {length: 100 }), // e.g., 'personal', 'work', 'mother', 'emergency'
   isPrimary: boolean('is_primary').notNull().default(false),
@@ -509,7 +509,7 @@ export const auditLogs = pgTable('audit_logs', {
 
 export const documents = pgTable('documents', {
   id: text('id').primaryKey(),
-  ownerId: uuid('owner_id').notNull().references(() => persons.id), // FK to person.id
+  ownerId: uuid('owner_id').notNull().references(() => persons.id, {onDelete: 'cascade'}), // FK to person.id
   ownerType: text('owner_type').notNull(), // 'tutor', 'student', 'employee', 'parent'
   documentType: text('document_type').notNull(), // 'id_card', 'contract', etc.
   fileUrl: text('file_url').notNull(), 
@@ -574,7 +574,3 @@ export type Documents = typeof documents.$inferSelect;
 export type RevenueSummaries = typeof revenue_summaries.$inferSelect;
 export type StudentProgress = typeof student_progress;
 export type TutorRatings = typeof tutor_ratings;
-
-
-
-
