@@ -13,8 +13,9 @@
 
  <h3>Welcome {data.role.name} </h3>
 
-<div class="p-4 w-[550px] rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<div class="p-4 lg:w-[80%] w-full justify-self-center rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100">
   {#if data.birthdayPerson.length}
+   <div class="grid lg:grid-cols-2 grid-cols-1 gap-2">
   {#each data.birthdayPerson as people}
     
       <div>
@@ -31,8 +32,10 @@
             </li>
         </ul>
       </div>
+    
    
   {/each}
+  </div>
   {:else}
 
      <h2 class="text-xl font-semibold border-b pb-2 mb-4 capitalize border-gray-300 dark:border-gray-700">

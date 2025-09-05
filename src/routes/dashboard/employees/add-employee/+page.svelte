@@ -11,8 +11,14 @@
 import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import { fly } from 'svelte/transition';
+      import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
+
+
+    
 
  let { data } = $props();
+  let toastTimer = $state();
+    let visible = $state(false);
 
 const { form, errors, enhance, constraints, message, delayed, capture, restore } =
     superForm(data.form,  {
@@ -23,27 +29,25 @@ taintedMessage: () => {
         // Replace alert with confirm for actual response
         resolve(window.confirm('Do you want to leave?\nChanges you made may not be saved.'));
 
-    }); }
+    }); },
+    onUpdate({ form }) {
+    if (form.message) {
+      visible = true;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => visible = false, 5000);
+    }
+  }
     });
 
   export const snapshot: Snapshot = { capture, restore };
 
-  let visible = $state(false)
 
-  $effect(() => {
-    if ($message) {
-        visible=true
-      const timer = setTimeout(() => {
-        visible = false;
-      }, 5000);
-
-      return () => {
-        clearTimeout(timer);
-      }
-    }
+ 
 
 
-  });
+   
+
+  
 
     
    
@@ -53,12 +57,12 @@ taintedMessage: () => {
     {#if visible}
     <p  class="{$message.success ? toastmsg: errormsg}" transition:fly={{x:20, duration:300}}>{$message.message}</p>{/if}
 
-    {#snippet fe(labeler="", name="", type="", placeholder="")}
+    {#snippet fe(labeler="", name="", type="", placeholder="",)}
     <div class="flex justify-start flex-col w-full">
     <Label for={name} class={label} >{labeler}</Label>
     <input type={type} name={name} placeholder={placeholder} 
     class="{input} flex flex-row justify-between
-    {$errors[name] ? '!border-red-500' : ''}" required bind:value={$form[name]} 
+    {$errors[name] ? '!border-red-500' : ''} " required bind:value={$form[name]} 
     aria-invalid={$errors[name] ? 'true' : undefined}
     {...$constraints[name]}
     />
@@ -67,7 +71,6 @@ taintedMessage: () => {
         {/if}
     </div>
     {/snippet}
-    <ScrollArea class="h-full pb-12 flex flex-col justify-center items-center" orientation = "vertical" >
     <form use:enhance action="?/createEmployee"  id="main"
     class={createForm}
      method="POST">
@@ -120,5 +123,25 @@ taintedMessage: () => {
 
 
 </button>
-    </ScrollArea>
+
+
+<form id="bank" class="mt-10 ">
+  
+   {@render fe('Payment Method', 'name', 'text', 'Enter the Payment Method(Bank Name or Telebirr) Here')}
+   {@render fe('Account Number', 'accountNumber', 'number', 'Enter the Bank Name here')}
+
+<RadioGroup.Root value="true">
+        <label for="" class={label}> Is the Account the Default Account for the Employee?</label>
+
+  <div class="flex items-center  space-x-2">
+    <RadioGroup.Item value="true" id="option-one" />
+    <Label for="true">Yes, it is the Default</Label>
+  </div>
+  <div class="flex items-center space-x-2">
+    <RadioGroup.Item value="false" id="option-two" />
+    <Label for="false">No, it is not the Defaulte</Label>
+  </div>
+</RadioGroup.Root>
+
+</form>
 
