@@ -1,18 +1,25 @@
     <script lang="ts">
-        import { createbtn, createForm, errormsg, input, label, submitButton, toastmsg} from '$lib/global.svelte.js';
-        import * as Select from "$lib/components/ui/select/index.js";
+        import { createbtn, createForm, errormsg, input, label,  submitButton,  toastmsg} from '$lib/global.svelte.js';
         import { Label } from "$lib/components/ui/label/index.js";
-    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+        import SelectComp from '$lib/forms/SelectComp.svelte';
+
 
     let value = $state<string | undefined>();
+        let items = [
+            {name:"Male", value:"male"},
+            {name:"Female", value:"female"}]
     
-        import { Loader, UserPlus } from '@lucide/svelte';
+        import { Loader, Plus, UserPlus } from '@lucide/svelte';
 
 import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import { fly } from 'svelte/transition';
+    import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
       import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
+      import RadioComp from '$lib/forms/RadioComp.svelte';
 
+      
+    
 
     
 
@@ -47,7 +54,6 @@ taintedMessage: () => {
 
    
 
-  
 
     
    
@@ -71,6 +77,7 @@ taintedMessage: () => {
         {/if}
     </div>
     {/snippet}
+
     <form use:enhance action="?/createEmployee"  id="main"
     class={createForm}
      method="POST">
@@ -82,15 +89,8 @@ taintedMessage: () => {
     <div class="flex justify-start flex-col w-full">
 
         <label for="gender" class={label}>Gender:</label>
-        <Select.Root type="single" name="gender" required bind:value>
-            <Select.Trigger class="w-full {input}">
-                {value ? (value === 'male' ? 'Male' : 'Female') : 'Select Gender'}
-            </Select.Trigger>
-            <Select.Content>
-                <Select.Item value="male">Male</Select.Item>
-                <Select.Item value="female">Female</Select.Item>
-            </Select.Content>
-        </Select.Root>
+        
+        <SelectComp {value} {items} name="gender" />
             {#if $errors.gender}<span class="invalid">{$errors.gender}</span>{/if}
 
         </div>
@@ -111,26 +111,32 @@ taintedMessage: () => {
 
     </form>
 
-    
         <button type="submit" form="main" class={createbtn}>
-            {#if $delayed}<Loader class="h-4 w-4 animate-spin" /> 
-            <span class="animate-pulse">Creating Employee...</span>
-    {:else}
+            {#if $delayed}
+            <!-- <Loader class="h-4 w-4 animate-spin" /> 
+            <span class="animate-pulse">Creating Employee...</span> -->
+
+            <Loadingbtn name="Creating Employee"/>
+
+        {:else}
+        
+ 
     <UserPlus class="h-4 w-4" />
 
     Create Employee
 {/if}
 
+        </button>
 
-</button>
+<form id="bank" class="mt-10 {createForm} !grid-cols-1 !w-1/2">
 
+    <h2>Add Bank Details for New Employee</h2>
+            <SelectComp {value} items={data.banks} name="bank" />
 
-<form id="bank" class="mt-10 ">
   
-   {@render fe('Payment Method', 'name', 'text', 'Enter the Payment Method(Bank Name or Telebirr) Here')}
-   {@render fe('Account Number', 'accountNumber', 'number', 'Enter the Bank Name here')}
+    {@render fe('Account Number', 'accountNumber', 'number', 'Enter the Bank Name here')}
 
-<RadioGroup.Root value="true">
+<!-- <RadioGroup.Root value="true">
         <label for="" class={label}> Is the Account the Default Account for the Employee?</label>
 
   <div class="flex items-center  space-x-2">
@@ -141,7 +147,29 @@ taintedMessage: () => {
     <RadioGroup.Item value="false" id="option-two" />
     <Label for="false">No, it is not the Defaulte</Label>
   </div>
-</RadioGroup.Root>
+</RadioGroup.Root> -->
+
+<RadioComp
+  name="default"
+  items={[
+    { value: 'true',  name: 'Yes, it is Default' },
+    { value: 'false', name: 'No, it is not Default' }
+  ]}
+/>
+
+<button type="submit"  class="{submitButton} w-1/2 gap-2">
+
+    {#if $delayed}
+
+      <Loadingbtn name="Adding Bank Details" />
+    {:else}
+        <Plus class="h-4 w-4" />
+
+    Add Bank Details
+   {/if}
+</button>
+
+ 
 
 </form>
 

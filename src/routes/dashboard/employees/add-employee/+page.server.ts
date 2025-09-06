@@ -4,7 +4,7 @@ import { message } from 'sveltekit-superforms';
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { employees, persons } from '$lib/server/db/schema'
+import { employees, persons, paymentMethods } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { employeeSchema } from "$lib/server/zodschema";
@@ -24,8 +24,15 @@ export const load: PageServerLoad = async ({ parent }) => {
      error(403, 'Not Allowed! You do not have permission to create employees. <br /> Talk to an admin to change it.');
   }
   const form = await superValidate(zod4(employeeSchema));
+
+     const banks = await 
+      await db.select({
+         value: paymentMethods.id,
+         name: paymentMethods.name
+      }).from(paymentMethods);
   return {
-     form
+     form,
+     banks
   }
 
  
