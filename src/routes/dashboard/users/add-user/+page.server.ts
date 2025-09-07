@@ -1,6 +1,6 @@
 import { hash } from '@node-rs/argon2';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 // import * as auth from '$lib/server/auth';
 // import { eq } from 'drizzle-orm';
 
@@ -8,108 +8,119 @@ import { db } from '$lib/server/db';
 import {permissions, rolePermissions, roles, specialPermissions, user} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { superValidate } from 'sveltekit-superforms';
+import { createUserSchema } from '$lib/server/zodschema';
 
+export const load: PageServerLoad = async ({parent}) => {
+  const layoutData = await parent();
+    const permList = layoutData.permList;
+    const perm = 'can_create_users';
+  
+    if (!permList || !permList.some(p => p.name === perm)) {
+        error(403, 'Not Allowed! You do not have permission to create users. <br /> Talk to an admin to change it.');
+    }
+  
+    const form = await superValidate(zod4(createUserSchema));
+  
+    const allroles = await db.select({
+        id: roles.id,
+        name: roles.name
+    }).from(roles).orderBy(roles.id);
 
-export const load: PageServerLoad = async ({locals}) => {
-	if (!locals.user) {
-		return redirect(303, '/login');
-	}
-
-
-  const allroles = await db.select({
-     id: roles.id,
-     name: roles.name
-  }).from(roles).orderBy(roles.id);
-
-  const allPermissions = await db.select(
-      {
-          id: permissions.id,
-          name: permissions.name, 
-          description: permissions.description  
-      }
+    const allPermissions = await db.select(
+        {
+            id: permissions.id,
+            name: permissions.name, 
+            description: permissions.description  
+        }
     ).from(permissions).orderBy(permissions.id);
 
-   const allRolePermissions = await db
-  .select({
-    id: rolePermissions.id,
-    roleName: rolePermissions.roleId,
-    permissionName: rolePermissions.permissionId,
-  })
-  .from(rolePermissions)
-  
+    const allRolePermissions = await db
+        .select({
+            id: rolePermissions.id,
+            roleName: rolePermissions.roleId,
+            permissionName: rolePermissions.permissionId,
+        })
+        .from(rolePermissions);
 
-  return {
-     allroles,
-     allPermissions,
-     allRolePermissions
-  }
+    return {
+        allroles,
+        allPermissions,
+        allRolePermissions, 
+        form
+    };
 };
 
 
 
+import { setFlash, redirect} from 'sveltekit-flash-message/server';
+type Message = { status: 'error' | 'success' | 'warning'; text: string };
+
 
 export const actions: Actions = {
-	register: async (event) => {
-		const formData = await event.request.formData();
+  register: async ({ request, cookies }) => {
+    const formData = await request.formData();
+    const form = await superValidate<Infer<typeof createUserSchema>, Message>(formData, zod4(createUserSchema));
 
-		const name = formData.get('name') as string;
-		const email = formData.get('email') as string;
-		const roleId = formData.get('role') as string;
-    const customPrem = formData.get('customPrem') as string;
-    const permissionIds = formData.getAll("permissions[]").map(v => Number(v)); 
-    const username = extractUsername(email);
-
-		const password = generatePassword();
-
-		if(!isValidEmail(email)){
-			return fail(400, {message: 'Invalid email'})
-		}
-
-		const userId = generateUserId();
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
-
-		try {
-			await db.insert(user).values({ id: userId, email, name,  username, passwordHash, roleId }).returning;
-
-      if(customPrem === 'true'){
-await db.insert(specialPermissions).values(
-  permissionIds.map((permId) => ({
-    userId,
-    permissionId: permId,
-  }))
-);
-  permissionIds.map((permId) => ({
-    userId,
-    permissionId: permId,
-  }));
+    if (!form.valid) {
+      setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
+      return fail(400, { form });
     }
 
-			// const sessionToken = auth.generateSessionToken();
-			// const session = await auth.createSession(sessionToken, userId);
-			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-   
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const roleId = formData.get('role') as string;
+    const customPrem = formData.get('customPrem') as string;
+    const permissionIds = formData.getAll("permissions[]").map(v => Number(v));
+    const username = extractUsername(email);
+    const password = generatePassword();
 
+  
+    const userId = generateUserId();
+    const passwordHash = await hash(password, {
+      memoryCost: 19456,
+      timeCost: 2,
+      outputLen: 32,
+      parallelism: 1
+    });
 
+      const [newUser] = await db.insert(user).values({
+        id: userId,
+        email,
+        name,
+        username,
+        passwordHash,
+        roleId
+      }).returning({ id: user.id });
 
-		} catch(err) {
-			console.error('Action failed:', err);
+      if (customPrem === 'true') {
+        await db.insert(specialPermissions).values(
+          permissionIds.map((permId) => ({
+            userId: newUser.id,
+            permissionId: permId,
+          }))
+        );
+      }
 
-			return fail(500, { message: 'An error has occurred' });
-		}
+      const emailResult = await sendWelcomeEmail({ email, username, name, password });
+      if (!emailResult.success) {
+        setFlash({ type: 'error', message: "Error when sending an email: " + emailResult.error }, cookies);
+        return fail(500, { form });
+      }
+      if(newUser)
+      redirect(`/dashboard/users/${newUser.id}`, {type: 'success', message: "User Successfully Created and Email with credentials sent to New User" }, cookies);
+    
+       
+      //  setFlash({ type: 'success', message: "User Successfully Created and Email with credentials sent to New User" }, cookies);
 
-    sendWelcomeEmail({ email, username, name, password })
-            .catch((err) => console.error('Background mail send failed:', err));
-		return {
-       message: "Successfully Added User"
-    };
-	}
-}; 
+      else {
+      setFlash({ type: 'error', message: "An unexpected error occurred: "}, cookies);
+      return fail(400, { form });
+    } 
+  }
+    
+};
 
 
 function generateUserId() {
@@ -182,7 +193,7 @@ function generatePassword() {
 // Example usage
 import nodemailer from 'nodemailer';
 import { HOST, USER, PASSWORD } from '$env/static/private';
-import { spec } from 'node:test/reporters';
+
 
 const transporter = nodemailer.createTransport({
     host: HOST,

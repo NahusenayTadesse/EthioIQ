@@ -33,12 +33,57 @@ export const employeeSchema = z.object({
    accountNumber: z.string()
 
 });
+export type EmployeeSchema = typeof employeeSchema;
 
 export const bankSchema = z.object({
 
    name: z.int({message: 'You must select a Payment Provider'}),
    isDefault: z.boolean({message: "You must select if Payment Method is Default or not. Choose no if you're not sure"}),
    accountNumber: z.string().min(1, {message: "Bank Account cannot be empty"})
-})
+});
+export type BankSchema = typeof bankSchema;
 
-export type EmployeeSchema = typeof employeeSchema;
+
+export const createUserSchema = z.object({
+  email: z.email("Invalid email address"),
+
+  name: z
+    .string()
+    .min(1, "Full name is required")
+    .max(100, "Name too long"),
+
+  role: z
+    .string()
+    .min(1, "Role is required"),
+
+  customPerm: z
+    .union([z.string(), z.boolean()])
+    .transform((val) => val === "true" || val === true)
+    .optional()
+    .default(false),
+
+  permissions: z
+    .array(z.string().or(z.number()))
+    .optional()
+    .default([]),
+})
+.refine(
+  (data) => {
+    if (data.customPerm) {
+      return data.permissions && data.permissions.length > 0;
+    }
+    return true;
+  },
+  {
+    message: "At least one permission must be selected when using custom permissions",
+    path: ["permissions"],
+  }
+);
+
+
+
+
+
+export type CreateUserSchema = typeof createUserSchema;
+
+

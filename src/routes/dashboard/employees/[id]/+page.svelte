@@ -5,11 +5,9 @@
 	import RadioComp from "$lib/forms/RadioComp.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
 	import { Plus } from "@lucide/svelte";
-  
-import { superForm } from 'sveltekit-superforms';
+  import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
-	import { createForm, errormsg, input, label, submitButton, toastmsg } from "$lib/global.svelte.js";
-	import { fly } from "svelte/transition";
+	import { createForm, input, label, submitButton } from "$lib/global.svelte.js";
 	import SelectComp from "$lib/forms/SelectComp.svelte";
   let { data } = $props();
   let employee = $state(data.employee);
@@ -25,27 +23,6 @@ let singleTable = [
     { name: 'Position', value: employee.position },
     { name: 'Active Status', value: employee.isActive ? 'Active' : 'Inactive' }
 ];
-
-    
-  
-  let message = $state('');
-  
-// const fileName = `${data.employee.firstName} ${data.employee.lastName} .pdf`;
-// const buttonName = `Download ${data.employee.firstName} as PDF`
-  async function copyPhoneNumber(copied: string) {
-    try {
-      await navigator.clipboard.writeText(copied);
-      message = 'Copied!';
-      setTimeout(() => (message = ''), 2000);
-
-    } catch (err) {
-      message = 'Failed to copy!';
-      console.error(err);
-      setTimeout(() => (message = ''), 2000);
-
-    }
-  }
-      let bankAccounts =  $state(data.bankAccounts);
   let bankHeader = $state([
      { name: 'Id', key: 'id'},
      { name: 'Payment Method', key: 'name'},
@@ -56,12 +33,6 @@ let singleTable = [
 
       let value = $state<string | undefined>();
 
-
-
-  let visible = $state(false);
-    let toastTimer = $state();
-
-
     const {
     form,
     errors,
@@ -71,17 +42,7 @@ let singleTable = [
     message: bankMessage,
     capture,
     restore
-  } = superForm(data.form, {
-
-    onUpdate({ form }) {
-    if (form.message) {
-      visible = true;
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => visible = false, 5000);
-    }
-  }
-    
-  });
+  } = superForm(data.form);
 
     export const snapshot: Snapshot = { capture, restore };
 
@@ -115,10 +76,6 @@ let singleTable = [
 </div>
 
 {#if data.permList?.some(p => p.name === "can_edit_employees")}
-
-
-{#if visible}
-    <p  class="{$bankMessage.success ? toastmsg: errormsg}" transition:fly={{x:20, duration:300}}>{$bankMessage.message}</p>{/if}
 
 <form id="bank" method="post" action="?/addBank" use:enhance class="mt-10 {createForm} !grid-cols-1 !w-1/2 gap-4">
     

@@ -1,14 +1,20 @@
 import { eq, asc } from 'drizzle-orm';
-import { redirect, error } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import {  user, permissions, specialPermissions, rolePermissions, roles, session} from '$lib/server/db/schema'
 
 
-export const load: PageServerLoad = async ({ params, locals }) => {
-	if (!locals.user) {
-		return redirect(302, '/login');
-	}
+export const load: PageServerLoad = async ({ params, parent}) => {
+	const layoutData = await parent();
+      const permList: Array<{ name: string }> = layoutData.permList;
+      const perm = 'can_view_users';
+    
+      const hasPerm = permList.some(p => p.name === perm);
+    
+         if (!hasPerm) {
+         error(403, 'Not Allowed! You do not have permission to see users. <br /> Talk to an admin to change it.');
+      }
 
 	const { id } = params;
 

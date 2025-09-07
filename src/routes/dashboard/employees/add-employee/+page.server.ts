@@ -86,7 +86,8 @@ export const actions: Actions = {
 
 
      if (!form.valid) {
-      // Return { form } and things will just work.
+            setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
+
       return fail(400, { form });
     }
 

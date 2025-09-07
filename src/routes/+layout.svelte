@@ -4,7 +4,7 @@
   import { page } from '$app/state';
   import { toastmsg, errormsg } from '$lib/global.svelte';
 
-  const flash = getFlash(page, { clearAfterMs: 5_000 });
+  const flash = getFlash(page, { clearAfterMs: 5000 });
 
 	  import { ModeWatcher } from "mode-watcher";
 
@@ -13,8 +13,8 @@
 </script>
 <ModeWatcher />
 {#if $flash}
-  {@const bg = $flash.type == 'success' ? toastmsg: errormsg}
-  <div class={bg} >{$flash.message}</div>
+ 
+  <div class={$flash.type==='success' ? toastmsg: errormsg} >{$flash.message}</div>
 {/if}
 
 {@render children()}

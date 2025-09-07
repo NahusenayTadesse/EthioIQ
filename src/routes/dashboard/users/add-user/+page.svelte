@@ -1,23 +1,12 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { input, label, select, submitButton } from '$lib/global.svelte.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { SquarePen, Save, BadgeCheck } from '@lucide/svelte';
 	import DialogClose from '$lib/components/ui/dialog/dialog-close.svelte';
-
-
-	let tableHeaders = $state([
-		{ name: 'Id', key: 'id' },
-		{ name: 'Role Name', key: 'roleName' },
-		{ name: 'Permission Name', key: 'permissionName' }
-	]);
-	let { data, form } = $props();
-
+	let { data } = $props();
 	let showPermission = $state(false);
-
 	let selected = $state("");
-
 	let allRolePermissions = $state(data.allRolePermissions);
 
 	function hasPermission(roleId: number, permissionId: number): boolean {
@@ -28,7 +17,23 @@
 
 	let customPerm = $state(false);
 
-	let value = $state('');
+
+	import { superForm } from 'sveltekit-superforms';
+	import type { Snapshot } from './$types.js';
+	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+
+	const {
+    form,
+    errors,
+    enhance,
+    constraints,
+    delayed,
+    message,
+    capture,
+    restore
+  } = superForm(data.form);
+
+    export const snapshot: Snapshot = { capture, restore };
 
 	 
 </script>
@@ -37,7 +42,26 @@
 	<title>Add User</title>
 </svelte:head>
 
-<h1>{form?.message}</h1>
+{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
+	<div class="flex w-full flex-col justify-start">
+		<label for={name} class={label}>{labeler} {required ? '' : '(optional)'}</label>
+		<input
+			{type}
+			{name}
+			{placeholder}
+			class="{input} flex flex-row justify-between
+    {$errors[name] ? '!border-red-500' : ''} "
+			{required}
+			bind:value={$form[name]}
+			aria-invalid={$errors[name] ? 'true' : undefined}
+			{...$constraints[name]}
+		/>
+		{#if $errors[name]}
+			<span class="invalid text-red-500">{$errors[name]}</span>
+		{/if}
+	</div>
+{/snippet}
+
 <div class="flex min-h-screen items-center justify-center p-4 text-foreground">
 	<div class="flex w-full max-w-full flex-col flex-wrap justify-start gap-4 lg:flex-row">
 		<div
@@ -48,7 +72,7 @@
 					<h1 class="text-center">Create User</h1>
 				</div>
 				<!-- Email Input -->
-				<div>
+				<!-- <div>
 					<label for="email" class={label}>Email Address</label>
 					<input
 						id="email"
@@ -58,10 +82,13 @@
 						required
 						class={input}
 					/>
-				</div>
+				</div> -->
+
+				{@render fe("Email Address", 'email', 'email', "Enter your email")}
+				{@render fe("Full Name", 'name', 'text', "Enter User's Full Name")}
 
 				<!-- Name Input -->
-				<div>
+				<!-- <div>
 					<label for="name" class={label}>Full Name</label>
 					<input
 						id="name"
@@ -71,12 +98,6 @@
 						required
 						class={input}
 					/>
-				</div>
-
-				<!-- Password Input -->
-				<!-- <div>
-					<label for="password" class={label}>Password</label>
-					<input id="password" name="password" type="password" placeholder="Create a password" required class={input} />
 				</div> -->
 
 				<!-- Role Select -->
@@ -109,7 +130,7 @@
 
 				{#if showPermission}
 					<Dialog.Root>
-						<Dialog.Trigger class="{submitButton} flex w-full flex-row gap-2"
+						<Dialog.Trigger class="{submitButton} flex w-full flex-row gap-2" type="button"
 							><SquarePen class="h-4 w-4" /> Customize User Permission</Dialog.Trigger
 						>
 						<Dialog.Content>
@@ -136,11 +157,12 @@
 							</Dialog.Header>
 							<Dialog.DialogFooter>
 								<div class="items-between flex w-full flex-row justify-between">
-									<DialogClose class="{submitButton} px-4" onclick={() => (customPerm = false)}
+									<DialogClose  class="{submitButton} px-4" type="button" onclick={() => (customPerm = false)}
 										>Use Default Permissions</DialogClose
 									>
 									<DialogClose>
 										<button
+										   type="button"
 											class="{submitButton} flex flex-row gap-2 px-4 {customPerm
 												? '!bg-green-400 !text-white'
 												: ''}"
@@ -162,6 +184,7 @@
 				{:else}
 					<Popover.Root>
 						<Popover.Trigger
+						type="button"
 							class="{submitButton} flex w-full cursor-not-allowed flex-row gap-2 !bg-gray-400 !text-white opacity-50"
 							><SquarePen class="h-4 w-4" />Customize user permission</Popover.Trigger
 						>
@@ -170,7 +193,12 @@
 						>
 					</Popover.Root>
 				{/if}
-				<button type="submit" class="{submitButton} w-full">Create User</button>
+				<button type="submit" class="{submitButton} w-full flex flex-row gap-2">
+					{#if $delayed}
+					<Loadingbtn name="Creating User" />
+					{:else}
+					Create User
+				{/if}</button>
 			</form>
 
 			<!-- Additional Info -->

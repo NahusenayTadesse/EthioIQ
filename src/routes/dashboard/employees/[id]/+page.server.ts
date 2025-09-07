@@ -9,6 +9,9 @@ import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { bankSchema } from '$lib/server/zodschema';
 import { fail } from '@sveltejs/kit';
+import { setFlash } from 'sveltekit-flash-message/server';
+
+
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 
 
@@ -54,7 +57,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 
 
   if (!employee) {
-			throw error(404, 'User not found');
+			throw error(404, 'Employee not found');
 		}
   const bankAccounts = db.select({
       id: employees.id,
@@ -100,11 +103,14 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 
 export const actions: Actions = {
 
-      addBank: async({request})=> {
+      addBank: async({request, cookies})=> {
 
      const formData = await request.formData();
     const form = await superValidate<Infer<typeof bankSchema>, Message>(formData, zod4(bankSchema));
-        if (!form.valid) return fail(400, { form });
+        if (!form.valid){ 
+            setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
+
+            return fail(400, { form }); }
 
         
         const name = formData.get('name') as string || '';
@@ -116,12 +122,22 @@ export const actions: Actions = {
         const personId = formData.get('personId') as string || '';
         
 
-        await db.insert(personPaymentMethods).values({
-           personId,
-           paymentMethodId: name,
-           accountNumber,
-           isDefault,
-        })
+        try {
+            await db.insert(personPaymentMethods).values({
+                personId,
+                paymentMethodId: name,
+                accountNumber,
+                isDefault,
+            });
+             
+        
+            setFlash({ type: 'success', message: "Bank Account Added Successfully" }, cookies); 
+            
+        } catch (err) {
+            setFlash({ type: 'error', message: "Failed to add bank account" + err }, cookies);
+            return fail(500, { form }); 
+        }    
+
 
 
 

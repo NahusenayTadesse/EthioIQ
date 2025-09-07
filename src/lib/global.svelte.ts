@@ -23,7 +23,7 @@ export const searchableFields = ['id', 'firstName', 'lastName',
    'parentFirstName', 'parentLastName', 'description', 'subject', 'name', 'roleName', 
    'permissionName', 'userName', 'role', 'email','name', 'description'];
 
-  export const toastmsg = `bg-green-500 rounded-lg  font-bold p-3 text-white fixed right-4 lg:bottom-0 bottom-20 z-10`
+  export const toastmsg = `bg-green-500 rounded-lg  font-bold p-4 text-white fixed right-4 lg:bottom-0 bottom-20 z-10`
   export const errormsg = `${toastmsg} !bg-red-500`;
   export const createForm = `rounded-lg lg:w-4/5 w-full bg-white dark:bg-black grid lg:grid-cols-2 grid-cols-1 gap-4 p-6`;
 
