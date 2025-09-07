@@ -1,175 +1,124 @@
-    <script lang="ts">
-        import { createbtn, createForm, errormsg, input, label,  submitButton,  toastmsg} from '$lib/global.svelte.js';
-        import { Label } from "$lib/components/ui/label/index.js";
-        import SelectComp from '$lib/forms/SelectComp.svelte';
+<script lang="ts">
+	import { createbtn, createForm, errormsg, input, label, toastmsg } from '$lib/global.svelte.js';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import SelectComp from '$lib/forms/SelectComp.svelte';
+	import { UserPlus } from '@lucide/svelte';
 
-
-    let value = $state<string | undefined>();
-        let items = [
-            {name:"Male", value:"male"},
-            {name:"Female", value:"female"}]
-    
-        import { Loader, Plus, UserPlus } from '@lucide/svelte';
-
-import { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import { fly } from 'svelte/transition';
-    import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
-      import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
-      import RadioComp from '$lib/forms/RadioComp.svelte';
+	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+	import RadioComp from '$lib/forms/RadioComp.svelte';
 
-      
+	let value = $state<string | undefined>();
+	let items = [
+		{ name: 'Male', value: 'male' },
+		{ name: 'Female', value: 'female' }
+	];
+
+	let { data } = $props();
+	let toastTimer = $state();
+	let visible = $state(false);
+
+	const { form, errors, enhance, constraints, message, delayed, capture, restore } = superForm(
+		data.form,
+		{
+			taintedMessage: () => {
+				return new Promise((resolve) => {
+					// alert('Do you want to leave?\nChanges you made may not be saved.');
+					// Simulate confirm dialog: resolve true if OK, false if Cancel
+					// Replace alert with confirm for actual response
+					resolve(window.confirm('Do you want to leave?\nChanges you made may not be saved.'));
+				});
+			},
+			onUpdate({ form }) {
+				if (form.message) {
+					visible = true;
+					clearTimeout(toastTimer);
+					toastTimer = setTimeout(() => (visible = false), 5000);
+				}
+			}
+		}
+	);
+
+	export const snapshot: Snapshot = { capture, restore };
+
+	let bankreq = false;
+</script>
+
+{#if visible}
+	<p class={$message.success ? toastmsg : errormsg} transition:fly={{ x: 20, duration: 300 }}>
+		{$message.message}
+	</p>{/if}
     
+{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
+	<div class="flex w-full flex-col justify-start">
+		<Label for={name} class={label}>{labeler} {required ? '' : '(optional)'}</Label>
+		<input
+			{type}
+			{name}
+			{placeholder}
+			class="{input} flex flex-row justify-between
+    {$errors[name] ? '!border-red-500' : ''} "
+			{required}
+			bind:value={$form[name]}
+			aria-invalid={$errors[name] ? 'true' : undefined}
+			{...$constraints[name]}
+		/>
+		{#if $errors[name]}
+			<span class="invalid text-red-500">{$errors[name]}</span>
+		{/if}
+	</div>
+{/snippet}
 
-    
+<form use:enhance action="?/createEmployee" id="main" class={createForm} method="POST">
+	{@render fe('First Name', 'firstName', 'text')}
+	{@render fe('Last Name', 'lastName', 'text')}
+	{@render fe("Grandfather's Name", 'grandFatherName', 'text')}
+	{@render fe('Email', 'email', 'email')}
 
- let { data } = $props();
-  let toastTimer = $state();
-    let visible = $state(false);
+	<div class="flex w-full flex-col justify-start">
+		<label for="gender" class={label}>Gender:</label>
 
-const { form, errors, enhance, constraints, message, delayed, capture, restore } =
-    superForm(data.form,  {
-taintedMessage: () => { 
-    return new Promise((resolve) => {
-        // alert('Do you want to leave?\nChanges you made may not be saved.');
-        // Simulate confirm dialog: resolve true if OK, false if Cancel
-        // Replace alert with confirm for actual response
-        resolve(window.confirm('Do you want to leave?\nChanges you made may not be saved.'));
+		<SelectComp {value} {items} name="gender" />
+		{#if $errors.gender}<span class="invalid">{$errors.gender}</span>{/if}
+	</div>
 
-    }); },
-    onUpdate({ form }) {
-    if (form.message) {
-      visible = true;
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => visible = false, 5000);
-    }
-  }
-    });
+	{@render fe('Address', 'address', 'text')}
+	{@render fe('Phone', 'phone', 'tel')}
+	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth')}
 
-  export const snapshot: Snapshot = { capture, restore };
+	{@render fe('Position', 'position', 'text')}
+	{@render fe('Salary', 'salary', 'number')}
+	{@render fe('Hire Date', 'hireDate', 'date')}
 
+	<div class="flex w-full flex-col justify-start gap-2">
+		<Label for="bank" class={label}>Bank Name (optional)</Label>
 
- 
+		<SelectComp {value} items={data.banks} required={bankreq} name="bank" />
+	</div>
 
-
-   
-
-
-    
-   
-
-
-    </script>
-    {#if visible}
-    <p  class="{$message.success ? toastmsg: errormsg}" transition:fly={{x:20, duration:300}}>{$message.message}</p>{/if}
-
-    {#snippet fe(labeler="", name="", type="", placeholder="",)}
-    <div class="flex justify-start flex-col w-full">
-    <Label for={name} class={label} >{labeler}</Label>
-    <input type={type} name={name} placeholder={placeholder} 
-    class="{input} flex flex-row justify-between
-    {$errors[name] ? '!border-red-500' : ''} " required bind:value={$form[name]} 
-    aria-invalid={$errors[name] ? 'true' : undefined}
-    {...$constraints[name]}
-    />
-        {#if $errors[name]}
-        <span class="invalid text-red-500">{$errors[name]}</span>
-        {/if}
-    </div>
-    {/snippet}
-
-    <form use:enhance action="?/createEmployee"  id="main"
-    class={createForm}
-     method="POST">
-        {@render fe("First Name", "firstName", "text")}
-        {@render fe("Last Name", "lastName", "text")}
-        {@render fe("Grandfather's Name", "grandFatherName", "text")}
-        {@render fe("Email", "email", "email")}
-
-    <div class="flex justify-start flex-col w-full">
-
-        <label for="gender" class={label}>Gender:</label>
-        
-        <SelectComp {value} {items} name="gender" />
-            {#if $errors.gender}<span class="invalid">{$errors.gender}</span>{/if}
-
-        </div>
-
-        {@render fe("Address", "address", "text")}
-        {@render fe("Phone", "phone", "tel")}
-        {@render fe("Date of Birth", "dateOfBirth", "date", "Select Date of Birth")}
-
-        {@render fe("Position", "position", "text")}
-        {@render fe("Salary", "salary", "number")}
-        {@render fe("Hire Date", "hireDate", "date")}
-
-    
-
-
-
-    
-
-    </form>
-
-        <button type="submit" form="main" class={createbtn}>
-            {#if $delayed}
-            <!-- <Loader class="h-4 w-4 animate-spin" /> 
-            <span class="animate-pulse">Creating Employee...</span> -->
-
-            <Loadingbtn name="Creating Employee"/>
-
-        {:else}
-        
- 
-    <UserPlus class="h-4 w-4" />
-
-    Create Employee
-{/if}
-
-        </button>
-
-<form id="bank" class="mt-10 {createForm} !grid-cols-1 !w-1/2">
-
-    <h2>Add Bank Details for New Employee</h2>
-            <SelectComp {value} items={data.banks} name="bank" />
-
-  
-    {@render fe('Account Number', 'accountNumber', 'number', 'Enter the Bank Name here')}
-
-<!-- <RadioGroup.Root value="true">
-        <label for="" class={label}> Is the Account the Default Account for the Employee?</label>
-
-  <div class="flex items-center  space-x-2">
-    <RadioGroup.Item value="true" id="option-one" />
-    <Label for="true">Yes, it is the Default</Label>
-  </div>
-  <div class="flex items-center space-x-2">
-    <RadioGroup.Item value="false" id="option-two" />
-    <Label for="false">No, it is not the Defaulte</Label>
-  </div>
-</RadioGroup.Root> -->
-
-<RadioComp
-  name="default"
-  items={[
-    { value: 'true',  name: 'Yes, it is Default' },
-    { value: 'false', name: 'No, it is not Default' }
-  ]}
-/>
-
-<button type="submit"  class="{submitButton} w-1/2 gap-2">
-
-    {#if $delayed}
-
-      <Loadingbtn name="Adding Bank Details" />
-    {:else}
-        <Plus class="h-4 w-4" />
-
-    Add Bank Details
-   {/if}
-</button>
-
- 
-
+	{@render fe('Account Number', 'accountNumber', 'text', 'Enter Your Bank Account Here', bankreq)}
+	<RadioComp
+		name="isDefault"
+		btnName="Is the Account the Default Account for the Employee? (optional)"
+		required={bankreq}
+		items={[
+			{ value: true, name: 'Yes, it is Default' },
+			{ value: false, name: 'No, it is not Default' }
+		]}
+	/>
 </form>
 
+<button type="submit" form="main" class={createbtn}>
+	{#if $delayed}
+		<!-- <Loader class="h-4 w-4 animate-spin" /> 
+            <span class="animate-pulse">Creating Employee...</span> -->
+
+		<Loadingbtn name="Creating Employee" />
+	{:else}
+		<UserPlus class="h-4 w-4" />
+
+		Create Employee
+	{/if}
+</button>

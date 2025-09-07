@@ -1,7 +1,16 @@
 
 <script lang='ts'>
 	import ChildrenTable from "$lib/ChildrenTable.svelte";
+	import Loadingbtn from "$lib/forms/Loadingbtn.svelte";
+	import RadioComp from "$lib/forms/RadioComp.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
+	import { Plus } from "@lucide/svelte";
+  
+import { superForm } from 'sveltekit-superforms';
+	import type { Snapshot } from './$types.js';
+	import { createForm, errormsg, input, label, submitButton, toastmsg } from "$lib/global.svelte.js";
+	import { fly } from "svelte/transition";
+	import SelectComp from "$lib/forms/SelectComp.svelte";
   let { data } = $props();
   let employee = $state(data.employee);
 
@@ -45,6 +54,38 @@ let singleTable = [
      
   ]);
 
+      let value = $state<string | undefined>();
+
+
+
+  let visible = $state(false);
+    let toastTimer = $state();
+
+
+    const {
+    form,
+    errors,
+    enhance,
+    constraints,
+    delayed,
+    message: bankMessage,
+    capture,
+    restore
+  } = superForm(data.form, {
+
+    onUpdate({ form }) {
+    if (form.message) {
+      visible = true;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => visible = false, 5000);
+    }
+  }
+    
+  });
+
+    export const snapshot: Snapshot = { capture, restore };
+
+
 
 
 </script>
@@ -68,73 +109,72 @@ let singleTable = [
      <div class="flex flex-col flex-start gap-4">
       <h1>Bank Accounts</h1>
 
-<ChildrenTable mainlist = {bankAccounts} tableHeaders = {bankHeader} />
+<ChildrenTable mainlist = {data.bankAccounts} tableHeaders = {bankHeader} />
 </div>
 
 </div>
-    <!-- <div class="py-8 px-6">
-      {#await data}
-           <h1 class="flex flex-row m-2">     Loading Employee Data <LoaderCircle class="animate-spin" /></h1>
 
-        
-      {:then employee} 
-        
+{#if data.permList?.some(p => p.name === "can_edit_employees")}
 
 
+{#if visible}
+    <p  class="{$bankMessage.success ? toastmsg: errormsg}" transition:fly={{x:20, duration:300}}>{$bankMessage.message}</p>{/if}
 
+<form id="bank" method="post" action="?/addBank" use:enhance class="mt-10 {createForm} !grid-cols-1 !w-1/2 gap-4">
+    
+    <h3 class="text-center m-4">Add Bank Details for Employee</h3>
+    <div class="flex justify-start flex-col w-full gap-2">
 
+        <label for="bank" class={label} >Bank Name</label>
+        <SelectComp {value} items={data.banks} name="name" />
+            {#if $errors.name}
+        <span class="invalid text-red-500">{$errors.name}</span>
+        {/if}
        
-      <table id="employeedetail" class="w-full table-auto text-left">
-        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold uppercase tracking-wider">
-          <tr>
-            <th class="py-3 px-4">Detail</th>
-            <th class="py-3 px-4">Value</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-900 dark:text-gray-100">
-          <tr>
-            <td class="py-3 px-4 font-semibold">Name</td>
-            <td class="py-3 px-4">{data.employee?.firstName} {data.employee?.lastName}</td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Gender</td>
-            <td class="py-3 px-4 capitalize">{data.employee?.gender}</td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Date of Birth</td>
-            <td class="py-3 px-4">{data.employee?.birthday}</td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Salary</td>
-            <td class="py-3 px-4">{data.employee?.salary}</td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Position</td>
-            <td class="py-3 px-4">{data.employee?.position}</td>
-            
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Hired Date</td>
-            <td class="py-3 px-4">{data.employee?.joined}</td>
-          </tr>
-          <tr>
-             <td class="py-3 px-4 font-semibold">Phone</td>
-            <td class="py-3 px-4"><button onclick={()=>copyPhoneNumber(data.employee?.phone)}>{data.employee?.phone}
-              <p class="text-blue-500">{message}</p>
-            </button> 
-            </td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Address</td>
-            <td class="py-3 px-4">{data.employee?.address}</td>
-          </tr>
-          <tr>
-            <td class="py-3 px-4 font-semibold">Is Employee Active</td>
-            <td class="py-3 px-4">{data.employee?.isActive ? 'Yes' : 'No'}</td>
-          </tr>
-        </tbody>
-      </table>
-        {/await}
+
+        </div>
+
+    <div class="flex justify-start flex-col w-full gap-2">
+    <label for="accountNumber" class={label} >Account Number</label>
+    <input type="text" name="accountNumber" placeholder="Enter the Bank Account Here" 
+    class="{input} flex flex-row justify-between
+    {$errors.accountNumber ? '!border-red-500' : ''} " required bind:value={$form.accountNumber} 
+    aria-invalid={$errors.accountNumber ? 'true' : undefined}
+    {...$constraints.accountNumber}
+    />
+        {#if $errors.accountNumber}
+        <span class="invalid text-red-500">{$errors.accountNumber}</span>
+        {/if}
     </div>
-  </div>
-</div> -->
+
+  
+
+
+
+<RadioComp
+  name="isDefault"
+  btnName= "Is the Account the Default Account for the Employee?"
+  items={[
+    { value: true,  name: 'Yes, it is Default' },
+    { value: false, name: 'No, it is not Default' }
+  ]}
+/>
+<input type="hidden" name="personId" value={data.employee.personId} >
+
+<button type="submit"  class="{submitButton} w-1/2 gap-2">
+
+    {#if $delayed}
+
+      <Loadingbtn name="Adding Bank Details" />
+    {:else}
+        <Plus class="h-4 w-4" />
+
+    Add Bank Details
+   {/if}
+</button>
+
+ 
+
+</form>
+
+{/if}

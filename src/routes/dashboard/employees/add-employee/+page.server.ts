@@ -1,13 +1,14 @@
 import {  fail, error } from "@sveltejs/kit";
-import { message } from 'sveltekit-superforms';
+import { redirect, setFlash } from 'sveltekit-flash-message/server';
+
 
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { employees, persons, paymentMethods } from '$lib/server/db/schema'
+import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { employeeSchema } from "$lib/server/zodschema";
+import { employeeSchema, bankSchema } from "$lib/server/zodschema";
 import type {  Actions } from "../$types";
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 
@@ -24,6 +25,8 @@ export const load: PageServerLoad = async ({ parent }) => {
      error(403, 'Not Allowed! You do not have permission to create employees. <br /> Talk to an admin to change it.');
   }
   const form = await superValidate(zod4(employeeSchema));
+  const bankForm = await superValidate(zod4(bankSchema));
+
 
      const banks = await 
       await db.select({
@@ -32,6 +35,7 @@ export const load: PageServerLoad = async ({ parent }) => {
       }).from(paymentMethods);
   return {
      form,
+     bankForm,
      banks
   }
 
@@ -39,8 +43,9 @@ export const load: PageServerLoad = async ({ parent }) => {
  };
 
 
+
 export const actions: Actions = {
-  createEmployee: async ({request}) => {
+  createEmployee: async ({request, cookies}) => {
 
 
     const formData = await request.formData();
@@ -48,7 +53,13 @@ export const actions: Actions = {
     const form = await superValidate<Infer<typeof employeeSchema>, Message>(formData, zod4(employeeSchema));
 
 
-    if (!form.valid) return fail(400, { form });
+    if (!form.valid) {
+      
+      setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
+
+      return fail(400, { form });
+    
+    }
 
 
 
@@ -64,6 +75,12 @@ export const actions: Actions = {
     const salary = formData.get('salary') as string;
     const hireDate = formData.get('hireDate') as string;
     const notes = formData.get('notes') as string;
+    const bank = formData.get('bank') as string;
+    const accountNumber = formData.get('accountNumber') as string;
+    const isdefault = formData.get('isDefault') as string;
+
+    const isDefault = isdefault === 'true' ? true : false;
+    
     const type = 'employee';
     
 
@@ -86,10 +103,23 @@ export const actions: Actions = {
       type,
       dateOfBirth
     }).returning();
+      
 
-     await db.insert(employees).values({ personId: employee.id, position, salary: Number(salary), hireDate, notes });
 
-    return message(form, {message:'Employee Created Successfully!', success: true});
+     const [employeeDetail] =await db.insert(employees).values({ personId: employee.id, position, salary: Number(salary), hireDate, notes }).returning({id:employees.id});
+
+    if(isDefault && accountNumber && bank){
+      await db.insert(personPaymentMethods).values({
+           personId: employee.id,
+           paymentMethodId: bank,
+           accountNumber,
+           isDefault,
+        }).returning();
+    }
+
+    // return message(form, { message:'Employee Created Successfully!', success: true});
+        redirect(`/dashboard/employees/${employeeDetail.id}`, { type: 'success', message: "Employee Successfully Created" }, cookies);
+
   }
 
   

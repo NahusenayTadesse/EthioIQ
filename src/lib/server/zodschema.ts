@@ -28,7 +28,17 @@ export const employeeSchema = z.object({
   salary: z.string().optional(),
   hireDate: z.string().min  (1, { message: 'Hire date is required.' }),
   notes: z.string().optional(),
+  bank: z.int(),
+   isDefault: z.boolean(),
+   accountNumber: z.string()
 
 });
+
+export const bankSchema = z.object({
+
+   name: z.int({message: 'You must select a Payment Provider'}),
+   isDefault: z.boolean({message: "You must select if Payment Method is Default or not. Choose no if you're not sure"}),
+   accountNumber: z.string().min(1, {message: "Bank Account cannot be empty"})
+})
 
 export type EmployeeSchema = typeof employeeSchema;

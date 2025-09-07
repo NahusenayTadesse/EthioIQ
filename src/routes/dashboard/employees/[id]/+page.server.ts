@@ -1,10 +1,16 @@
 
 
 import { eq } from 'drizzle-orm';
-import type { PageServerLoad } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
 import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/server/db/schema'
 import { error } from '@sveltejs/kit';
+import { type Infer, superValidate } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { bankSchema } from '$lib/server/zodschema';
+import { fail } from '@sveltejs/kit';
+type Message = { status: 'error' | 'success' | 'warning'; text: string };
+
 
 export const load: PageServerLoad = async ({ params, parent }) => {
 
@@ -35,7 +41,8 @@ export const load: PageServerLoad = async ({ params, parent }) => {
      address: persons.address,
      position: employees.position,
      isActive: employees.isActive,
-     image: persons.image
+     image: persons.image,
+     personId: persons.id
 
 
     }
@@ -60,11 +67,22 @@ export const load: PageServerLoad = async ({ params, parent }) => {
   .innerJoin(persons, eq(personPaymentMethods.personId, persons.id))
   .innerJoin(employees, eq(persons.id, employees.personId))
   .where(eq(employees.id, id));
+
+  const form = await superValidate(zod4(bankSchema));
+
+
+  const banks = await 
+      await db.select({
+         value: paymentMethods.id,
+         name: paymentMethods.name
+      }).from(paymentMethods);
   
 
         return {
             employee,
-            bankAccounts
+            bankAccounts,
+            banks,
+            form
         };
     } catch (error) {
         console.error('Failed to load employees:', error);
@@ -78,3 +96,36 @@ export const load: PageServerLoad = async ({ params, parent }) => {
         };
     }
 };
+
+
+export const actions: Actions = {
+
+      addBank: async({request})=> {
+
+     const formData = await request.formData();
+    const form = await superValidate<Infer<typeof bankSchema>, Message>(formData, zod4(bankSchema));
+        if (!form.valid) return fail(400, { form });
+
+        
+        const name = formData.get('name') as string || '';
+        const accountNumber = formData.get('accountNumber') as string || '';
+        const isdefault = formData.get('isDefault') as string;
+
+        const isDefault = isdefault === 'true' ? true : false;
+
+        const personId = formData.get('personId') as string || '';
+        
+
+        await db.insert(personPaymentMethods).values({
+           personId,
+           paymentMethodId: name,
+           accountNumber,
+           isDefault,
+        })
+
+
+
+
+     
+   }
+}

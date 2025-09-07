@@ -2,12 +2,12 @@
           import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
 	import { label } from "$lib/global.svelte";
 
-    let { name, items, required=true} = $props();
+    let { name, items, required=true, btnName} = $props();
 
 </script>
 
-<RadioGroup.Root value="true" required={required}> 
-        <label for="" class={label}> Is the Account the Default Account for the Employee?</label>
+<RadioGroup.Root value="true" {name} required={required}> 
+        <label for="" class={label}> {btnName}</label>
 
         {#each items as item}
 
