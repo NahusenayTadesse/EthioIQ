@@ -110,6 +110,8 @@ const lead = formData.get('lead') as string;
 
 const notes = formData.get('notes') as string;
 
+const naturalOrSocial = formData.get('naturalOrSocial') as string || null;
+
     
     const type = 'student';
     
@@ -128,11 +130,11 @@ const notes = formData.get('notes') as string;
       
 
 
-     const [studentDetail] =await db.insert(students).values({ personId: student.id,gradeId: grade, location, school, fee, lead, specificLocation, notes }).returning({id:students.id});
+     const [studentDetail] =await db.insert(students).values({ personId: student.id,gradeId: grade, location, naturalOrSocial, school, fee, lead, specificLocation, notes }).returning({id:students.id});
       await db.insert(contacts).values({personId: student.id, type: "Telegram",value: telegram} )
 
     // return message(form, { message:'Employee Created Successfully!', success: true});
-        redirect(`/dashboard/employees/${studentDetail.id}`, { type: 'success', message: "Succefully Successfully Created" }, cookies);
+        redirect(`/dashboard/students/${studentDetail.id}`, { type: 'success', message: "Succefully Successfully Created" }, cookies);
 
   }
 

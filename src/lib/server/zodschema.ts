@@ -147,6 +147,7 @@ export const studentSchema = z.object({
 
   gender: z.string().trim().min(1, "Gender is required"),
   grade: z.string().trim().min(1, "Grade is required"),
+  naturalOrSocial: z.string().trim().optional(),
   school: z.string().trim().min(1, "School is required"),
 
   telegram: z.string().trim().min(1, "Telegram username is required"),
@@ -156,6 +157,7 @@ export const studentSchema = z.object({
   specificAddress: z.string().trim().min(1, "Specific address is required"),
 
   phone: z.string().trim().optional(),
+  
 
   dateOfBirth: z
     .preprocess((val) => {

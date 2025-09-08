@@ -11,7 +11,7 @@
  </script>
  <Select.Root type="single" {name} required={required} bind:value >
             <Select.Trigger class="w-full capitalize {input}">
-                {value === '' ? 'Select '+ name: typeof value === 'number'? getItemNameById(items, value) : value} 
+                {value === '' ? 'Select '+ name.replace(/([a-z])([A-Z])/g, '$1 $2'): typeof value === 'number'? getItemNameById(items, value) : value} 
             </Select.Trigger>
             <Select.Content>
                  {#each items as item}

@@ -13,24 +13,11 @@
 		{ name: 'Male', value: 'male' },
 		{ name: 'Female', value: 'female' }
 	];
-    let grades = [
-		{ name: 'LKG', value: 'LKG' },
-		{ name: 'UKG', value: 'UKG' },
-        { name: '1', value: '1' },
-        { name: '2', value: '2' },
-        { name: '3', value: '3' },
-        { name: '4', value: '4' },
-        { name: '5', value: '5' },
-        { name: '6', value: '6' },
-        { name: '7', value: '7' },
-        { name: '8', value: '8' },
-        { name: '9', value: '9' },
-        { name: '10', value: '10' },
-        { name: '11', value: '11' },
-        { name: '12', value: '12' },
-        { name: 'University', value: 'University' },
-        { name: 'College', value: 'College' },
-        { name: 'Other', value: 'other' } 
+    let ns = [
+        { name: 'Neither', value: '' },
+		{ name: 'Natural', value: 'Natural' },
+		{ name: 'Social', value: 'Social' },
+		
 	];
 
 	let { data } = $props();
@@ -73,7 +60,7 @@
 {#snippet selects(name, items)}
 
 <div class="flex w-full flex-col justify-start">
-		<label for={name} class={label}>{name}:</label>
+		<label for={name} class={label}>{name.replace(/([a-z])([A-Z])/g, '$1 $2')}:</label>
 
 		<SelectComp {value} {items} {name} />
 		{#if $errors[name]}<span class="text-red-500">{$errors[name]}</span>{/if}
@@ -87,6 +74,7 @@
 	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name")}
     {@render selects('gender', items)}
     {@render selects('grade', data.grade)}
+    {@render selects ('naturalOrSocial', ns)}
     {@render selects('school', data?.school)}
     {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student")}
     {@render selects('fee', data?.fee)}
