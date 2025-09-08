@@ -6,9 +6,7 @@
 
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
-	import { fly } from 'svelte/transition';
 	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
-	import RadioComp from '$lib/forms/RadioComp.svelte';
 
 	let value = $state<string | undefined>();
 	let items = [
@@ -43,13 +41,7 @@
 
 	export const snapshot: Snapshot = { capture, restore };
 
-	let bankreq = false;
 </script>
-
-{#if visible}
-	<p class={$message.success ? toastmsg : errormsg} transition:fly={{ x: 20, duration: 300 }}>
-		{$message.message}
-	</p>{/if}
     
 {#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
 	<div class="flex w-full flex-col justify-start">
@@ -60,13 +52,13 @@
 			{placeholder}
 			class="{input} flex flex-row justify-between
     {$errors[name] ? '!border-red-500' : ''} "
-			{required}
+			
 			bind:value={$form[name]}
 			aria-invalid={$errors[name] ? 'true' : undefined}
 			{...$constraints[name]}
 		/>
 		{#if $errors[name]}
-			<span class="invalid text-red-500">{$errors[name]}</span>
+			<span class="text-red-500">{$errors[name]}</span>
 		{/if}
 	</div>
 {/snippet}
@@ -87,27 +79,9 @@
 	{@render fe('Address', 'address', 'text')}
 	{@render fe('Phone', 'phone', 'tel')}
 	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth')}
-
 	{@render fe('Position', 'position', 'text')}
 	{@render fe('Salary', 'salary', 'number')}
 	{@render fe('Hire Date', 'hireDate', 'date')}
-
-	<div class="flex w-full flex-col justify-start gap-2">
-		<Label for="bank" class={label}>Bank Name (optional)</Label>
-
-		<SelectComp {value} items={data.banks} required={bankreq} name="bank" />
-	</div>
-
-	{@render fe('Account Number', 'accountNumber', 'text', 'Enter Your Bank Account Here', bankreq)}
-	<RadioComp
-		name="isDefault"
-		btnName="Is the Account the Default Account for the Employee? (optional)"
-		required={bankreq}
-		items={[
-			{ value: true, name: 'Yes, it is Default' },
-			{ value: false, name: 'No, it is not Default' }
-		]}
-	/>
 </form>
 
 <button type="submit" form="main" class={createbtn}>

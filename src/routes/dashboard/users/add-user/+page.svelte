@@ -42,25 +42,25 @@
 	<title>Add User</title>
 </svelte:head>
 
-{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
-	<div class="flex w-full flex-col justify-start">
-		<label for={name} class={label}>{labeler} {required ? '' : '(optional)'}</label>
-		<input
-			{type}
-			{name}
-			{placeholder}
-			class="{input} flex flex-row justify-between
-    {$errors[name] ? '!border-red-500' : ''} "
-			{required}
-			bind:value={$form[name]}
-			aria-invalid={$errors[name] ? 'true' : undefined}
-			{...$constraints[name]}
-		/>
-		{#if $errors[name]}
-			<span class="invalid text-red-500">{$errors[name]}</span>
-		{/if}
-	</div>
-{/snippet}
+	{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
+		<div class="flex w-full flex-col justify-start">
+			<label for={name} class={label}>{labeler} {required ? '' : '(optional)'}</label>
+			<input
+				{type}
+				{name}
+				{placeholder}
+				class="{input} flex flex-row justify-between
+		        {$errors[name] ? '!border-red-500' : ''} "
+				{required}
+				bind:value={$form[name]}
+				aria-invalid={$errors[name] ? 'true' : undefined}
+				{...$constraints[name]}
+			/>
+			{#if $errors[name]}
+				<span class="invalid text-red-500">{$errors[name]}</span>
+			{/if}
+		</div>
+	{/snippet}
 
 <div class="flex min-h-screen items-center justify-center p-4 text-foreground">
 	<div class="flex w-full max-w-full flex-col flex-wrap justify-start gap-4 lg:flex-row">

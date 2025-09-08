@@ -74,6 +74,7 @@ let singleTable = [
 </div>
 
 </div>
+<div id="bank">
 
 {#if data.permList?.some(p => p.name === "can_edit_employees")}
 
@@ -135,3 +136,5 @@ let singleTable = [
 </form>
 
 {/if}
+
+</div>

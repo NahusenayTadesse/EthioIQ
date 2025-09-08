@@ -5,11 +5,11 @@ import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { employees, paymentMethods, persons } from '$lib/server/db/schema'
+import { employees, leads, persons } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { employeeSchema, bankSchema } from "$lib/server/zodschema";
-import type {  Actions } from "../$types";
+import { employeeSchema } from "$lib/server/zodschema";
+import type {  Actions } from "./$types";
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 
 
@@ -17,26 +17,24 @@ type Message = { status: 'error' | 'success' | 'warning'; text: string };
 export const load: PageServerLoad = async ({ parent }) => {
    const layoutData = await parent();
   const permList = layoutData.permList;
-  const perm = 'can_create_employees';
+  const perm = 'can_create_students';
 
   const hasPerm = permList.some(p => p.name === perm);
 
      if (!hasPerm) {
-     error(403, 'Not Allowed! You do not have permission to create employees. <br /> Talk to an admin to change it.');
+     error(403, 'Not Allowed! You do not have permission to create students. <br /> Talk to an admin to change it.');
   }
   const form = await superValidate(zod4(employeeSchema));
-  const bankForm = await superValidate(zod4(bankSchema));
 
 
-     const banks = await 
+     const lead = await 
       await db.select({
-         value: paymentMethods.id,
-         name: paymentMethods.name
-      }).from(paymentMethods);
+         value: leads.id,
+         name: leads.name
+      }).from(leads);
   return {
      form,
-     bankForm,
-     banks
+     lead
   }
 
  

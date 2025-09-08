@@ -27,10 +27,7 @@ export const employeeSchema = z.object({
   position: z.string().min(1, { message: 'Position is required.' }),
   salary: z.string().optional(),
   hireDate: z.string().min  (1, { message: 'Hire date is required.' }),
-  notes: z.string().optional(),
-  bank: z.int(),
-   isDefault: z.boolean(),
-   accountNumber: z.string()
+  notes: z.string().optional()
 
 });
 export type EmployeeSchema = typeof employeeSchema;
@@ -80,10 +77,40 @@ export const createUserSchema = z.object({
   }
 );
 
-
-
-
-
 export type CreateUserSchema = typeof createUserSchema;
+
+export const createRoleSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Role name is required")
+    .max(100, "Role name must be under 100 characters"),
+
+  description: z
+    .string()
+    .min(1, "Role description is required")
+    .max(500, "Role description must be under 500 characters"),
+
+  permissions: z
+    .array(z.string().min(1))
+    .nonempty("At least one permission must be selected")
+});
+
+
+export type CreateRoleInput = z.infer<typeof createRoleSchema>;
+
+
+export const createSubjectSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Subject name is required")
+    .max(100, "Subject name must be under 100 characters"), 
+
+  description: z
+    .string()
+    .min(1, "Subject description is required")
+    .max(500, "Subject description must be under 500 characters"),
+});
+
+export type CreateSubjectInput = z.infer<typeof createSubjectSchema>;
 
 

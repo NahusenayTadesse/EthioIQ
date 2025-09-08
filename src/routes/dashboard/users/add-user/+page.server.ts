@@ -55,13 +55,12 @@ export const load: PageServerLoad = async ({parent}) => {
 
 
 import { setFlash, redirect} from 'sveltekit-flash-message/server';
-type Message = { status: 'error' | 'success' | 'warning'; text: string };
 
 
 export const actions: Actions = {
   register: async ({ request, cookies }) => {
     const formData = await request.formData();
-    const form = await superValidate<Infer<typeof createUserSchema>, Message>(formData, zod4(createUserSchema));
+    const form = await superValidate(formData, zod4(createUserSchema));
 
     if (!form.valid) {
       setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
@@ -142,11 +141,11 @@ function generateUserId() {
 // function validatePassword(password: unknown): password is string {
 // 	return typeof password === 'string' && password.length >= 6 && password.length <= 255;
 // }
-function isValidEmail(email: string): boolean {
-  // Basic email regex pattern
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+// function isValidEmail(email: string): boolean {
+//   // Basic email regex pattern
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   return emailRegex.test(email);
+// }
 function extractUsername(email: string) {
   if (typeof email !== "string") {
     throw new Error("Input must be a string");

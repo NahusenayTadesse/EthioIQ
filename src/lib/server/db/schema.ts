@@ -20,50 +20,6 @@ export const session = pgTable('session', {
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
 });
 
-
-
-// Authentication Tables (adapted for PostgreSQL)
-// export const user = pgTable('user', {
-//   id: varchar('id').primaryKey(),
-//   name: varchar('name', { length: 255 }).notNull(),
-//   email: varchar('email', { length: 255 }).notNull().unique(),
-//   emailVerified: boolean('email_verified').notNull().default(false),
-//   image: varchar('image', { length: 2048 }),
-//   createdAt: timestamp('created_at').notNull().defaultNow(),
-//   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-//   firstName: varchar('first_name', { length: 25 }),
-//   lastName: varchar('last_name', { length: 25 }),
-//   role: varchar('role', {length: 50}),
-//   roleId: integer('role_id').references(() => roles.id),
-//   profilePictureUrl: varchar('profile_picture_url', { length: 255 }),
-//   isActive: boolean('is_active').notNull().default(true),
-// });
-
-// export const account = pgTable('account', {
-//   id: varchar('id').primaryKey(),
-//   userId: varchar('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-//   accountId: varchar('account_id', { length: 255 }).notNull(),
-//   providerId: varchar('provider_id', { length: 255 }).notNull(),
-//   accessToken: varchar('access_token', { length: 2048 }),
-//   refreshToken: varchar('refresh_token', { length: 2048 }),
-//   accessTokenExpiresAt: timestamp('access_token_expires_at'),
-//   refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-//   scope: varchar('scope', { length: 1024 }),
-//   idToken: varchar('id_token', { length: 2048 }),
-//   password: varchar('password', { length: 255 }),
-//   createdAt: timestamp('created_at').notNull().defaultNow(),
-//   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-// });
-
-// export const verification = pgTable('verification', {
-//   id: varchar('id').primaryKey(),
-//   identifier: varchar('identifier', { length: 255 }).notNull(),
-//   value: varchar('value', { length: 1024 }).notNull(),
-//   expiresAt: timestamp('expires_at').notNull(),
-//   createdAt: timestamp('created_at').notNull().defaultNow(),
-//   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-// });
-
 export const roles = pgTable('roles', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 50 }).notNull().unique(),
@@ -133,6 +89,7 @@ export const students = pgTable('students', {
   prefferedGender: varchar('gender', {length: 10}).notNull().default('female'),
   isActive: boolean('is_active').notNull().default(true),
   behaviour: varchar('behaviour', { length: 100}),
+  lead: integer('lead').references(()=>leads.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 });
@@ -530,6 +487,14 @@ export const fieldOfStudy = pgTable('field_of_study', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 });
+
+export const leads = pgTable('leads', {
+   id: serial('id').primaryKey(),
+   name: varchar('name', { length: 100 }).notNull().unique(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+
+})
 
 
 

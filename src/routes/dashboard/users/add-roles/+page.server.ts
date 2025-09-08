@@ -1,16 +1,18 @@
-import { fail, redirect } from '@sveltejs/kit';
-// import * as auth from '$lib/server/auth';
-// import { eq } from 'drizzle-orm';
-
+import { error, fail } from '@sveltejs/kit';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { superValidate } from 'sveltekit-superforms';
+import { createRoleSchema, createSubjectSchema } from '$lib/server/zodschema';
 import { db } from '$lib/server/db';
 import { roles, rolePermissions, permissions, locations, subjects} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
-
-
-export const load: PageServerLoad = async ({locals}) => {
-    if (!locals.user) {
-        return redirect(303, '/login');
+export const load: PageServerLoad = async ({parent}) => {
+  const layoutData = await parent();
+    const permList = layoutData.permList;
+    const perm = 'can_create_users';
+  
+    if (!permList || !permList.some(p => p.name === perm)) {
+        error(403, 'Not Allowed! You do not have permission to create users. <br /> Talk to an admin to change it.');
     }
 
   try {
@@ -43,13 +45,16 @@ export const load: PageServerLoad = async ({locals}) => {
       .from(permissions)
       .orderBy(permissions.id);
 
-
+    const roleForm = await superValidate(zod4(createRoleSchema))
+    const subjectForm = await superValidate(zod4(createSubjectSchema))
 
     return {
       allPermissions,
       allRoles,
       allSubjects,
-      allLocations
+      allLocations,
+      roleForm,
+      subjectForm
     };
   } catch (error) {
     console.error('Database error:', error);
@@ -57,34 +62,30 @@ export const load: PageServerLoad = async ({locals}) => {
   }
 }
 
+import { setFlash} from 'sveltekit-flash-message/server';
+
+
 export const actions: Actions = {
-  addRole: async ({ request }) => {
-    try {
+  addRole: async ({ request, cookies }) => {
+    
       const formData = await request.formData();
+      const form = await superValidate(formData, zod4(createRoleSchema));
+
+      if (!form.valid) {
+      setFlash({ type: 'error', message: "Error! Please check the form for errors" }, cookies);
+      return fail(400, { form });
+    }
 
       const name = formData.get("name") as string;
       const description = formData.get("description") as string;
       const permissionIds = formData
-        .getAll("permissions[]")
+        .getAll("permissions")
         .map((v) => Number(v));
 
 
-          if (!name || !description) {
-        return fail(400, {
-          success: false,
-          message: "Name and description are required.",
-          values: { name, description, permissionIds }
-        });
-      }
+    
 
-      if (permissionIds.length === 0) {
-        return fail(400, {
-          success: false,
-          message: "At least one permission must be selected.",
-          values: { name, description, permissionIds }
-        });
-      }
-
+     try {
       const [role] = await db
         .insert(roles)
         .values({ name, description })
@@ -97,61 +98,70 @@ export const actions: Actions = {
         }))
       );
 
-      // ✅ Return success message
-      return {
-        success: true,
-        message: "Role created successfully!",
-        role,
-      };
+      setFlash({ type: 'success', message: `Role created successfully!` }, cookies);
     } catch (error) {
       console.error("Error creating role:", error);
+        const errMsg =  error?.toString?.() || "";
 
-      // ❌ Return error message
-      return {
-        success: false,
-        message: "Failed to create role. Please try again.",
-        error: String(error),
-      };
+      if(errMsg.includes("roles_name_unique")){
+
+         setFlash({ type: 'error', message: `Error! ${name} already exists` }, cookies);
+      return fail(400, { form });
+      }
+       
+    
+
+      setFlash({ type: 'error', message: "Error! " + error }, cookies);
+      return fail(400, { form });
     }
   },
 
-  addSubject: async ({ request }) => {
-    try {
+  addSubject: async ({ request, cookies }) => {
+
       const formData = await request.formData();
+       const form = await superValidate(formData, zod4(createSubjectSchema));
+
+      if (!form.valid) {
+      setFlash({ type: 'error', message: "Error! Please check the form for errors" }, cookies);
+      return fail(400, { form });
+    }
+
 
       const name = formData.get("name") as string;
       const description = formData.get("description") as string;
 
-          if (!name || !description) {
-        return fail(400, {
-          success: false,
-          message: "Name and description are required.",
-          values: { name, description}
-        });
-      }
+      //     if (!name || !description) {
+      //   return fail(400, {
+      //     success: false,
+      //     message: "Name and description are required.",
+      //     values: { name, description}
+      //   });
+      // }
 
-
+    try{
    await db
         .insert(subjects)
         .values({ name, description });
 
 
-      // ✅ Return success message
-      return {
-        success: true,
-        message: "Subject created successfully!",
-      };
-    } catch (error) {
-      console.error("Error creating role:", error);
+    setFlash({ type: 'success', message: `Subject created successfully!` }, cookies);
 
-      // ❌ Return error message
-      return {
-        success: false,
-        message: "Failed to create subject. Please try again.",
-        error: String(error),
-      };
+    } catch (error) {
+      console.error("Error creating subject:", error);
+        const errMsg =  error?.toString?.() || "";
+
+      if(errMsg.includes("subjects_name_unique")){
+
+         setFlash({ type: 'error', message: `Error! ${name} already exists` }, cookies);
+      return fail(400, { form });
+      }
+       
+    
+
+      setFlash({ type: 'error', message: "Error! " + error }, cookies);
+      return fail(400, { form });
     }
+  },
   
   
   }
-};
