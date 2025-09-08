@@ -5,7 +5,7 @@ import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { employees, leads, persons } from '$lib/server/db/schema'
+import { employees, fees, leads, locations, persons, schools } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { employeeSchema } from "$lib/server/zodschema";
@@ -32,9 +32,30 @@ export const load: PageServerLoad = async ({ parent }) => {
          value: leads.id,
          name: leads.name
       }).from(leads);
+
+
+      const locationer = await db.select({
+         value: locations.id,
+         name: locations.name
+      }).from(locations);
+
+     const schooler = await db.select({
+         value: schools.id,
+         name: schools.name
+     }).from(schools);
+
+      const feer = await db.select(
+        {
+            value: fees.id,
+            name: fees.fee
+        }
+      )
   return {
      form,
-     lead
+     lead,
+     location: locationer,
+     school: schooler,
+     fee: feer
   }
 
  

@@ -84,7 +84,8 @@ export const students = pgTable('students', {
   naturalOrSocial: varchar('natural_or_social', {length: 20}),
   notes: text('notes'),
   location: integer('location').notNull().references(() => locations.id),
-  fee: integer('fee').notNull().default(400), //either 400 or 300
+  fee: integer('fee').notNull().default(400), //delete this column on next version 
+  feesId: integer('fees_id').notNull().default(1).references(()=> fees.id), //make this fee instead of fees on next version 
   specificLocation: text('specific_location').notNull(),
   prefferedGender: varchar('gender', {length: 10}).notNull().default('female'),
   isActive: boolean('is_active').notNull().default(true),
@@ -92,7 +93,7 @@ export const students = pgTable('students', {
   lead: integer('lead').references(()=>leads.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-});
+}); 
 
 export const tutors = pgTable('tutors', {
   id: serial('id').primaryKey(),
@@ -494,15 +495,20 @@ export const leads = pgTable('leads', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 
-})
+});
 
+export const fees = pgTable('leads', {
+   id: serial('id').primaryKey(),
+  fee: integer('fee').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+
+});
 
 
 
 export type Users = typeof user.$inferSelect;
 export type Sessions = typeof session.$inferSelect;
-// export type Accounts = typeof account.$inferSelect;
-// export type Verifications = typeof verification.$inferSelect;
 export type Roles = typeof roles.$inferSelect;
 export type Permissions = typeof permissions.$inferSelect;
 export type RolePermissions = typeof rolePermissions.$inferSelect;
@@ -539,3 +545,5 @@ export type Documents = typeof documents.$inferSelect;
 export type RevenueSummaries = typeof revenue_summaries.$inferSelect;
 export type StudentProgress = typeof student_progress;
 export type TutorRatings = typeof tutor_ratings;
+export type Fees = typeof fees;
+export type Leads = typeof leads;

@@ -34,8 +34,6 @@
 	];
 
 	let { data } = $props();
-	let toastTimer = $state();
-	let visible = $state(false);
 
 	const { form, errors, enhance, constraints, delayed, capture, restore } = superForm(
 		data.form,
@@ -72,39 +70,31 @@
 	</div>
 {/snippet}
 
+{#snippet selects(name, items)}
+
+<div class="flex w-full flex-col justify-start">
+		<label for={name} class={label}>{name}:</label>
+
+		<SelectComp {value} {items} {name} />
+		{#if $errors[name]}<span class="text-red-500">{$errors[name]}</span>{/if}
+	</div>
+    
+{/snippet}
+
 <form use:enhance action="?/createStudent" id="main" class={createForm} method="POST">
 	{@render fe('First Name', 'firstName', 'text', "Enter Student First Name")}
 	{@render fe('Last Name', 'lastName', 'text',  "Enter Student Last Name")}
 	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name")}
-	<div class="flex w-full flex-col justify-start">
-		<label for="gender" class={label}>Gender:</label>
-
-		<SelectComp {value} {items} name="gender" />
-		{#if $errors.gender}<span class="invalid">{$errors.gender}</span>{/if}
-	</div>
-
-    <div class="flex w-full flex-col justify-start">
-		<label for="gender" class={label}>Grade:</label>
-
-		<SelectComp {value} items={grades} name="grade" />
-		{#if $errors.grade}<span class="invalid">{$errors.grade}</span>{/if}
-	</div>
-
-    
-
+    {@render selects('gender', items)}
+    {@render selects('grade', grades)}
+    {@render selects('school', data?.school)}
     {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student")}
-
-	{@render fe('Address', 'address', 'text')}
+    {@render fe('Fee', 'fee', 'number', 'Enter the hourly fee student must pay?')}
+    {@render selects('location', data?.location)}	
 	{@render fe('Specific Address', 'specificAddress', 'text', "Enter specific address of student")}
-	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student')}
-    
+	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student')}    
 	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth')}
-    <div class="flex w-full flex-col justify-start">
-		<label for="Lead" class={label}>Lead:</label>
-
-		<SelectComp {value} items={data?.lead} name="Lead" />
-		{#if $errors.lead}<span class="text-red-500">{$errors.lead}</span>{/if}
-	</div>
+    {@render selects('lead', data?.lead)}
 </form>
 
 <button type="submit" form="main" class={createbtn}>
