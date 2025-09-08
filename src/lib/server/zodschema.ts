@@ -114,3 +114,70 @@ export const createSubjectSchema = z.object({
 export type CreateSubjectInput = z.infer<typeof createSubjectSchema>;
 
 
+/**
+ * Checks if a given date corresponds to an age within the min-max range.
+ * @param date Date to check
+ * @param minAge Minimum age (inclusive)
+ * @param maxAge Maximum age (inclusive)
+ * @returns true if age is within range
+ */
+export function isAgeInRange(date: Date, minAge: number, maxAge: number): boolean {
+  const today = new Date();
+  let age = today.getFullYear() - date.getFullYear();
+
+  // adjust if birthday hasn't occurred yet this year
+  const hasHadBirthday =
+    today.getMonth() > date.getMonth() ||
+    (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate());
+  if (!hasHadBirthday) age -= 1;
+
+  return age >= minAge && age <= maxAge;
+}
+
+const optionalText = () =>
+  z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.string().min(1)
+  );
+
+export const studentSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required"),
+  lastName: z.string().trim().min(1, "Last name is required"),
+  grandFatherName: optionalText().optional(),
+
+  gender: z.string().trim().min(1, "Gender is required"),
+  grade: z.string().trim().min(1, "Grade is required"),
+  school: z.string().trim().min(1, "School is required"),
+
+  telegram: z.string().trim().min(1, "Telegram username is required"),
+
+  fee: z.string().trim().min(1, "Fee is required"),
+  location: z.string().trim().min(1, "Location is required"),
+  specificAddress: z.string().trim().min(1, "Specific address is required"),
+
+  phone: z.string().trim().optional(),
+
+  dateOfBirth: z
+    .preprocess((val) => {
+      // val is a string from <input type="date"> in YYYY-MM-DD format
+      if (typeof val === "string") return new Date(val);
+      return val;
+    }, z.date({ error: "Date of birth is required" }))
+    .refine(
+      (date) => isAgeInRange(date, 2, 60),
+      "Student age must be between 2 and 60"
+    ),
+
+  lead: z.string().trim().min(1, "Lead is required"),
+
+  notes: z.string().trim().min(1, "Notes are required"),
+});
+
+export type StudentForm = z.infer<typeof studentSchema>;
+
+
+
+
+
+
+

@@ -80,6 +80,7 @@ export const students = pgTable('students', {
   id: serial('id').primaryKey(),
   personId: uuid('person_id').notNull().references(() => persons.id, {onDelete: 'cascade'}),
   grade: varchar('grade', { length: 20 }),
+  gradeId: integer('grade_id').notNull().references(()=> grades.id),
   school: integer('school').notNull().references(() => schools.id),
   naturalOrSocial: varchar('natural_or_social', {length: 20}),
   notes: text('notes'),
@@ -497,9 +498,17 @@ export const leads = pgTable('leads', {
 
 });
 
-export const fees = pgTable('leads', {
+export const fees = pgTable('fees', {
    id: serial('id').primaryKey(),
   fee: integer('fee').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+
+});
+
+export const grades = pgTable('grades', {
+   id: serial('id').primaryKey(),
+  grade: varchar('grade').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 

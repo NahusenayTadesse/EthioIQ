@@ -2,7 +2,7 @@ import { sql, eq } from 'drizzle-orm';
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import {  locations, students, persons, schools} from '$lib/server/db/schema'
+import {  locations, students, grades, fees, persons, schools} from '$lib/server/db/schema'
 
 export const load: PageServerLoad = async ({ parent }) => {
   const layoutData = await parent();
@@ -24,16 +24,18 @@ export const load: PageServerLoad = async ({ parent }) => {
   gender: persons.gender,
   age: sql<number>`EXTRACT(YEAR FROM AGE(CURRENT_DATE, ${persons.dateOfBirth}))`.as('age'),
   phone: persons.phone,
-  grade: students.grade,
+  grade: grades.grade,
   naturalOrSocial: students.naturalOrSocial,
   location: locations.name,
   school: schools.name, 
-  fee: students.fee,
+  fee: fees.fee,
   notes: students.notes,
   isActive: students.isActive
 })
 .from(students)
 .innerJoin(persons, eq(students.personId, persons.id))
+.innerJoin(grades, eq(students.gradeId, grades.id))
+.innerJoin(fees, eq(students.feesId, fees.id))
 .innerJoin(schools, eq(students.school, schools.id)) 
 .innerJoin(locations, eq(students.location, locations.id))
 .orderBy(students.id);

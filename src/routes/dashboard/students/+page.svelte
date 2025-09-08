@@ -129,7 +129,7 @@ function filter(key: string, value: any): void {
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
  <div class= "lg:w-[90%] w-[100%] lg:pr-4 p-0">
 
- <Table mainlist = {students} {tableHeaders} {fileName} />
+ <Table mainlist = {data?.allStudents} {tableHeaders} {fileName} />
 </div>
 {/key}
 

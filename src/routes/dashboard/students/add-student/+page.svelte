@@ -86,15 +86,38 @@
 	{@render fe('Last Name', 'lastName', 'text',  "Enter Student Last Name")}
 	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name")}
     {@render selects('gender', items)}
-    {@render selects('grade', grades)}
+    {@render selects('grade', data.grade)}
     {@render selects('school', data?.school)}
     {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student")}
-    {@render fe('Fee', 'fee', 'number', 'Enter the hourly fee student must pay?')}
+    {@render selects('fee', data?.fee)}
     {@render selects('location', data?.location)}	
 	{@render fe('Specific Address', 'specificAddress', 'text', "Enter specific address of student")}
 	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student')}    
 	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth')}
     {@render selects('lead', data?.lead)}
+
+    <div class="flex w-full flex-col justify-start">
+		<label for="notes" class={label}>Notes:</label>
+
+        <textarea name="notes" 
+         rows="4"
+         placeholder="Enter added notes about Student"
+         
+         class="{input} flex flex-row justify-between
+    {$errors.notes ? '!border-red-500' : ''} "
+			
+			bind:value={$form.notes}
+			aria-invalid={$errors.notes ? 'true' : undefined}
+			{...$constraints.notes}
+
+         
+         ></textarea>
+
+		{#if $errors.notes}<span class="text-red-500">{$errors.notes}</span>{/if}
+	</div>
+
+    
+    
 </form>
 
 <button type="submit" form="main" class={createbtn}>
