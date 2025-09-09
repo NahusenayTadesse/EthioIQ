@@ -38,7 +38,8 @@
 	{#if navigating.to}
   <div class="fixed z-100 h-screen w-screen flex flex-col justify-center items-center">
     <div class="flex flex-row gap-2 items-center">
-		<Loader class="h-16 w-16 animate-spin"/> <h1 class="animate-pulse">Loading {navigating.to.url.pathname}...		 </h1>
+		 <img src="/loader.svg" class="animate-spin w-16 h-16 dark:hidden" alt="">
+      <img src="/loader2.svg" class="animate-spin w-16 h-16 hidden dark:block" alt=""><h1 class="animate-pulse">Loading {navigating.to.url.pathname}...		 </h1>
     </div>
     </div>
 	{/if}

@@ -3,13 +3,13 @@
 	import { input } from "$lib/global.svelte";
 	// import { fly } from "svelte/transition";
 
-    let { value, items, name, required=true } = $props();
+    let { value = $bindable(), items, name } = $props();
     function getItemNameById(items: any, value: any) {
   const item = items.find(i=> i.value === value);
   return item ? item.name : null; // returns null if not found
 }
  </script>
- <Select.Root type="single" {name} required={required} bind:value >
+ <Select.Root type="single" {name} bind:value >
             <Select.Trigger class="w-full capitalize {input}">
                 {value === '' ? 'Select '+ name.replace(/([a-z])([A-Z])/g, '$1 $2'): typeof value === 'number'? getItemNameById(items, value) : value} 
             </Select.Trigger>

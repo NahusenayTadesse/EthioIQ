@@ -5,10 +5,10 @@ import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 import type { PageServerLoad } from "./$types";
 import { db } from '$lib/server/db';
-import { contacts, employees, fees, grades, leads, locations, persons, schools, students } from '$lib/server/db/schema'
+import { contacts, fees, grades, leads, locations, persons, schools, students } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { employeeSchema, studentSchema } from "$lib/server/zodschema";
+import { studentSchema } from "$lib/server/zodschema";
 import type {  Actions } from "./$types";
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 
@@ -24,11 +24,10 @@ export const load: PageServerLoad = async ({ parent }) => {
      if (!hasPerm) {
      error(403, 'Not Allowed! You do not have permission to create students. <br /> Talk to an admin to change it.');
   }
-  const form = await superValidate(zod4(employeeSchema));
+  const form = await superValidate(zod4(studentSchema));
 
 
-     const lead = await 
-      await db.select({
+     const lead =  await db.select({
          value: leads.id,
          name: leads.name
       }).from(leads);
@@ -74,21 +73,23 @@ export const actions: Actions = {
 
 
     const formData = await request.formData();
-    // const form = await superValidate(formData, zod4(employeeSchema));
     const form = await superValidate<Infer<typeof studentSchema>, Message>(formData, zod4(studentSchema));
+
+    
+
 
 
     if (!form.valid) {
       
       setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
+    
 
       return fail(400, { form });
-    
+   
     }
 
 
-
-   const firstName = formData.get('firstName') as string;
+const firstName = formData.get('firstName') as string;
 const lastName = formData.get('lastName') as string;
 const grandFatherName = formData.get('grandFatherName') as string | null;
 
@@ -100,7 +101,7 @@ const telegram = formData.get('telegram') as string;
 
 const fee = formData.get('fee') as string;
 const location = formData.get('location') as string;
-const specificLocation = formData.get('specificAddress') as string;
+const specificLocation = formData.get('specificLocation') as string;
 
 const phone = formData.get('phone') as string | null;
 
@@ -114,8 +115,8 @@ const naturalOrSocial = formData.get('naturalOrSocial') as string || null;
 
     
     const type = 'student';
-    
-
+ 
+  
     
     
     const [student] = await db.insert(persons).values({
@@ -127,16 +128,30 @@ const naturalOrSocial = formData.get('naturalOrSocial') as string || null;
       type,
       dateOfBirth
     }).returning();
+
+    
       
 
 
-     const [studentDetail] =await db.insert(students).values({ personId: student.id,gradeId: grade, location, naturalOrSocial, school, fee, lead, specificLocation, notes }).returning({id:students.id});
+     const [studentDetail] =await db.insert(students).values({ personId: student.id, gradeId: grade, location, naturalOrSocial, school, fee, lead, specificLocation, notes }).returning({id:students.id});
       await db.insert(contacts).values({personId: student.id, type: "Telegram",value: telegram} )
+      
 
     // return message(form, { message:'Employee Created Successfully!', success: true});
-        redirect(`/dashboard/students/${studentDetail.id}`, { type: 'success', message: "Succefully Successfully Created" }, cookies);
+      
+      if(student && studentDetail)
+      redirect(`/dashboard/students/${studentDetail.id}`, { type: 'success', message: "Student Successfully Created" }, cookies);
+      else {
+      
+      setFlash({ type: 'error', message: "Unexpected Error Occurred" }, cookies);
+    
 
+      return fail(400, { form });
+   
+    }
+
+      
   }
+};
 
   
-};

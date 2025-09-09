@@ -2,13 +2,15 @@
 	import { createbtn, createForm, errormsg, input, label, toastmsg } from '$lib/global.svelte.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import SelectComp from '$lib/forms/SelectComp.svelte';
+	import DatePicker from '$lib/forms/DatePicker.svelte';
 	import { UserPlus } from '@lucide/svelte';
+	//  import * as Select from "$lib/components/ui/select/index.js";
 
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+	import { fly } from 'svelte/transition';
 
-	let value = $state<string | undefined>();
 	let items = [
 		{ name: 'Male', value: 'male' },
 		{ name: 'Female', value: 'female' }
@@ -33,23 +35,37 @@
 		}
 	);
 
+
 	export const snapshot: Snapshot = { capture, restore };
+	 function getItemNameById(items: any, value: any) {
+  const item = items.find(i=> i.value === value);
+  return item ? item.name : null; // returns null if not found
+}
+
+  import { getLocalTimeZone, today } from "@internationalized/date";
+
+  let dob = $derived($form.dateOfBirth.toDateString)
 
 </script>
+<svelte:head>
+	<title>Add New Student </title>
+</svelte:head>
+
     
-{#snippet fe(labeler = '', name = '', type = '', placeholder = '')}
+{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required=false)}
 	<div class="flex w-full flex-col justify-start">
 		<Label for={name} class={label}>{labeler}</Label>
 		<input
 			{type}
 			{name}
 			{placeholder}
+			{required}
 			class="{input} flex flex-row justify-between
     {$errors[name] ? '!border-red-500' : ''} "
 			
 			bind:value={$form[name]}
 			aria-invalid={$errors[name] ? 'true' : undefined}
-			{...$constraints[name]}
+			
 		/>
 		{#if $errors[name]}
 			<span class="text-red-500">{$errors[name]}</span>
@@ -62,27 +78,38 @@
 <div class="flex w-full flex-col justify-start">
 		<label for={name} class={label}>{name.replace(/([a-z])([A-Z])/g, '$1 $2')}:</label>
 
-		<SelectComp {value} {items} {name} />
+		<SelectComp {name} bind:value={$form[name]} {items} />
 		{#if $errors[name]}<span class="text-red-500">{$errors[name]}</span>{/if}
 	</div>
     
 {/snippet}
 
 <form use:enhance action="?/createStudent" id="main" class={createForm} method="POST">
-	{@render fe('First Name', 'firstName', 'text', "Enter Student First Name")}
-	{@render fe('Last Name', 'lastName', 'text',  "Enter Student Last Name")}
-	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name")}
+	{@render fe('First Name', 'firstName', 'text', "Enter Student First Name", true)}
+	{@render fe('Last Name', 'lastName', 'text',  "Enter Student Last Name", true)}
+	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name", false)}
     {@render selects('gender', items)}
     {@render selects('grade', data.grade)}
-    {@render selects ('naturalOrSocial', ns)}
+	{#if getItemNameById(data.grade,$form.grade) === 'Grade 11' || getItemNameById(data.grade,$form.grade) === 'Grade 12'}
+	<div transition:fly={{x:-20, duration:300}}>
+    {@render selects ('naturalOrSocial', ns) }
+	</div>
+	{/if}
+	
     {@render selects('school', data?.school)}
-    {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student")}
+    {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student", true)}
     {@render selects('fee', data?.fee)}
     {@render selects('location', data?.location)}	
-	{@render fe('Specific Address', 'specificAddress', 'text', "Enter specific address of student")}
-	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student')}    
-	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth')}
+	{@render fe('Specific Address', 'specificLocation', 'text', "Enter specific address of student", true)}
+	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student', false)}    
+	<!-- {@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth', true)} -->
+    <div>
+     <DatePicker name="dateOfBirth" bind:value={dob} />
+	 {#if $errors.dateOfBirth}<span class="text-red-500">{$errors.dateOfBirth}</span>{/if}
+	 <input type="text" name="dateOfBirth" bind:value={dob} /> 
+	 </div>
     {@render selects('lead', data?.lead)}
+
 
     <div class="flex w-full flex-col justify-start">
 		<label for="notes" class={label}>Notes:</label>
@@ -96,7 +123,6 @@
 			
 			bind:value={$form.notes}
 			aria-invalid={$errors.notes ? 'true' : undefined}
-			{...$constraints.notes}
 
          
          ></textarea>
@@ -105,7 +131,7 @@
 	</div>
 
     
-    
+
 </form>
 
 <button type="submit" form="main" class={createbtn}>
