@@ -42,6 +42,7 @@
  <Popover.Content bind:ref={contentRef} class="w-auto p-0">
   <Calendar type="single" captionLayout="dropdown" bind:value
    {minValue}
+    class="dark:bg-dark dark:text-white"
     maxValue={today(getLocalTimeZone())}
      />
  </Popover.Content>

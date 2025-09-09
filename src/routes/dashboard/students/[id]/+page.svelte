@@ -77,12 +77,7 @@ let tutorHeaders = $state([
   
   ]); 
 
-  
 
-  
-  
-// const fileName = `${data.student.firstName} ${data.student.lastName} .pdf`;
-// const buttonName = `Download ${data.student.firstName} as PDF`
  
 
 </script>
@@ -90,9 +85,16 @@ let tutorHeaders = $state([
    <title> {data.student.firstName} {data.student.lastName}</title>
 </svelte:head>
 
-   <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
 
-  
+  <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
+       <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
+       <a href="#studentDetials" class="{submitButton} w-[250px]">Student Details</a>
+       <a href="#parents" class="{submitButton} w-[250px]">Parents</a>
+       <a href="#tutors" class="{submitButton} w-[250px]">Tutors</a>
+       <a href="#subjects" class="{submitButton} w-[250px]">Subjects</a>
+
+
+  </div>
 
 
 <div class="min-h-screen py-10">
@@ -102,7 +104,7 @@ let tutorHeaders = $state([
 
       <h1 class="text-3xl font-bold text-center shadow-sm">Student Details</h1>
     </div>
-    <div class="py-8 px-6">
+    <div class="py-8 px-6" id="parents">
       {#await data}
            <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
 
@@ -123,18 +125,15 @@ let tutorHeaders = $state([
 <ChildrenTable mainlist = {parents} {tableHeaders}link='parents' />
 </div>
 
-<h1 class="text-4xl font-head">Tutors</h1>
+<h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
 
  <br /> <br />
  <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2">
 <ChildrenTable mainlist = {tutors} tableHeaders = {tutorHeaders} link='tutors'/>
 </div>
 
-<h1 class="text-4xl font-head my-6">Subjects</h1>
+<h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
 
  <div class="flex flex-col flex-start">
 <ChildrenTable mainlist = {subjects} tableHeaders = {subjectHeaders} />
 </div>
-
- 
-
