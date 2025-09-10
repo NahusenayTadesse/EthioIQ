@@ -77,7 +77,7 @@ let tutorHeaders = $state([
    {name: 'Active', key: 'isActive'}
   
   ]); 
-
+import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
  
 
@@ -85,6 +85,9 @@ let tutorHeaders = $state([
 <svelte:head>
    <title> {data.student.firstName} {data.student.lastName}</title>
 </svelte:head>
+{#snippet content()}
+  <Parents data={data.form} id={data.student.id} />
+{/snippet}
 
 
   <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
@@ -122,8 +125,10 @@ let tutorHeaders = $state([
 <h1 class="text-4xl font-head">Parents</h1>
 
  <br /> <br />
- <div class="flex flex-col flex-start">
+ <div class="flex flex-col flex-start gap-4">
 <ChildrenTable mainlist = {data.parent} {tableHeaders}link='parents' />
+<DialogComp title="Add New Parent" {content} />
+
 </div>
 
 <h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
@@ -140,4 +145,5 @@ let tutorHeaders = $state([
 </div>
 
 
-<Parents data={data.form} id={data.student.id} />
+
+

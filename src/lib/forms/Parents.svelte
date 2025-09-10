@@ -19,6 +19,10 @@
 		{ name: 'Yes, this is a primary parent', value: true },
 		{ name: 'No, this is not a primary parent', value: false }
 	];
+  let livingTogehter = [
+		{ name: 'Yes, the student is living with this parent', value: true },
+		{ name: 'No, the student is living with this parent', value: false }
+	];
   let type = [
 		{ name: 'Mother', value: "Mother" },
 		{ name: 'Father', value: "Father" },
@@ -69,7 +73,7 @@
 
 
 
- <form action="/dashboard/students/{id}?addParent" method="post" class="w-lg" use:enhance>
+ <form action="/dashboard/students/{id}?addParent" method="post" class="w-full p-2 flex flex-col gap-4" use:enhance>
 
     {@render fe("First Name", "firstName", 'text', "Enter Parent First Name", true)}
     {@render fe("Last Name", "lastName", 'text', "Enter Parent Last Name", true)}
@@ -77,6 +81,7 @@
     {@render fe("Phone Number", "phone", 'tel', "Enter Parent's Phone Number", true)}
     {@render fe("Specific Address", "specificLocation", 'text', "Enter Parent's specific address", true)}
 	{@render selects('type', type)}
+	{@render selects('livingTogether', livingTogehter)}
 	{@render selects('isPrimary', isPirmary)}
 
     <div class="flex w-full flex-col justify-start">

@@ -171,29 +171,32 @@ export const parentSchema = z.object({
   firstName: z
     .string()
     .min(2, "First Name must be at least 2 characters long")
-    .max(50, "First Name must be less than 50 characters"),
+    .max(50, "First Name must be less than 50 characters")
+    .min(1, "First Name is required"),
   lastName: z
     .string()
     .min(2, "Last Name must be at least 2 characters long")
-    .max(50, "Last Name must be less than 50 characters"),
+    .max(50, "Last Name must be less than 50 characters")
+    .min(1, "Last Name is required"),
   gender: z.string().trim().min(1, "Gender is required"),
   phone: z
     .string()
     .min(7, "Phone number must be at least 7 digits")
     .max(20, "Phone number must be less than 20 digits")
-    .regex(/^[0-9+\-\s()]+$/, "Invalid phone number format"),
+    .regex(/^[0-9+\-\s()]+$/, "Invalid phone number format")
+    .min(1, "Phone number is required"),
   specificLocation: z
     .string()
     .min(3, "Specific Address must be at least 3 characters long")
-    .max(100, "Specific Address must be less than 100 characters"),
+    .max(100, "Specific Address must be less than 100 characters")
+    .min(1, "Specific Address is required"),
   notes: z
     .string()
     .max(500, "Notes must be less than 500 characters")
     .optional()
     .or(z.literal("")), // allow empty string
-  type: z
-  .string()
-
+  type: z.string().min(1, "Relation Type is required"),
+  livingTogether: z.string().min(1, "Living Together is required")
 });
 
 export type ParentSchema = typeof parentSchema;

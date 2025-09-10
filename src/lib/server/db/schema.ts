@@ -137,8 +137,8 @@ export const employees = pgTable('employees', {
 
 export const studentParentRelations = pgTable('student_parent_relations', {
   id: serial('id').primaryKey(),
-  studentId: integer('student_id').notNull().references(() => students.id),
-  parentId: integer('parent_id').notNull().references(() => parents.id),
+  studentId: integer('student_id').notNull().references(() => students.id,  {onDelete: 'cascade'}),
+  parentId: integer('parent_id').notNull().references(() => parents.id,  {onDelete: 'cascade'}),
   relationshipType: varchar('relationship_type', { length: 50 }).notNull(), // 'mother', 'father', 'guardian', etc.
   livingTogether: boolean('living_together').notNull().default(true),
   isPrimary: boolean('is_primary').notNull().default(true),

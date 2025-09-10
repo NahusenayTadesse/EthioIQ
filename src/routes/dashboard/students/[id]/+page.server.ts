@@ -53,6 +53,7 @@ export const actions: Actions = {
 		const phone = (formData.get('phone') as string) || '';
 		const specificLocation = (formData.get('specificLocation') as string) || '';
 		const isPrimary = (formData.get('isPrimary') as string) || '';
+		const livingTogether = (formData.get('livingTogether') as string) || '';
 		const type = (formData.get('type') as string) || '';
 		const notes = (formData.get('notes') as string) || '';
 		const id = (formData.get('id') as string) || '';
@@ -77,7 +78,8 @@ export const actions: Actions = {
                  parentId: parentDetail.id,
                  studentId: id,
                  isPrimary,
-                 relationshipType: type
+                 relationshipType: type,
+                 livingTogether
              });
 
 			setFlash({ type: 'success', message: 'Parent Added Successfully' }, cookies);
