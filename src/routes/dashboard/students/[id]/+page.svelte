@@ -5,6 +5,7 @@
   import { submitButton } from "$lib/global.svelte.js";
   import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
+  import Parents from "$lib/forms/Parents.svelte"
 
     let { data } = $props();
     let parents = $state(data.parent);
@@ -122,18 +123,21 @@ let tutorHeaders = $state([
 
  <br /> <br />
  <div class="flex flex-col flex-start">
-<ChildrenTable mainlist = {parents} {tableHeaders}link='parents' />
+<ChildrenTable mainlist = {data.parent} {tableHeaders}link='parents' />
 </div>
 
 <h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
 
  <br /> <br />
  <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2">
-<ChildrenTable mainlist = {tutors} tableHeaders = {tutorHeaders} link='tutors'/>
+<ChildrenTable mainlist = {data.matches} tableHeaders = {tutorHeaders} link='tutors'/>
 </div>
 
 <h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
 
  <div class="flex flex-col flex-start">
-<ChildrenTable mainlist = {subjects} tableHeaders = {subjectHeaders} />
+<ChildrenTable mainlist = {data.subjectforStudent} tableHeaders = {subjectHeaders} />
 </div>
+
+
+<Parents data={data.form} id={data.student.id} />

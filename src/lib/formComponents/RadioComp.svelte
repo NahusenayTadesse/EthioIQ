@@ -2,11 +2,11 @@
           import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
 	import { label } from "$lib/global.svelte";
 
-    let { name, items, required=true, btnName} = $props();
+    let { name, value=$bindable(), items, required=true, btnName} = $props();
 
 </script>
 
-<RadioGroup.Root value="true" {name} required={required}> 
+<RadioGroup.Root bind:value {name} required={required}> 
         <label for="" class={label}> {btnName}</label>
 
         {#each items as item}

@@ -90,7 +90,7 @@ function filter(key: string, value: any): void {
 <div class="flex flex-col gap-2" transition:fly={{x:-200, duration: 600}}>
   
   <button onclick={()=> students = data.allStudents} class="{submitButton} !w-[120px] flex flex-row gap-2 justify-center items-center" title="Clear Filter">
-    <BrushCleaning size=18 /> Clear</button>
+  <BrushCleaning size=18 /> Clear</button>
   
 
   {#each filterNames as filterName}
@@ -129,7 +129,7 @@ function filter(key: string, value: any): void {
 <button onclick={reloadComponent} class="aboslute right-0 top-0" aria-label="Relaod Table" title="Reload Table" > <RotateCcw  /></button>
  <div class= "lg:w-[90%] w-[100%] lg:pr-4 p-0">
 
- <Table mainlist = {data?.allStudents} {tableHeaders} {fileName} />
+ <Table mainlist = {students} {tableHeaders} {fileName} />
 </div>
 {/key}
 

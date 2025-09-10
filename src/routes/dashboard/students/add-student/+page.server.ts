@@ -140,7 +140,7 @@ const naturalOrSocial = formData.get('naturalOrSocial') as string || null;
     // return message(form, { message:'Employee Created Successfully!', success: true});
       
       if(student && studentDetail)
-      redirect(`/dashboard/students/${studentDetail.id}/parents`, { type: 'success', message: "Student Successfully Created" }, cookies);
+      redirect(`/dashboard/students/${studentDetail.id}/#parents`, { type: 'success', message: "Student Successfully Created" }, cookies);
       else {
       
       setFlash({ type: 'error', message: "Unexpected Error Occurred" }, cookies);

@@ -3,7 +3,7 @@
  import {
 	CalendarDate,
   DateFormatter,
-  type DateValue,
+  type Date,
   getLocalTimeZone,
 
   today

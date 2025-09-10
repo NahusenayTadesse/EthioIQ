@@ -7,9 +7,15 @@ import {  persons, parents, studentParentRelations, tutors, students, subjects, 
 import { error } from '@sveltejs/kit';
 
 
+
+
+
+
 export const load: LayoutDataServerLoad = async ({params}) => {
     
     const {id} =  params;
+
+
 
    
     try {
@@ -126,7 +132,9 @@ if (!student) {
             student,
             parent,
             matches,
-            subjectforStudent
+            subjectforStudent,
+            locationBranches
+         
         };
     } catch (error) {
         console.error('Failed to load Student:', error);

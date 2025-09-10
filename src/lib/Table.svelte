@@ -10,7 +10,7 @@
 	import { ScrollArea } from "./components/ui/scroll-area";
 	import Skeleton from "./Skeleton.svelte";
 
-    let table = $state();
+    let table: HTMLElement = $state();
    
   
 
@@ -23,15 +23,19 @@
    {name:'Gender', key: 'gender'},
    {name:'Position', key: 'position'},
    {name: 'Active', key: 'isActive'}], fileName = 'fileName' } = $props();
-   let list = $state();
-   list = mainlist;
+   let list = $state(mainlist);
    
    let searchQuery= $state('');
    let hover = $state(false);
    
 
 
- 
+//  $effect(() => {
+//   // Reset list when search query changes
+//   if (!searchQuery) {
+//     list = [...mainlist];
+//   }
+// });
 
 
   
@@ -51,12 +55,6 @@
 
 
  
-
-
-
-
-
-
 // Sorter
 function sorter(head: string) {
   if (head === '') return list;
@@ -76,7 +74,7 @@ function sorter(head: string) {
 
 //Reverse Sorter
 
-function sorterReverse(head: string){
+function sorterReverse(head: String){
    if(head === '')
    return list;
  const sample = list[0]?.[head];
@@ -92,38 +90,6 @@ function sorterReverse(head: string){
 
 return list.sort((a,b)=> b[head].localeCompare(a[head]) )
 }
-
-
-// function sorter(head: string, reverse = false) {
-//   if (!head) return [...list];
-
-//   const sample = list.find(item => item[head] !== undefined && item[head] !== null)?.[head];
-//   if (sample === undefined) return [...list];
-
-//   const dir = reverse ? -1 : 1;
-
-//   if (typeof sample === 'number' || typeof sample === 'boolean') {
-//     return [...list].sort((a, b) => (Number(a[head]) - Number(b[head])) * dir);
-//   }
-
-//   return [...list].sort((a, b) => String(a[head]).localeCompare(String(b[head])) * dir);
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Define searchable fields
-
 // Filter function
 function filterEmployees(persons, query) {
   if (!query) return persons;
@@ -141,7 +107,7 @@ function filterEmployees(persons, query) {
 }
  
   function exportJSONtoCSV() {
-    const csv = Papa.unparse(mainlist);
+    const csv = Papa.unparse(list);
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -181,7 +147,7 @@ function filterEmployees(persons, query) {
 
      {/if}
 
-Number of Filtered Data: {mainlist.length} <br>
+Number of Filtered Data: {list.length} <br>
 
 
 <input type="text" class="{select} !w-[200px] !placeholder:dark:text-white m-2 ml-0" bind:value={searchQuery} placeholder="Search...">
@@ -192,7 +158,7 @@ Number of Filtered Data: {mainlist.length} <br>
         <Skeleton {tableHeaders} />
       {:then list} 
 
-      <ScrollArea class="h-full lg:w-[90%] w-[100%] rounded-md border p-4" orientation='both'>
+      <ScrollArea class="h-full lg:w-[100%] w-[100%] rounded-md border p-4" orientation='both'>
 
 <table id='table' class="divide-y divide-gray-200 dark:divide-gray-200" bind:this={table}>
     <thead class="bg-gray-100 dark:bg-black">
@@ -208,7 +174,7 @@ Number of Filtered Data: {mainlist.length} <br>
             >
             <div class="flex flex-row">
            <button onclick={() => sorter(head.key) } 
-             class="flex flex-row items-center justify-between"  title = "Sort with {head.name}" >{head.name} 
+             class="flex flex-row items-center justify-between"  title = "Sort with {head.name}" >{head.name}
         
              <ArrowDownWideNarrow class="w-[16px] {hover ? 'opacity-100': 'opacity-0'} transition-all"/>
             </button>
@@ -244,8 +210,8 @@ Number of Filtered Data: {mainlist.length} <br>
       Nothing found matching "{searchQuery}"
 
       {/if}
-    </td>
-  </tr>
+    </td> 
+  </tr>                                    
       
        {:else}
       {#each Object.values(filterEmployees(list, searchQuery)) as person, index} 
@@ -290,7 +256,7 @@ Number of Filtered Data: {mainlist.length} <br>
    {:catch error}
   <div>
     <div  class="px-6 py-4 text-center text-sm text-red-500 te">
-      Error loading data: {mainlist.error}
+      Error loading data: {error.message}
     </div>
   </div>
 

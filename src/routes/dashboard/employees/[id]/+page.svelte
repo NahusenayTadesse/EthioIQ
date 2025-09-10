@@ -1,14 +1,14 @@
 
 <script lang='ts'>
 	import ChildrenTable from "$lib/ChildrenTable.svelte";
-	import Loadingbtn from "$lib/forms/Loadingbtn.svelte";
-	import RadioComp from "$lib/forms/RadioComp.svelte";
+	import Loadingbtn from "$lib/formComponents/Loadingbtn.svelte";
+	import RadioComp from "$lib/formComponents/RadioComp.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
 	import { Plus } from "@lucide/svelte";
   import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import { createForm, input, label, submitButton } from "$lib/global.svelte.js";
-	import SelectComp from "$lib/forms/SelectComp.svelte";
+	import SelectComp from "$lib/formComponents/SelectComp.svelte";
   let { data } = $props();
   let employee = $state(data.employee);
 

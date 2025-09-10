@@ -155,7 +155,7 @@ export const studentSchema = z.object({
   phone: z.string().trim().optional(),
   
 
-  dateOfBirth: dateOfBirthWithMinAge(2,'Student'), 
+  dateOfBirth: z.string().trim().min(1, "Date of Birth is Required"), 
 
   lead: z.string().trim().min(1, "Lead is required"),
 
@@ -163,4 +163,39 @@ export const studentSchema = z.object({
 });
 
 export type StudentForm = z.infer<typeof studentSchema>;
+
+
+
+
+export const parentSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, "First Name must be at least 2 characters long")
+    .max(50, "First Name must be less than 50 characters"),
+  lastName: z
+    .string()
+    .min(2, "Last Name must be at least 2 characters long")
+    .max(50, "Last Name must be less than 50 characters"),
+  gender: z.string().trim().min(1, "Gender is required"),
+  phone: z
+    .string()
+    .min(7, "Phone number must be at least 7 digits")
+    .max(20, "Phone number must be less than 20 digits")
+    .regex(/^[0-9+\-\s()]+$/, "Invalid phone number format"),
+  specificLocation: z
+    .string()
+    .min(3, "Specific Address must be at least 3 characters long")
+    .max(100, "Specific Address must be less than 100 characters"),
+  notes: z
+    .string()
+    .max(500, "Notes must be less than 500 characters")
+    .optional()
+    .or(z.literal("")), // allow empty string
+  type: z
+  .string()
+
+});
+
+export type ParentSchema = typeof parentSchema;
+
 

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { createbtn, createForm, errormsg, input, label, toastmsg } from '$lib/global.svelte.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import SelectComp from '$lib/forms/SelectComp.svelte';
-	import DatePicker from '$lib/forms/DatePicker.svelte';
+	import SelectComp from '$lib/formComponents/SelectComp.svelte';
+	import DatePicker from '$lib/formComponents/DatePicker.svelte';
 	import { UserPlus } from '@lucide/svelte';
 	//  import * as Select from "$lib/components/ui/select/index.js";
 
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
-	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
 	import { fly } from 'svelte/transition';
 
 	let items = [
@@ -42,9 +42,8 @@
   return item ? item.name : null; // returns null if not found
 }
 
-  import { getLocalTimeZone, today } from "@internationalized/date";
 
-  let dob = $derived($form.dateOfBirth.toDateString)
+//   let dob = $derived($form.dateOfBirth.toDateString)
 
 </script>
 <svelte:head>
@@ -104,9 +103,9 @@
 	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student', false)}    
 	<!-- {@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth', true)} -->
     <div>
-     <DatePicker name="dateOfBirth" bind:value={dob} />
+     <DatePicker name="dateOfBirth" bind:value={$form.dateOfBirth} />
 	 {#if $errors.dateOfBirth}<span class="text-red-500">{$errors.dateOfBirth}</span>{/if}
-	 <input type="text" name="dateOfBirth" bind:value={dob} /> 
+	 <input type="text" name="dateOfBirth" bind:value={$form.dateOfBirth} /> 
 	 </div>
     {@render selects('lead', data?.lead)}
 

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { createbtn, createForm, errormsg, input, label, toastmsg } from '$lib/global.svelte.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import SelectComp from '$lib/forms/SelectComp.svelte';
+	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import { UserPlus } from '@lucide/svelte';
 
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
-	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
 
 	let value = $state<string | undefined>();
 	let items = [
