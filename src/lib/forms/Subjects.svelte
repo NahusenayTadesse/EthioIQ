@@ -1,43 +1,27 @@
 <script lang="ts">
   import type { SuperValidated, Infer } from 'sveltekit-superforms';
   import { superForm } from 'sveltekit-superforms'
-  import type { ParentSchema } from '$lib/server/zodschema';
+  import type { AddSubjectSchema } from '$lib/server/zodschema';
 	import { input, label, submitButton } from '$lib/global.svelte';
 	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
 	import { Plus } from '@lucide/svelte';
+	import DatePicker from '$lib/formComponents/DatePicker.svelte';
 
-  let { data, id, action="?/addParent" } : { data : SuperValidated<Infer<ParentSchema>> } = $props();
+  let { data, id, subjects, action="?/addSubject" } : { data : SuperValidated<Infer<AddSubjectSchema>> } = $props();
 
   const { form, errors, enhance, delayed } = superForm(data);
 
-  let items = [
-		{ name: 'Male', value: 'male' },
-		{ name: 'Female', value: 'female' }
-	];
-  let isPirmary = [
-		{ name: 'Yes, this is a primary parent', value: true },
-		{ name: 'No, this is not a primary parent', value: false }
-	];
-  let livingTogehter = [
-		{ name: 'Yes, the student is living with this parent', value: true },
-		{ name: 'No, the student is living with this parent', value: false }
-	];
-  let type = [
-		{ name: 'Mother', value: "Mother" },
-		{ name: 'Father', value: "Father" },
-		{ name: 'Brother', value: "Brother" },
-		{ name: 'Sister', value: "Sister" },
-		{ name: 'Uncle', value: "Uncle" },
-		{ name: 'Aunt', value: "Aunt" },
-		{ name: 'Grandfather', value: "Grandfather" },
-		{ name: 'Grandmother', value: "Grandmother" },
-		{ name: 'Stepfather', value: "Stepfather" },
-		{ name: 'Stepmother', value: "Stepmother" },
-		{ name: 'Guardian', value: "Guardian" },
-		{ name: 'Cousin', value: "Cousin" },
-		{ name: 'Family Friend', value: "Family Friend" },
-		{ name: 'Other', value: "Other" }
+
+
+  let profieciencyLevel = [
+        { name: 'Beginner', value: 'Beginner' },
+        { name: 'Elementary', value: 'Elementary' },
+        { name: 'Intermediate', value: 'Intermediate' },
+        { name: 'Upper Intermediate', value: 'Upper Intermediate' },
+        { name: 'Advanced', value: 'Advanced' },
+        { name: 'Proficient', value: 'Proficient' }
+	
 	];
 </script>
 
@@ -49,7 +33,7 @@
 			{name}
 			{placeholder}
 			class="{input} flex flex-row justify-between
-    {$errors[name] ? '!border-red-500' : ''} "
+           {$errors[name] ? '!border-red-500' : ''} "
 			
 			bind:value={$form[name]}
 			aria-invalid={$errors[name] ? 'true' : undefined}
@@ -75,14 +59,15 @@
 
  <form {action} method="post" class="w-full p-2 flex flex-col gap-4" use:enhance>
 
-    {@render fe("First Name", "firstName", 'text', "Enter Parent First Name", true)}
-    {@render fe("Last Name", "lastName", 'text', "Enter Parent Last Name", true)}
-    {@render selects('gender', items)}
-    {@render fe("Phone Number", "phone", 'tel', "Enter Parent's Phone Number", true)}
-    {@render fe("Specific Address", "specificLocation", 'text', "Enter Parent's specific address", true)}
-	{@render selects('type', type)}
-	{@render selects('livingTogether', livingTogehter)}
-	{@render selects('isPrimary', isPirmary)}
+	{@render selects('subject', subjects)}
+	{@render selects('profieciencyLevel', profieciencyLevel)}
+
+
+      <div>
+     <DatePicker name="startedAt" bind:value={$form.startedAt} />
+	 {#if $errors.startedAt}<span class="text-red-500">{$errors.startedAt}</span>{/if}
+	 <input type="text" name="startedAt" bind:value={$form.startedAt} /> 
+	 </div>
 
     <div class="flex w-full flex-col justify-start">
 		<label for="notes" class={label}>Notes:</label>
@@ -107,10 +92,10 @@
 
 	 <button type="submit" class="{submitButton} w-full" >
 		{#if $delayed}
-		 <Loadingbtn name="Adding Parent" />
+		 <Loadingbtn name="Adding Subject" />
 		{:else}
 		<Plus />
-		Add Parent
+		Add Subject
 		{/if}
 	</button>
 </form>

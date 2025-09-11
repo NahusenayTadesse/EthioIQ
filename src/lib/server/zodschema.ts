@@ -201,4 +201,13 @@ export const parentSchema = z.object({
 
 export type ParentSchema = typeof parentSchema;
 
+export const addSubjectSchema = z.object({
+  subject: z.string().min(1, "Subject is required"),
+  profieciencyLevel: z.string().min(1, "Proficiency level is required"),
+  startedAt: z.string().min(1, "Start date is required"),
+  notes: z.string().optional(),
+  id: z.string().min(1, "ID is required"),
+});
+
+export type AddSubjectSchema = typeof addSubjectSchema;
 

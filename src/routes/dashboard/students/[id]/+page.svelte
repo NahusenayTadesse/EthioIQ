@@ -6,6 +6,7 @@
   import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
   import Parents from "$lib/forms/Parents.svelte"
+  import Subjects from "$lib/forms/Subjects.svelte"
 
     let { data } = $props();
     let parents = $state(data.parent);
@@ -88,6 +89,9 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 {#snippet content()}
   <Parents data={data.form} id={data.student.id} />
 {/snippet}
+{#snippet content2()}
+  <Subjects data={data.subjectForm} id={data.student.id} subjects={data.allSubjects} action="?/addSubject" />
+{/snippet}
 
 
   <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
@@ -140,8 +144,10 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
 <h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
 
- <div class="flex flex-col flex-start">
+ <div class="flex flex-col flex-start gap-4">
 <ChildrenTable mainlist = {data.subjectforStudent} tableHeaders = {subjectHeaders} />
+<DialogComp title="Add New Subject" content={content2} />
+
 </div>
 
 
