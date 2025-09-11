@@ -10,7 +10,16 @@
 
   let { data, id, subjects, action="?/addSubject" } : { data : SuperValidated<Infer<AddSubjectSchema>> } = $props();
 
-  const { form, errors, enhance, delayed } = superForm(data);
+  const { form, errors, enhance, delayed } = superForm(data,
+      
+		{
+			taintedMessage: () => {
+				return new Promise((resolve) => {
+					resolve(window.confirm('Do you want to leave?\nChanges you made may not be saved.'));
+				});
+			},
+		}
+  );
 
 
 
@@ -64,9 +73,9 @@
 
 
       <div>
-     <DatePicker name="startedAt" bind:value={$form.startedAt} />
+     <label for="startedAt" class={label}>Date Student Started At</label>
+     <DatePicker name="startedAt" bind:value={$form.startedAt} captionLayout="" maxValue="" minValue="" />
 	 {#if $errors.startedAt}<span class="text-red-500">{$errors.startedAt}</span>{/if}
-	 <input type="text" name="startedAt" bind:value={$form.startedAt} /> 
 	 </div>
 
     <div class="flex w-full flex-col justify-start">

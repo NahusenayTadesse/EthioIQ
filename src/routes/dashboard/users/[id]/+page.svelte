@@ -31,9 +31,7 @@
     </div>
     <div class="py-8 px-6">
       {#await data}
-           <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
-
-        
+           <h1 class="flex flex-row m-2 animate-pulse">  <LoaderCircle class="animate-spin" />Loading Parent Data </h1>
       {:then user} 
        
           <SingleTable {singleTable} />

@@ -1,11 +1,11 @@
-import type { Actions, PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types'
+import { eq, sql } from 'drizzle-orm'
 import { db } from '$lib/server/db';
 import {
 	persons,
 	parents,
 	subjects,
 	subjectStudents,
-	assessmentResults,
 	studentParentRelations
 } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
@@ -42,11 +42,20 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 			name: subjects.name
 		})
 		.from(subjects);
+	  
+		const parentsNames = await db
+		.select({
+			value: parents.id,
+            name: sql<string>`concat(${persons.firstName}, ' ', ${persons.lastName})`,
+		})
+		.from(parents)
+		.leftJoin(persons, eq(persons.id, parents.personId));
 
 	return {
 		form,
 		subjectForm,
-		allSubjects
+		allSubjects,
+		parentsNames
 	};
 };
 export const actions: Actions = {

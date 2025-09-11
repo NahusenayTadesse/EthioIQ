@@ -20,7 +20,7 @@
 
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
-	import Loadingbtn from '$lib/forms/Loadingbtn.svelte';
+	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
 
 	const {
     form,

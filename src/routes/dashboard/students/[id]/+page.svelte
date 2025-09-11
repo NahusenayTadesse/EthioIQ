@@ -6,13 +6,13 @@
   import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
   import Parents from "$lib/forms/Parents.svelte"
-  import Subjects from "$lib/forms/Subjects.svelte"
+  import Subjects from "$lib/forms/Subjects.svelte";
+  import ComboboxComp  from "$lib/formComponents/ComboboxComp.svelte";
 
     let { data } = $props();
-    let parents = $state(data.parent);
     let student =  $state(data.student);
-    let tutors = $state(data.matches);
-    let subjects = $state(data.subjectforStudent);
+
+  
 
     let tableHeaders = $state([
     
@@ -80,7 +80,7 @@ let tutorHeaders = $state([
   ]); 
 import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
- 
+ let value = $state('')
 
 </script>
 <svelte:head>
@@ -132,6 +132,7 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
  <div class="flex flex-col flex-start gap-4">
 <ChildrenTable mainlist = {data.parent} {tableHeaders}link='parents' />
 <DialogComp title="Add New Parent" {content} />
+<ComboboxComp {value} name="parents" items={data.parentsNames} />
 
 </div>
 
