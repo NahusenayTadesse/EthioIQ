@@ -1,6 +1,7 @@
 <script>
     import ChildrenTable from "$lib/ChildrenTable.svelte";
 
+
     let {data} = $props();
 
     let tutorSessions = data.tutorSessions;
@@ -9,7 +10,7 @@
         { name: "Session ID", key: "id" },
         { name: "Student First Name", key: "firstName" },
         { name: "Student Last Name", key: "lastName" },
-        { name: "Phone", key: "phone" },
+        { name: "Tutor's Phone", key: "phone" },
         { name: "Subject", key: "subject" },
         { name: "Scheduled Start", key: "scheduledStart" },
         { name: "Scheduled End", key: "scheduledEnd" },
@@ -28,8 +29,9 @@
         <p class="text-gray-500 dark:text-gray-100">No sessions found for this student.</p>
     {:else}
        <div class="flex flex-start flex-col w-[90%]">
-           <ChildrenTable mainlist={tutorSessions} {tableHeaders} link='tutors' search=true />
+           <ChildrenTable mainlist={data.tutorSessions} {tableHeaders} link='tutors' search=true />
        </div>
     {/if}
+
 
 </div>

@@ -101,6 +101,7 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
   <ConnectTutors data={data.connectTutorForm} id={data.student.id} items={data.possibleTutors} action="?/addTutor" subjects={data.allSubjects} />
 {/snippet}
 
+       <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
 
 
   <!-- <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
@@ -113,7 +114,7 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
   </div> -->
 
-
+<div class="flex flex-col gap-8">
 <div class="min-h-screen py-10">
   <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md overflow-hidden max-w-3xl">
     <div class="bg-gradient-to-r from-dark to-black text-white py-6 px-8 flex flex-col justify-center items-center">
@@ -123,22 +124,16 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
     </div>
     <div class="py-8 px-6" id="parents">
       {#await data}
-           <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
-
-        
+           <h1 class="flex flex-row m-2">Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
       {:then parent} 
-       
           <SingleTable {singleTable} />
-
         {/await}
     </div>
   </div>
 </div>
 
-<h1 class="text-4xl font-head">Parents</h1>
-
- <br /> <br />
  <div class="flex flex-col flex-start gap-4">
+  <h1 class="text-4xl font-head">Parents</h1>
 <ChildrenTable mainlist = {data.parent} {tableHeaders}link='parents' />
 <div class="flex flex-row gap-4">
   <DialogComp title="Add New Parent" {content} />
@@ -146,20 +141,21 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
 </div>
 
-<h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
 
- <br /> <br />
- <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2">
+
+ <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2 gap-4">
+  <h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
+
 <ChildrenTable mainlist = {data.matches} tableHeaders = {tutorHeaders} link='tutors'/>
 <div class="w-sm">
 <DialogComp title="Connect Tutor to Student" content={content4} />
 </div>
-
 </div>
 
-<h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
 
  <div class="flex flex-col flex-start gap-4">
+  <h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
+
 <ChildrenTable mainlist = {data.subjectforStudent} tableHeaders = {subjectHeaders} />
 <div class="w-sm">
 <DialogComp title="Add New Subject" content={content2} />
@@ -167,6 +163,6 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
 </div>
 
-
+</div>
 
 

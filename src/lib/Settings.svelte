@@ -2,7 +2,6 @@
 	import { enhance } from "$app/forms";
 	import { LogOut, MoonIcon, Settings, SunIcon } from "@lucide/svelte";
 	import { toggleMode } from "mode-watcher";
-	import { fly } from "svelte/transition";
       import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 
   let submitting = $state(false);
@@ -12,6 +11,21 @@
     }
       
 </script>
+<div class="flex flex-row gap-4">
+<button onclick={toggleMode} class="lg:hidden block" title="Change Theme">
+  <div class="flex dark:hidden flex-row gap-2 text-sm text-dark dark:text-white">
+    <MoonIcon
+    class="w-6 h-6 rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0"
+  />
+  </div>
+    <div class="dark:flex hidden flex-row gap-2 text-sm text-dark dark:text-white ">
+  
+  <SunIcon
+    class="w-6 h-6 text-white rotate-90 scale-0 !transition-all dark:rotate-0 dark:scale-100"
+  />
+  </div>
+  <span class="sr-only">Toggle theme</span>
+</button>
 <DropdownMenu.Root>
   <DropdownMenu.Trigger> <div title="Change Site Settings"> <Settings class="text-dark w-6 h-6 dark:text-white" /></div>
 </DropdownMenu.Trigger>
@@ -20,7 +34,7 @@
       <DropdownMenu.Label>Settings</DropdownMenu.Label>
       <DropdownMenu.Separator />
       <DropdownMenu.Item></DropdownMenu.Item>
-      <DropdownMenu.Item><button onclick={toggleMode} class="w-32" title="Change Theme">
+      <DropdownMenu.Item><button onclick={toggleMode} class="lg:w-32 w-auto lg:block hidden" title="Change Theme">
   <div class="flex dark:hidden flex-row gap-2 text-sm text-dark dark:text-white">
     <MoonIcon
     class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0"
@@ -48,4 +62,4 @@
   </DropdownMenu.Content>
 </DropdownMenu.Root>
 
-
+</div>

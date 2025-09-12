@@ -3,8 +3,12 @@
     import {page} from '$app/state';
     import Settings from '$lib/Settings.svelte';
 
-    import { LayoutDashboard, IdCardLanyard, GraduationCap, Users, CircleDollarSign, BookOpenText, HeartHandshake, SunIcon, MoonIcon, LogOut } from '@lucide/svelte';
+    import { LayoutDashboard, IdCardLanyard, GraduationCap, Users, CircleDollarSign, BookOpenText, HeartHandshake, SunIcon, MoonIcon, LogOut, AlignJustify, X } from '@lucide/svelte';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+    import * as Sheet from "$lib/components/ui/sheet/index.js";
+	import { buttonVariants } from '$lib/components/ui/button/button.svelte';
+
 
 let currentPage = $state(page.url.pathname.charAt(1).toUpperCase() + page.url.pathname.slice(2));
 let permList: Array<{ name: string }> = $state(data.permList);
@@ -13,6 +17,8 @@ let forPar = ["can_view_parents"];
 let forStu = ["can_view_students"];
 let forPay = ["can_view_payments"];
 let forUser = ["can_view_users"];
+
+
 
 
 
@@ -69,7 +75,9 @@ fileteredItems = navItems.filter(item => {
   // }
   
   let sidebar = $state(true);
-  
+  let mobMenu = $state(false);
+
+let  Menuicon = $derived (mobMenu ? X : AlignJustify);  
   let showbanner =  $state(true)
 onMount(() => {
     const timer = setTimeout(() => {
@@ -140,7 +148,7 @@ onMount(() => {
   <!-- Main Content -->
   <div class="flex-1 flex flex-col p-2 pt-0">md
     <!-- Header -->
-    <header class="{sidebar ? 'ml-[250px] w-[1200px]' : 'ml-[80px] w-[1420px]'} mr-8
+    <header class="{sidebar ? 'ml-[250px] w-[1250px]' : 'ml-[80px] w-[1420px]'} mr-8
     shadow-md px-4 flex-row items-center justify-end dark:shadow-gray-300/70 rounded-lg 
     transition-all duration-300 ease-in-out hidden lg:flex">
       <!-- <h1 class="text-md font-semibold">
@@ -172,12 +180,58 @@ onMount(() => {
 
     </header>
 
-<main class="flex flex-col p-2 flex-1 w-screen {sidebar ? 'lg:ml-[250px]' : 'lg:ml-[80px]'} pb-16 transition-all duration-300 ease-in-out">
+<main class="flex flex-col p-2 
+flex-1 w-screen {sidebar ? 'lg:ml-[250px]' : 'lg:ml-[80px]'} 
+pb-16 transition-all duration-300 ease-in-out">
             {@render children()}
     </main>
   </div>
 </div>
 {/await}
+
+
+
+<!-- Mobile Menu -->
+
+<div class="lg:hidden flex flex-row fixed bottom-0 right-0 left-0 w-full z-20 p-2 justify-between items-center px-4 bg-white dark:bg-dark">
+         <a href="/">
+         <img class="transition-transform duration-300 ease-in-out w-8 h-8 " src="/favicon.png" alt="Ethio IQ Logo" loading="lazy" >
+         </a>
+         <div class="flex flex-row gap-4">
+          <Settings />
+         <Sheet.Root bind:open={mobMenu} >
+  <Sheet.Trigger onclick={()=>mobMenu = !mobMenu}
+    > <Menuicon /></Sheet.Trigger
+  >
+
+  <Sheet.Content side="right" class="w-1/2 pt-4 h-full flex flex-col justify-between bg-gradient-to-bl
+   from-white to-mentalBlue/80 dark:bg-gradient-to-r dark:from-dark dark:to-dark">
+    
+   <nav class="w-full h-full px-2 pt-8 flex flex-col gap-4">
+    {#each fileteredItems as item}
+      <a
+        class="w-full flex flex-row items-center text-left px-4 py-2 duration-300 gap-2 dark:text-white
+             rounded-lg hover:bg-gray-200 hover:dark:bg-gray-200/60 hover:scale-110
+            aria-[current=page]:bg-dark aria-[current=page]:text-white dark:aria-[current=page]:bg-gray-100 
+            dark:aria-[current=page]:text-dark transition-all ease-in-out" 
+             aria-current={page.url.pathname === item.href ? 'page' : undefined}
+        class:selected={currentPage === item.name}
+        href={item.href}
+       title={item.name}> 
+        <item.icon size="16" />
+
+
+         <span> {item.name}</span>
+        
+      </a>
+    {/each}
+   </nav>
+  </Sheet.Content>
+</Sheet.Root>
+      
+          </div>
+        </div>
+
 
 
  

@@ -508,6 +508,15 @@ export const leads = pgTable('leads', {
 export const fees = pgTable('fees', {
    id: serial('id').primaryKey(),
   fee: integer('fee').notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
+export const tutorHourlyRate = pgTable('tutorHourlyRate', {
+  id: serial('id').primaryKey(),
+  fee: integer('fee').notNull(),
+  description: text('description'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 
@@ -518,7 +527,6 @@ export const grades = pgTable('grades', {
   grade: varchar('grade').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-
 });
 
 
