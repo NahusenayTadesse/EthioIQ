@@ -1,6 +1,6 @@
  <script lang="ts">
      import * as Select from "$lib/components/ui/select/index.js";
-	import { input } from "$lib/global.svelte";
+	import { input, selectItem } from "$lib/global.svelte";
 	// import { fly } from "svelte/transition";
 
     let { value = $bindable(), items, name } = $props();
@@ -15,7 +15,7 @@
             </Select.Trigger>
             <Select.Content>
                  {#each items as item}
-                <Select.Item value={item.value} class="hover:bg-gray-100 hover:shadow-md hover:scale-101 duration-300 transition-all ease-in-out dark:hover:bg-gray-900">{item.name}</Select.Item>
+                <Select.Item value={item.value} class={selectItem}>{item.name}</Select.Item>
                 {/each}
                 
             </Select.Content>

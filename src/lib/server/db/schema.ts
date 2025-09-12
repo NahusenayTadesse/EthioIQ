@@ -1,4 +1,4 @@
-import { pgTable, varchar, timestamp, boolean, integer, serial, text, json, uuid, date, time, decimal} from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp, boolean, integer, serial, text, json, uuid, date, time, decimal, unique} from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
 	id: text('id').primaryKey(),
@@ -142,9 +142,13 @@ export const studentParentRelations = pgTable('student_parent_relations', {
   relationshipType: varchar('relationship_type', { length: 50 }).notNull(), // 'mother', 'father', 'guardian', etc.
   livingTogether: boolean('living_together').notNull().default(true),
   isPrimary: boolean('is_primary').notNull().default(true),
+  notes: text('notes'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-});
+},
+(t) => ({
+    studentParentUnique: unique().on(t.studentId, t.parentId),
+  }));
 
 export const subjects = pgTable('subjects', {
   id: serial('id').primaryKey(),
@@ -255,7 +259,10 @@ export const tutorStudentMatches = pgTable('tutor_student_matches', {
   notes: text('notes'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-});
+},
+(t) => ({
+    tutorStudentMatchesUnique: unique().on(t.studentId, t.tutorId),
+  }));
 
 export const studentStudyPlans = pgTable('student_study_plans', {
   id: serial('id').primaryKey(),

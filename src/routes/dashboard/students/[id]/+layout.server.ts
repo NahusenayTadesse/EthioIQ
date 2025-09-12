@@ -54,7 +54,7 @@ if (!student) {
       lastName: persons.lastName,
       phone: persons.phone,
       gender: persons.gender,
-      notes: parents.notes,
+      notes: studentParentRelations.notes,
       isPrimary: studentParentRelations.isPrimary,
       isActive: parents.isActive
        

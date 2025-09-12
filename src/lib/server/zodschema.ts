@@ -194,9 +194,15 @@ export const parentSchema = z.object({
     .string()
     .max(500, "Notes must be less than 500 characters")
     .optional()
-    .or(z.literal("")), // allow empty string
+    .or(z.literal("")), 
+  addNotes: z
+    .string()
+    .max(500, "Notes must be less than 500 characters")
+    .optional()
+    .or(z.literal("")),
   type: z.string().min(1, "Relation Type is required"),
-  livingTogether: z.string().min(1, "Living Together is required")
+  livingTogether: z.string().min(1, "Living Together is required"),
+    isPrimary: z.string().optional().nullable(),
 });
 
 export type ParentSchema = typeof parentSchema;
@@ -207,7 +213,35 @@ export const addSubjectSchema = z.object({
   startedAt: z.string().min(1, "Start date is required"),
   notes: z.string().optional(),
   id: z.string().min(1, "ID is required"),
+
 });
 
 export type AddSubjectSchema = typeof addSubjectSchema;
 
+export const existingParentSchema = z.object({
+  parent: z.string().min(1, { message: "Parent is required" }), // required
+ notes: z
+    .string()
+    .max(500, "Notes must be less than 500 characters")
+    .optional()
+    .or(z.literal("")), // allow empty string
+  type: z.string().min(1, "Relation Type is required"),
+  livingTogether: z.string().min(1, "Living Together is required"),
+    isPrimary: z.string().optional().nullable(),
+
+
+});
+
+export type ExistingParentSchema = typeof existingParentSchema;
+
+export const connectTutorSchema = z.object({
+  tutor: z.string().min(1, { message: "Tutor is required" }), // required
+  notes: z
+    .string()
+    .max(500, "Notes must be less than 500 characters")
+    .optional()
+    .or(z.literal("")),
+  subject: z.string().min(1, "Subject is required"),
+});
+
+export type ConnectTutorSchema = typeof connectTutorSchema;

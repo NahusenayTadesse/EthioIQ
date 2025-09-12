@@ -79,6 +79,8 @@ let tutorHeaders = $state([
   
   ]); 
 import DialogComp from "$lib/formComponents/DialogComp.svelte";
+	import Existing from "$lib/forms/Existing.svelte";
+	import ConnectTutors from "$lib/forms/ConnectTutors.svelte";
 
  let value = $state('')
 
@@ -92,9 +94,16 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 {#snippet content2()}
   <Subjects data={data.subjectForm} id={data.student.id} subjects={data.allSubjects} action="?/addSubject" />
 {/snippet}
+{#snippet content3()}
+  <Existing data={data.existingParentForm} id={data.student.id} items={data.parentsNames} action="?/addExistingParent" />
+{/snippet}
+{#snippet content4()}
+  <ConnectTutors data={data.connectTutorForm} id={data.student.id} items={data.possibleTutors} action="?/addTutor" subjects={data.allSubjects} />
+{/snippet}
 
 
-  <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
+
+  <!-- <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
        <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
        <a href="#studentDetials" class="{submitButton} w-[250px]">Student Details</a>
        <a href="#parents" class="{submitButton} w-[250px]">Parents</a>
@@ -102,7 +111,7 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
        <a href="#subjects" class="{submitButton} w-[250px]">Subjects</a>
 
 
-  </div>
+  </div> -->
 
 
 <div class="min-h-screen py-10">
@@ -131,8 +140,9 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
  <br /> <br />
  <div class="flex flex-col flex-start gap-4">
 <ChildrenTable mainlist = {data.parent} {tableHeaders}link='parents' />
-<DialogComp title="Add New Parent" {content} />
-<ComboboxComp {value} name="parents" items={data.parentsNames} />
+<div class="flex flex-row gap-4">
+  <DialogComp title="Add New Parent" {content} />
+<DialogComp title="Add Existing Parent" content={content3} /></div>
 
 </div>
 
@@ -141,13 +151,19 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
  <br /> <br />
  <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2">
 <ChildrenTable mainlist = {data.matches} tableHeaders = {tutorHeaders} link='tutors'/>
+<div class="w-sm">
+<DialogComp title="Connect Tutor to Student" content={content4} />
+</div>
+
 </div>
 
 <h1 class="text-4xl font-head my-6" id="subjects">Subjects</h1>
 
  <div class="flex flex-col flex-start gap-4">
 <ChildrenTable mainlist = {data.subjectforStudent} tableHeaders = {subjectHeaders} />
+<div class="w-sm">
 <DialogComp title="Add New Subject" content={content2} />
+</div>
 
 </div>
 

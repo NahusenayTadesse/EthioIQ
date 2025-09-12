@@ -4,7 +4,9 @@ shadow transition-all ease-in-out hover:scale-110 duration-400
 dark:bg-gray-200 dark:text-dark flex flex-row justify-center items-center`;
 export const menubtn = `${submitButton} bg-white dark:!bg-dark !border-1 !text-dark dark:!text-white !border-dark dark:!border-white`;
 export const label = "block capitalize text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
-export const input = `w-full border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 bg-gray-50 dark:bg-dark text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 dark:focus:ring-white focus:ring-dark transition`;
+export const input = `w-full border border-gray-300 dark:border-gray-700 
+rounded-lg px-4 py-2 bg-gray-50 dark:bg-dark text-gray-900 dark:text-gray-100 
+focus:outline-none focus:ring-1 dark:focus:ring-white focus:ring-dark transition`;
 export const formContainer = `min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black transition-colors`;
 export const formContainerInner = `mx-auto w-full max-w-md border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-8 bg-white dark:bg-gray-950 transition-colors`;
 export const select = `appearance-none w-full px-4 py-2.5 pr-10 bg-white dark:bg-dark 
@@ -31,5 +33,7 @@ export const searchableFields = ['id', 'firstName', 'lastName',
   export const errormsg = `${toastmsg} !bg-red-600`;
   export const createForm = `rounded-lg lg:w-4/5 w-full bg-white dark:bg-black grid lg:grid-cols-2 grid-cols-1 gap-4 p-6`;
 
-  export const createbtn= `${submitButton} w-[180px]  fixed top-30 right-4 flex flex-row gap-2`
+  export const createbtn= `${submitButton} w-[180px]  fixed top-30 right-4 flex flex-row gap-2`;
+
+  export const selectItem = `hover:bg-gray-100 hover:shadow-md hover:scale-101 duration-300 transition-all ease-in-out dark:hover:bg-gray-900`;
 

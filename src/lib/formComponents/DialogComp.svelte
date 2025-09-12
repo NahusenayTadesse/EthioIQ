@@ -8,7 +8,7 @@
 </script>
  
 <Dialog.Root>
- <Dialog.Trigger class="{submitButton} w-[140px]"
+ <Dialog.Trigger class="{submitButton} w-auto px-4"
   >{title}</Dialog.Trigger
  >
  <Dialog.Content class="w-full">

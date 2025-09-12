@@ -6,6 +6,7 @@
  import * as Popover from "$lib/components/ui/popover/index.js";
  import { Button } from "$lib/components/ui/button/index.js";
  import { cn } from "$lib/utils.js";
+	import { selectItem } from "$lib/global.svelte";
  
 
   let { items, name,value=$bindable(), btnName = "Select from Existing Parents" } = $props();
@@ -33,7 +34,7 @@
    <Button
     {...props}
     variant="outline"
-    class="w-[200px] justify-between capitalize"
+    class="w-full justify-between capitalize"
     role="combobox"
     aria-expanded={open}
    >
@@ -42,9 +43,9 @@
    </Button>
   {/snippet}
  </Popover.Trigger>
- <input type="text" bind:value {name} /> 
+ <input type="hidden" bind:value {name} /> 
 
- <Popover.Content class="w-[200px] p-0">
+ <Popover.Content class="w-full p-0">
   <Command.Root>
    <Command.Input placeholder="Search {name}..." />
    <Command.List>
@@ -52,11 +53,13 @@
     <Command.Group >
      {#each items as  item}
       <Command.Item
-       value={item.value}
-       onSelect={() => {
-        value = item.value;
-        closeAndFocusTrigger();
-       }} 
+       value={item.name}        
+    keywords={[item.name]}    
+    onSelect={() => {
+      value = item.value;     
+      closeAndFocusTrigger();
+    }}
+     class={selectItem}
       >
        <CheckIcon
         class={cn(value !== item.value && "text-transparent")}
