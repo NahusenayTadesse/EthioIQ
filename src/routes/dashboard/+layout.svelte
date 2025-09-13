@@ -104,8 +104,8 @@ onMount(() => {
 <div class="flex h-screen">
 
   <!-- Sidebar -->
-  <aside class="{sidebar ? 'w-[250px]': 'w-[70px]'} 
-  {sidebar ? 'min-w-[250px]': 'min-w-[70px]'} 
+  <aside class="{sidebar ? 'w-[300px]': 'w-[70px]'} 
+  {sidebar ? 'min-w-[300px]': 'min-w-[70px]'} 
   h-[100vh] inset-y-0 fixed hidden lg:block
   top-0 bottom-0 shadow-md p-2 
   dark:shadow-gray-300/70 bg-gradient-to-bl
@@ -120,7 +120,7 @@ onMount(() => {
     pb-8 border-b-1 border-gray-500 dark:border-white">
 
        <a href="/dashboard">
-        <img class="transition-transform duration-300 ease-in-out" src={sidebar ? "/ethioiq.png" : "/favicon.png"} alt="Ethio IQ Logo" loading="lazy" >
+        <img class="transition-transform duration-300 ease-in-out'}" src={sidebar ? "/ethioiq.png" : "/favicon.png"} alt="Ethio IQ Logo" loading="lazy" >
         </a>
     </div>
     <nav class="mt-4 flex flex-col gap-4">
@@ -144,24 +144,22 @@ onMount(() => {
     {/each}
    </nav>
   </aside>
+  
 
-  <!-- Main Content -->
-  <div class="flex-1 flex flex-col p-2 pt-0">md
+<main class="flex flex-col p-2 
+flex-1 w-screen {sidebar ? 'pl-[330px]': 'pl-[90px]'}
+pb-16 transition-all duration-300 ease-in-out">
+<div class="flex-1 flex flex-col p-2 pt-0">
     <!-- Header -->
-    <header class="{sidebar ? 'ml-[250px] w-[1250px]' : 'ml-[80px] w-[1420px]'} mr-8
-    shadow-md px-4 flex-row items-center justify-end dark:shadow-gray-300/70 rounded-lg 
-    transition-all duration-300 ease-in-out hidden lg:flex">
-      <!-- <h1 class="text-md font-semibold">
-        {(navItems.find(item => item.href === page.url.pathname)?.name) || ''}
-        {page.url.pathname}
-      </h1>  -->
-  <div class="text-center mt-4 text-lg font-semibold text-gray-800">
-  <div class="text-center mt-4 text-lg font-semibold text-gray-800">
+    <header class="min-w-full w-full shadow-md px-4 pb-4 flex flex-row items-center-safe justify-end dark:shadow-gray-300/70 rounded-lg 
+    transition-all duration-300 ease-in-out pt-6">
+  <div class="w-screeen text-center mt-4 text-lg font-semibold text-gray-800">
     {#if data.birthdayPerson && showbanner}
    {#each data.birthdayPerson as birthdayPerson}
      {#if birthdayPerson.type === 'employee'} 
     
-   <h1 class="text-4xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-center animate-bounce">
+   <h1 class="text-4xl md:text-4xl font-extrabold text-transparent 
+   bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-center animate-bounce">
   🎉 Today is 
   <span class="text-white drop-shadow-lg text-5xl">
     { data.birthdayPerson[0].firstName } { data.birthdayPerson[0].lastName }'s
@@ -175,18 +173,14 @@ onMount(() => {
   
    <Settings />
 
-  </div>
+
 
 
     </header>
-
-<main class="flex flex-col p-2 
-flex-1 w-screen {sidebar ? 'lg:ml-[250px]' : 'lg:ml-[80px]'} 
-pb-16 transition-all duration-300 ease-in-out">
+    </div>
             {@render children()}
     </main>
   </div>
-</div>
 {/await}
 
 
@@ -215,7 +209,7 @@ pb-16 transition-all duration-300 ease-in-out">
             aria-[current=page]:bg-dark aria-[current=page]:text-white dark:aria-[current=page]:bg-gray-100 
             dark:aria-[current=page]:text-dark transition-all ease-in-out" 
              aria-current={page.url.pathname === item.href ? 'page' : undefined}
-        class:selected={currentPage === item.name}
+        class:selected={currentPage === item.name} 
         href={item.href}
        title={item.name}> 
         <item.icon size="16" />

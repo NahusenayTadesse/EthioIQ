@@ -2,11 +2,11 @@
   import type { SuperValidated, Infer } from 'sveltekit-superforms';
   import { superForm } from 'sveltekit-superforms'
   import type { ConnectTutorSchema} from '$lib/server/zodschema';
-	import { input, label, submitButton } from '$lib/global.svelte';
-	import SelectComp from '$lib/formComponents/SelectComp.svelte';
-	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
-	import { Plus } from '@lucide/svelte';
-	import ComboboxComp from '$lib/formComponents/ComboboxComp.svelte';
+  import { input, label, submitButton } from '$lib/global.svelte';
+  import SelectComp from '$lib/formComponents/SelectComp.svelte';
+  import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
+  import { Plus } from '@lucide/svelte';
+ import ComboboxComp from '$lib/formComponents/ComboboxComp.svelte';
 
   let { data, id, action="?/addTutor", subjects, items } : { data : SuperValidated<Infer<ConnectTutorSchema>> } = $props();
 

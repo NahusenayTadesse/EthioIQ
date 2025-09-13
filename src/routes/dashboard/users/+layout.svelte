@@ -12,4 +12,7 @@
 <a href="/dashboard/users/add-roles" class="w-[150px] {page.url.pathname==='/dashboard/users/add-roles' ? submitButton: menubtn}">Add New Role</a>
 </div>
 
-{@render children()}
+ <div class="h-full">
+    {@render children?.()}
+   </div>
+   

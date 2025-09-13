@@ -4,7 +4,7 @@
 	import Loadingbtn from "$lib/formComponents/Loadingbtn.svelte";
 	import RadioComp from "$lib/formComponents/RadioComp.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
-	import { Plus } from "@lucide/svelte";
+	import { Plus } from "@lucide/svelte";                                                                                     
   import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import { createForm, input, label, submitButton } from "$lib/global.svelte.js";

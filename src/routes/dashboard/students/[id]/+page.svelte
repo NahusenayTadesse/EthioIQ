@@ -101,18 +101,16 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
   <ConnectTutors data={data.connectTutorForm} id={data.student.id} items={data.possibleTutors} action="?/addTutor" subjects={data.allSubjects} />
 {/snippet}
 
-       <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
+       <!-- <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a> -->
+  <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
+       <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-auto px-4">Sessions</a>
+       <!-- <a href="#studentDetials" class="{submitButton} w-auto px-4">Student Details</a> -->
+       <a href="#parents" class="{submitButton} w-auto px-4">Parents</a>
+       <a href="#tutors" class="{submitButton} w-auto px-4">Tutors</a>
+       <a href="#subjects" class="{submitButton} w-auto px-4">Subjects</a>
 
 
-  <!-- <div class="flex lg:flex-row flex-col sticky top-2 backdrop-blur-lg bg-white/30 dark:bg-dark/30 z-10 gap-4 flex-wrap justify-start items-center">
-       <a href="/dashboard/students/{data.student.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
-       <a href="#studentDetials" class="{submitButton} w-[250px]">Student Details</a>
-       <a href="#parents" class="{submitButton} w-[250px]">Parents</a>
-       <a href="#tutors" class="{submitButton} w-[250px]">Tutors</a>
-       <a href="#subjects" class="{submitButton} w-[250px]">Subjects</a>
-
-
-  </div> -->
+  </div>
 
 <div class="flex flex-col gap-8">
 <div class="min-h-screen py-10">
@@ -143,7 +141,7 @@ import DialogComp from "$lib/formComponents/DialogComp.svelte";
 
 
 
- <div class="flex flex-col flex-start overflow-x-auto w-[1150px] pr-2 gap-4">
+ <div class="flex flex-col flex-start overflow-x-auto w-4/5 pr-2 gap-4">
   <h1 class="text-4xl font-head" id='tutors'>Tutors</h1>
 
 <ChildrenTable mainlist = {data.matches} tableHeaders = {tutorHeaders} link='tutors'/>

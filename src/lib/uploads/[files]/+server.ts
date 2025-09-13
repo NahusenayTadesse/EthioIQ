@@ -8,7 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UPLOAD_DIR = path.join(__dirname, '../../../../lib/uploads');
 
 export async function GET({ params }) {
-  const filePath = path.join(UPLOAD_DIR, params.file);
+
+   const [files] = params.file;
+  const filePath = path.join(UPLOAD_DIR, files);
   try {
     const stats = await stat(filePath);
     if (!stats.isFile()) throw new Error('Not a file');

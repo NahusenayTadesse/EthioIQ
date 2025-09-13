@@ -5,6 +5,7 @@
   import ChildrenTable from "$lib/ChildrenTable.svelte";
 	import SingleTable from "$lib/SingleTable.svelte";
 	import { submitButton } from "$lib/global.svelte.js";
+	import Loadingbtn from "$lib/formComponents/Loadingbtn.svelte";
 
     let { data } = $props();
     let matches = $state(data.matches);
@@ -98,7 +99,11 @@ let subjectHeaders = $state([
   
 
    <a href="/dashboard/tutors/{data.tutor.id}/sessions" class="{submitButton} w-[250px]">Sessions</a>
-
+{#await data}
+  <Loadingbtn name="Loading Parent Data" />
+           <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
+{:then parent} 
+<div class="flex flex-col gap-6">
 
 <div class="min-h-screen py-10">
   <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md overflow-hidden max-w-3xl">
@@ -108,41 +113,36 @@ let subjectHeaders = $state([
       <h1 class="text-3xl font-bold text-center shadow-sm">Tutors Details</h1>
     </div>
     <div class="py-8 px-6">
-      {#await data}
-           <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
-
-        
-      {:then parent} 
-       
           <SingleTable {singleTable} />
-
-        {/await}
     </div>
   </div>
 </div>
-
+ <div>
 <h1 class="text-4xl font-head">Students</h1>
-
- <br /> <br />
  <div class="flex flex-col flex-start">
 <ChildrenTable mainlist = {matches} {tableHeaders} />
+</div>
 </div>
 
 
 
-
+<div> 
 <h1 class="text-4xl font-head my-4">Subjects</h1>
 
  <div class="flex flex-col flex-start">
 <ChildrenTable mainlist = {subjects} tableHeaders = {subjectHeaders} />
 </div>
+</div>
+
+<div>
 
 <h1 class="text-4xl font-head my-4">Fields</h1>
 
  <div class="flex flex-col flex-start">
 <ChildrenTable mainlist = {fields} tableHeaders = {fieldHeaders} />
 </div>
-
+</div>
+<div>
  <h1 class="text-4xl font-head my-4">Bank Accounts</h1>
 
 
@@ -150,7 +150,9 @@ let subjectHeaders = $state([
 
 <ChildrenTable mainlist = {bankAccounts} tableHeaders = {bankHeader} />
 </div>
-
+</div>
+</div>
+{/await}
 
 
 

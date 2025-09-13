@@ -19,4 +19,7 @@
         
     </div>
 
-    {@render children()}
+    <div class="h-full">
+    {@render children?.()}
+   </div>
+   

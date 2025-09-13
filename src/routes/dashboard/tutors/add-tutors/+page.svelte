@@ -30,7 +30,6 @@
         { name: 'Grade 11', value: '11' },
         { name: 'Grade 12', value: '12' },
         { name: 'All Grades', value: 'all' },
-		
 	];
 
 	let { data } = $props();
