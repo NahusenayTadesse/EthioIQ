@@ -8,7 +8,7 @@
 
 	  import { ModeWatcher } from "mode-watcher";
 	import { fly } from 'svelte/transition';
-	import { CircleCheckBig, Loader, CircleX } from '@lucide/svelte';
+	import { CircleCheckBig, CircleX } from '@lucide/svelte';
 
 
 	let { children } = $props();
@@ -16,7 +16,11 @@
    let iconify = $state("h-6 w-6 animate-ping")
 
 </script>
+<svelte:head>
+		<link rel="icon" href="/favicon.png" />
+</svelte:head>
 <ModeWatcher />
+ 
 {#if $flash}
  
   <div class="flex flex-row gap-2 

@@ -104,11 +104,12 @@ let subjectHeaders = $state([
            <h1 class="flex flex-row m-2">     Loading Parent Data <LoaderCircle class="animate-spin" /></h1>
 {:then parent} 
 <div class="flex flex-col gap-6">
+  
 
 <div class="min-h-screen py-10">
   <div class="bg-white dark:bg-dark shadow-lg dark:shadow-md dark:shadow-gray-600 rounded-md overflow-hidden max-w-3xl">
     <div class="bg-gradient-to-r from-dark to-black text-white py-6 px-8 flex flex-col justify-center items-center">
-            <img src={data.tutor.image} alt="" class="w-[150px]" loading="lazy">
+            <img src="/dashboard/files/{data.tutor.image}" alt="" class="w-[150px]" loading="lazy">
 
       <h1 class="text-3xl font-bold text-center shadow-sm">Tutors Details</h1>
     </div>

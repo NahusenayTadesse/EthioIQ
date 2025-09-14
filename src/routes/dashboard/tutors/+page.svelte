@@ -89,8 +89,7 @@ function filter(key: string, value: any): void {
    <title> Tutors </title>
  </svelte:head>
 
-
-
+<a href="/dashboard/tutors/add-tutors">Add Tutors</a>
 
 
 <button onclick={()=> openFilter = !openFilter} aria-label="Advanced Filter" title="Filter Table"><SlidersHorizontal  /> </button><br/>

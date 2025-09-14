@@ -1,15 +1,25 @@
 <script lang="ts">
-	import { createbtn, createForm, errormsg, input, label, toastmsg } from '$lib/global.svelte.js';
+	import { Upload } from '$lib/stores/upload.svelte.js';
+
+	/** @type {{data: import('./$types').PageData}} */
+
+	const upload = new Upload();
+
+	/** @param {SubmitEvent} event */
+	
+
+	import { createbtn, createForm, input, label, } from '$lib/global.svelte.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import DatePicker from '$lib/formComponents/DatePicker.svelte';
 	import { UserPlus } from '@lucide/svelte';
-	//  import * as Select from "$lib/components/ui/select/index.js";
-
 	import { superForm } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
-	import { fly } from 'svelte/transition';
+	import { CalendarDate, today } from '@internationalized/date';
+	import type { DateValue } from '@internationalized/date';
+
+
 
 	let items = [
 		{ name: 'Male', value: 'male' },
@@ -22,19 +32,22 @@
 		
 	];
 
-    let gradePreferences = [
-        { name: 'Grade 1-4', value: '1-4' },
-        { name: 'Grade 5-8', value: '5-8' },
-        { name: 'Grade 9-10', value: '9-10' },
-        { name: 'Grade 9-12', value: '9-12' },
-        { name: 'Grade 11', value: '11' },
-        { name: 'Grade 12', value: '12' },
-        { name: 'All Grades', value: 'all' },
-	];
+	let gradePreference = [
+		{ name: 'Grades 1-4', value: '1-4' },
+		{ name: 'Grades 5-8', value: '5-8' },
+		{ name: 'Grades 9-12', value: '9-12' },
+		{ name: 'Grade 9', value: '9' },
+		{ name: 'Grade 10', value: '10' },
+		{ name: 'Grade 11', value: '11' },
+		{ name: 'Grade 12', value: '12' },
+		{ name: 'College', value: 'College'},
+		{ name: 'University', value: 'Univerisity'},
+		{ name: 'All', value: 'All'}
+	]
 
 	let { data } = $props();
 
-	const { form, errors, enhance, constraints, delayed, capture, restore } = superForm(
+	const { form, errors, enhance, delayed, capture, restore } = superForm(
 		data.form,
 		{
 			taintedMessage: () => {
@@ -55,10 +68,22 @@
 
 //   let dob = $derived($form.dateOfBirth.toDateString)
 
+function yearMinus(year: number): DateValue {
+  const currentYear = today("UTC").year; 
+  return new CalendarDate(currentYear - year, 1, 1); // Jan = 1
+}
+
+  const year18= yearMinus(18);
+  const year65=yearMinus(65);
+
+  let dob = $derived($form.dateOfBirth.toDateString)
+
 </script>
 <svelte:head>
-	<title>Add New Student </title>
+	<title>Add New Tutor </title>
 </svelte:head>
+
+
 
     
 {#snippet fe(labeler = '', name = '', type = '', placeholder = '', required=false)}
@@ -93,33 +118,26 @@
     
 {/snippet}
 
-<form use:enhance action="?/createStudent" id="main" class={createForm} method="POST">
-	{@render fe('First Name', 'firstName', 'text', "Enter Student First Name", true)}
-	{@render fe('Last Name', 'lastName', 'text',  "Enter Student Last Name", true)}
+<form use:enhance action="?/addTutor" id="main" class={createForm} method="POST" enctype="multipart/form-data">
+	{@render fe('First Name', 'firstName', 'text', "Enter Tutor's First Name", true)}
+	{@render fe('Last Name', 'lastName', 'text',  "Enter Tutor's Last Name", true)}
 	{@render fe("Grandfather's Name", 'grandFatherName', 'text',  "Enter Grand Father's Name", false)}
     {@render selects('gender', items)}
-    {@render selects('grade', data.grade)}
-	{#if getItemNameById(data.grade,$form.grade) === 'Grade 11' || getItemNameById(data.grade,$form.grade) === 'Grade 12'}
-	<div transition:fly={{x:-20, duration:300}}>
+    {@render selects('gradePreference', gradePreference)}
     {@render selects ('naturalOrSocial', ns) }
-	</div>
-	{/if}
-	
-    {@render selects('school', data?.school)}
-    {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Student", true)}
-    {@render selects('fee', data?.fee)}
+	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Tutor', true)}
+    {@render fe('Telegram Username', 'telegram', 'text', "Enter Telegram Username of Tutor", true)}
+    {@render fe('Experience', 'experience', 'number', "Enter Experience of Tutor in Number of Years", true)}
+    {@render selects('hourly', data?.hourly)}
     {@render selects('location', data?.location)}	
-	{@render fe('Specific Address', 'specificLocation', 'text', "Enter specific address of student", true)}
-	{@render fe('Phone', 'phone', 'tel', 'Enter Phone of Student', true)}    
+	{@render fe('Specific Address', 'specificLocation', 'text', "Enter specific address of tutor", true)}
+	<!-- {@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth', true)} -->
     <div>
-     <DatePicker name="dateOfBirth" bind:value={$form.dateOfBirth} />
+     <DatePicker name="dateOfBirth" bind:value={dob}    />
 	 {#if $errors.dateOfBirth}<span class="text-red-500">{$errors.dateOfBirth}</span>{/if}
-	 <input type="text" name="dateOfBirth" bind:value={$form.dateOfBirth} /> 
-	 </div>
-     {@render fe("Experience in Years", 'experience', 'number', 'Enter the number of years tutor is experienced in', true)}
+	 </div> 
+
     {@render selects('lead', data?.lead)}
-    {@render selects('gradePreference', gradePreferences)}
-    
 
 
     <div class="flex w-full flex-col justify-start">
@@ -134,22 +152,20 @@
 			
 			bind:value={$form.notes}
 			aria-invalid={$errors.notes ? 'true' : undefined}
-
-         
          ></textarea>
 
 		{#if $errors.notes}<span class="text-red-500">{$errors.notes}</span>{/if}
 	</div>
+		<div>
+			<label for="file" class={label}>Select a small file</label>
+           <input type="file" name="image" bind:value={$form.image}  class={input} id="file" required />
 
-    
+		{#if $errors.image}<span class="text-red-500">{$errors.image}</span>{/if}
 
-</form>
-
-<button type="submit" form="main" class={createbtn}>
+		</div>
+		<button type="submit" form="main" class={createbtn}>
 	{#if $delayed}
-		<!-- <Loader class="h-4 w-4 animate-spin" /> 
-            <span class="animate-pulse">Creating Employee...</span> -->
-
+	
 		<Loadingbtn name="Creating Tutor" />
 	{:else}
 		<UserPlus class="h-4 w-4" />
@@ -157,3 +173,4 @@
 		Create Tutor
 	{/if}
 </button>
+	</form>

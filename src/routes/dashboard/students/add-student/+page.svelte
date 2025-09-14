@@ -105,7 +105,7 @@
     <div>
      <DatePicker name="dateOfBirth" bind:value={$form.dateOfBirth} />
 	 {#if $errors.dateOfBirth}<span class="text-red-500">{$errors.dateOfBirth}</span>{/if}
-	 <input type="text" name="dateOfBirth" bind:value={$form.dateOfBirth} /> 
+	 <input type="hidden" name="dateOfBirth" bind:value={$form.dateOfBirth} /> 
 	 </div>
     {@render selects('lead', data?.lead)}
 

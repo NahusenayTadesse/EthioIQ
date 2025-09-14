@@ -1,3 +1,4 @@
+import { X } from 'lucide-svelte';
 import { z } from 'zod/v4';
 
 const dateOfBirthWithMinAge = (minAge: number, name: string) =>
@@ -23,7 +24,7 @@ export const employeeSchema = z.object({
   gender: z.enum(['male', 'female']),
   address: z.string().min(1, {message: 'Address is required'}),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 digits long.' }),
- dateOfBirth: dateOfBirthWithMinAge(18,'Employee'), 
+  dateOfBirth: dateOfBirthWithMinAge(18,'Employee'), 
   position: z.string().min(1, { message: 'Position is required.' }),
   salary: z.string().optional(),
   hireDate: z.string().min  (1, { message: 'Hire date is required.' }),
@@ -245,3 +246,44 @@ export const connectTutorSchema = z.object({
 });
 
 export type ConnectTutorSchema = typeof connectTutorSchema;
+
+
+export const tutorSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required"),
+  lastName: z.string().trim().min(1, "Last name is required"),
+  grandFatherName: z.string().trim().optional(),
+  phone: z
+    .string()
+    .min(7, "Phone number must be at least 7 digits")
+    .max(20, "Phone number must be less than 20 digits")
+    .regex(/^[0-9+\-\s()]+$/, "Invalid phone number format")
+    .min(1, "Phone number is required"),
+  experience: z.number().max(50, "Tutor Experience cannot be more than 50"),
+  gender: z.string().trim().min(1, "Gender is required"),
+  gradePreference: z.string().trim().min(1, "Grade Preference is required"),
+  naturalOrSocial: z.string().trim().optional(),
+  telegram: z
+    .string()
+    .trim()
+    .min(1, "Telegram username is required")
+    .regex(/^@[a-zA-Z0-9_]{5,32}$/, "Invalid Telegram username"),
+  hourly: z.string().trim().min(1, "Hourly Fee is required"),
+  location: z.string().trim().min(1, "Location is required"),
+  specificLocation: z.string().trim().min(1, "Specific address is required"),
+
+  dateOfBirth: dateOfBirthWithMinAge(18,'Employee'), 
+
+  lead: z.string().trim().min(1, "Lead is required"),
+
+  image: z
+  .instanceof(File, { message: "Please upload a file." })
+  .refine((f) => f.size <= 1024 * 1024, "Max upload size is 1MB.")
+  .refine(
+    (f) => f.type.startsWith("image/"),
+    "Only image files are allowed."
+  ),
+
+  notes: z.string().trim().optional(),
+});
+
+export type TutorForm = z.infer<typeof tutorSchema>;
