@@ -13,7 +13,7 @@ import {
 import { error } from '@sveltejs/kit';
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { addSubjectSchema, connectTutorSchema, connectTutorSchema, existingParentSchema, parentSchema } from '$lib/server/zodschema';
+import { addSubjectSchema, connectTutorSchema, existingParentSchema, parentSchema } from '$lib/zodschema';
 import { fail } from '@sveltejs/kit';
 import { setFlash } from 'sveltekit-flash-message/server';
 

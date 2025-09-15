@@ -20,7 +20,7 @@ import { db } from '$lib/server/db';
 import {  grades, leads, locations, persons,tutors, tutorHourlyRate, contacts } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { tutorSchema } from "$lib/server/zodschema";
+import { tutorSchema } from "$lib/zodschema";
 import type {  Actions } from "./$types";
 import { withFiles } from 'sveltekit-superforms';
 
@@ -86,7 +86,7 @@ export const actions: Actions = {
           
           setFlash({ type: 'error', message: "Please check the form for Errors" }, cookies);
  
-        return fail(400, withFiles({ form }));
+        return fail(400, ({ form }));
        
         }
     const image = formData.get('image') as File;

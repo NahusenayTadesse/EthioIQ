@@ -8,7 +8,7 @@ import { db } from '$lib/server/db';
 import { employees, paymentMethods, persons } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { employeeSchema, bankSchema } from "$lib/server/zodschema";
+import { employeeSchema, bankSchema } from "$lib/zodschema";
 import type {  Actions } from "../$types";
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 

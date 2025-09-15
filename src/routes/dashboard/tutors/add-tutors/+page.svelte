@@ -6,6 +6,10 @@
 	const upload = new Upload();
 
 	/** @param {SubmitEvent} event */
+
+
+
+	 import { Input } from "$lib/components/ui/input/index.js";
 	
 
 	import { createbtn, createForm, input, label, } from '$lib/global.svelte.js';
@@ -13,11 +17,13 @@
 	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import DatePicker from '$lib/formComponents/DatePicker.svelte';
 	import { UserPlus } from '@lucide/svelte';
-	import { superForm } from 'sveltekit-superforms';
+	import { superForm, fileProxy, dateProxy } from 'sveltekit-superforms';
 	import type { Snapshot } from './$types.js';
 	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
 	import { CalendarDate, today } from '@internationalized/date';
 	import type { DateValue } from '@internationalized/date';
+	import { tutorSchema } from '$lib/zodschema.js'
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 
 
 
@@ -55,9 +61,11 @@
 					resolve(window.confirm('Do you want to leave?\nChanges you made may not be saved.'));
 				});
 			},
+
+			validators: zod4Client(tutorSchema)
+
 		}
 	);
-
 
 	export const snapshot: Snapshot = { capture, restore };
 	 function getItemNameById(items: any, value: any) {
@@ -68,32 +76,45 @@
 
 //   let dob = $derived($form.dateOfBirth.toDateString)
 
-function yearMinus(year: number): DateValue {
-  const currentYear = today("UTC").year; 
-  return new CalendarDate(currentYear - year, 1, 1); // Jan = 1
+function yearMinus(year: number) {
+  const dater = new Date();
+  dater.setFullYear(dater.getFullYear() - year); // go back N years
+
+  // Format as YYYY-MM-DD
+  const yyyy = dater.getFullYear();
+  const mm = String(dater.getMonth() + 1).padStart(2, '0'); // months are 0-based
+  const dd = String(dater.getDate()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}`;
 }
 
   const year18= yearMinus(18);
+  
   const year65=yearMinus(65);
 
-  let dob = $derived($form.dateOfBirth.toDateString)
+//   let dob = $derived($form.dateOfBirth.toDateString)
+  const file = fileProxy(form, 'image'); 
+  const proxyDate = dateProxy(form, 'dateOfBirth', { format: 'date' });
 
 </script>
 <svelte:head>
 	<title>Add New Tutor </title>
 </svelte:head>
 
-
-
+{year18}
+{year65}
     
-{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required=false)}
+{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required=false, min="", max="")}
 	<div class="flex w-full flex-col justify-start">
 		<Label for={name} class={label}>{labeler}</Label>
-		<input
+		<Input
 			{type}
 			{name}
 			{placeholder}
 			{required}
+			{min}
+			{max}
+			 lang="en-US"
 			class="{input} flex flex-row justify-between
     {$errors[name] ? '!border-red-500' : ''} "
 			
@@ -131,13 +152,11 @@ function yearMinus(year: number): DateValue {
     {@render selects('hourly', data?.hourly)}
     {@render selects('location', data?.location)}	
 	{@render fe('Specific Address', 'specificLocation', 'text', "Enter specific address of tutor", true)}
-	<!-- {@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth', true)} -->
-    <div>
-     <DatePicker name="dateOfBirth" bind:value={dob}    />
-	 {#if $errors.dateOfBirth}<span class="text-red-500">{$errors.dateOfBirth}</span>{/if}
-	 </div> 
+	{@render fe('Date of Birth', 'dateOfBirth', 'date', 'Select Date of Birth', true, year65, year18)}
 
+   
     {@render selects('lead', data?.lead)}
+	<!-- {@render fe('Upload Tutor Image', 'image', 'file', '', true)} -->
 
 
     <div class="flex w-full flex-col justify-start">
@@ -158,7 +177,7 @@ function yearMinus(year: number): DateValue {
 	</div>
 		<div>
 			<label for="file" class={label}>Select a small file</label>
-           <input type="file" name="image" bind:value={$form.image}  class={input} id="file" required />
+           <input type="file" name="image" bind:files={$file}  class={input} id="file" required />
 
 		{#if $errors.image}<span class="text-red-500">{$errors.image}</span>{/if}
 

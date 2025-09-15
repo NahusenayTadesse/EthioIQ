@@ -1,7 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms';
-import { createRoleSchema, createSubjectSchema } from '$lib/server/zodschema';
+import { createRoleSchema, createSubjectSchema } from '$lib/zodschema';
 import { db } from '$lib/server/db';
 import { roles, rolePermissions, permissions, locations, subjects} from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';

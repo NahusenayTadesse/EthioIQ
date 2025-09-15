@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SuperValidated, Infer } from 'sveltekit-superforms';
   import { superForm } from 'sveltekit-superforms'
-  import type { AddSubjectSchema } from '$lib/server/zodschema';
+  import type { AddSubjectSchema } from '$lib/zodschema';
 	import { input, label, submitButton } from '$lib/global.svelte';
 	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SuperValidated, Infer } from 'sveltekit-superforms';
   import { superForm } from 'sveltekit-superforms'
-  import type { ParentSchema } from '$lib/server/zodschema';
+  import type { ParentSchema } from '$lib/zodschema';
 	import { input, label, submitButton } from '$lib/global.svelte';
 	import SelectComp from '$lib/formComponents/SelectComp.svelte';
 	import Loadingbtn from '$lib/formComponents/Loadingbtn.svelte';
@@ -41,7 +41,7 @@
 	];
 </script>
 
-{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true)}
+{#snippet fe(labeler = '', name = '', type = '', placeholder = '', required = true, min = '', max='')}
 	<div class="flex w-full flex-col justify-start">
 		<label for={name} class={label}>{labeler} {required ? '' : '(optional)'}</label>
 		<input

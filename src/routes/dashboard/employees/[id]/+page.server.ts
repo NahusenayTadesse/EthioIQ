@@ -7,7 +7,7 @@ import { employees, paymentMethods, personPaymentMethods, persons } from '$lib/s
 import { error } from '@sveltejs/kit';
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { bankSchema } from '$lib/server/zodschema';
+import { bankSchema } from '$lib/zodschema';
 import { fail } from '@sveltejs/kit';
 import { setFlash } from 'sveltekit-flash-message/server';
 

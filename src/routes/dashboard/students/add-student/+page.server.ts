@@ -8,7 +8,7 @@ import { db } from '$lib/server/db';
 import { contacts, fees, grades, leads, locations, persons, schools, students } from '$lib/server/db/schema'
 import { type Infer, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { studentSchema } from "$lib/server/zodschema";
+import { studentSchema } from "$lib/zodschema";
 import type {  Actions } from "./$types";
 type Message = { status: 'error' | 'success' | 'warning'; text: string };
 

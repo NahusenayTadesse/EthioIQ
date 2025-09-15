@@ -1,8 +1,11 @@
-import { X } from 'lucide-svelte';
+// import {  today } from '@internationalized/date';
+// import type { DateValue } from '@internationalized/date';
 import { z } from 'zod/v4';
 
 const dateOfBirthWithMinAge = (minAge: number, name: string) =>
-  z.coerce.date().refine((dob) => {
+  z.any().refine((dobs) => {
+    
+    const dob = new Date(dobs)
     const today = new Date();
     const ageDiff = today.getFullYear() - dob.getFullYear();
     const hasBirthdayPassed =
@@ -16,6 +19,30 @@ const dateOfBirthWithMinAge = (minAge: number, name: string) =>
     message: `${name} must be at least ${minAge} years old.`,
   });
 
+// const dateOfBirthWithMinAge = (minAge: number, name: string) =>
+//   z
+//     .custom<DateValue>
+//     ()
+//     .refine(
+//       (dob) => {
+//         if (!dob) return false; // Handle null/undefined
+//         const currentYear = today("UTC").year; 
+//         const currentMonth = today('UTC').month;
+//         const currentDay = today('UTC').day
+
+//         const ageDiff = currentYear - dob.year;
+//         const hasBirthdayPassed =
+//            currentMonth > dob.month ||
+//           (currentMonth === dob.month && currentDay >= dob.day);
+
+//         const age = hasBirthdayPassed ? ageDiff : ageDiff - 1;
+
+//         return age >= minAge;
+//       },
+//       {
+//         message: `${name} must be at least ${minAge} years old.`,
+//       }
+//     );
 export const employeeSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required.' }),
   lastName: z.string().min(1, { message: 'Last name is required.' }),
@@ -267,13 +294,13 @@ export const tutorSchema = z.object({
     .trim()
     .min(1, "Telegram username is required")
     .regex(/^@[a-zA-Z0-9_]{5,32}$/, "Invalid Telegram username"),
-  hourly: z.string().trim().min(1, "Hourly Fee is required"),
-  location: z.string().trim().min(1, "Location is required"),
+  hourly: z.number().min(0, "Hourly Fee is required"),
+  location: z.number().min(0, "Location is required"),
   specificLocation: z.string().trim().min(1, "Specific address is required"),
 
-  dateOfBirth: dateOfBirthWithMinAge(18,'Employee'), 
+  dateOfBirth: dateOfBirthWithMinAge(18,'Tutor'), 
 
-  lead: z.string().trim().min(1, "Lead is required"),
+  lead: z.number().min(0, "Lead is required"),
 
   image: z
   .instanceof(File, { message: "Please upload a file." })

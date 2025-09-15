@@ -5,6 +5,7 @@
   import { toastmsg, errormsg, submitButton } from '$lib/global.svelte';
 
   const flash = getFlash(page, { clearAfterMs: 5000 });
+  
 
 	  import { ModeWatcher } from "mode-watcher";
 	import { fly } from 'svelte/transition';

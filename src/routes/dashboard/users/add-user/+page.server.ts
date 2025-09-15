@@ -10,7 +10,7 @@ import type { Actions, PageServerLoad } from './$types';
 
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms';
-import { createUserSchema } from '$lib/server/zodschema';
+import { createUserSchema } from '$lib/zodschema';
 
 export const load: PageServerLoad = async ({parent}) => {
   const layoutData = await parent();

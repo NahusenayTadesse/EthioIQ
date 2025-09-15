@@ -7,7 +7,7 @@ import { db } from '$lib/server/db';
 import { employees, persons } from '$lib/server/db/schema'
 import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { employeeSchema } from "$lib/server/zodschema";
+import { employeeSchema } from "$lib/zodschema";
 import type {  Actions } from "../$types";
 
 let sharedList: Array<{ name: string }>; 

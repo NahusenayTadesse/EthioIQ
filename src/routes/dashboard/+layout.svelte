@@ -55,24 +55,6 @@ fileteredItems = navItems.filter(item => {
   if (item.name === 'Users'      && !foundUser) return false;
   return true;
 });
-
-
-
-  // if(data.roleDetails.roleId === 1) {
-  //    fileteredItems = navItems;   
-  // }
-  // else if(data.roleDetails.roleId === 2){
-  //   fileteredItems = navItems.filter(item => !['Payments', 'Employees', 'Users'].includes(item.name));
-  // }
-  // else if(data.roleDetails.roleId === 3){
-  //       fileteredItems = navItems.filter(item => !['Users', 'Students'].includes(item.name));
-  // }
-  // else if(data.roleDetails.roleId === 4){
-  //       fileteredItems = navItems.filter(item => !['Payments'].includes(item.name));
-  // }
-  // else if(data.roleDetails.roleId === 5){
-  //       fileteredItems = navItems.filter(item => !['Users'].includes(item.name));
-  // }
   
   let sidebar = $state(true);
   let mobMenu = $state(false);
@@ -101,7 +83,7 @@ onMount(() => {
   
 
 
-<div class="flex h-screen">
+<div class="">
 
   <!-- Sidebar -->
   <aside class="{sidebar ? 'w-[300px]': 'w-[70px]'} 
